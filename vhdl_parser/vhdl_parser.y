@@ -73,7 +73,9 @@ direction:
 | "out"
 
 portassigns:
-"identifier" ":" direction "std_logic" { driver.signals[$1] = "std_logic"; }
+"identifier" ":" direction "std_logic" { driver.signals[$1] = "std_logic";
+
+                                       }
 | "identifier" ":" direction  "std_logic" ";" portassigns { driver.signals[$1] = "std_logic"; }
 
 logicexpr:

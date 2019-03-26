@@ -1,7 +1,6 @@
 #include <iostream>
 #include "vhdl_parser_driver.h"
 
-
 int
 main (int argc, char *argv[])
 {
