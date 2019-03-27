@@ -3,7 +3,7 @@
 
 TEST(ParserTests, simple) {
     vhdl_driver driver;
-    ASSERT_EQ(driver.parse ("../testinput/test.input"), 0);
+    ASSERT_FALSE(driver.parse ("../tests/hdl/simple.vhd"));
 }
 
 int main(int argc, char **argv){
