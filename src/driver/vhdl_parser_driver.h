@@ -2,8 +2,9 @@
 # define VHDL_DRIVER_HH
 # include <string>
 # include <map>
-#include <ostream>
+# include <ostream>
 # include "vhdl_parser.hpp"
+
 // Tell Flex the lexer's prototype ...
 # define YY_DECL \
   yy::vhdl_parser::symbol_type yylex (vhdl_driver& driver)
@@ -15,10 +16,6 @@ class vhdl_driver
 public:
     vhdl_driver ();
     virtual ~vhdl_driver ();
-
-    std::map<std::string, std::string> signals;
-
-    friend std::ostream &operator<<(std::ostream &os, const std::map<std::string, std::string> &signals);
 
     int result;
     // Handling the scanner.
@@ -37,6 +34,6 @@ public:
     void error (const yy::location& l, const std::string& m);
     void error (const std::string& m);
 
-    void dump_signals();
+    //std::unique_ptr<AST::AstNode> top;
 };
 #endif // ! VHDL_DRIVER_HH

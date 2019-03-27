@@ -36,27 +36,27 @@ loc.step ();
 {blank}+   loc.step ();
 [\n]+      loc.lines (yyleng); loc.step ();
 
-"--".*\n       { printf("COMMENT\n"); loc.lines (yyleng); loc.step (); }
-"library"      { printf("LIBRARY\n"); return yy::vhdl_parser::make_LIBRARY(loc); }
-"use"          { printf("USE\n"); return yy::vhdl_parser::make_USE(loc); }
-"port"         { printf("PORT\n"); return yy::vhdl_parser::make_PORT(loc); }
-"entity"       { printf("ENTITY\n"); return yy::vhdl_parser::make_ENTITY(loc); }
-"is"           { printf("IS\n"); return yy::vhdl_parser::make_IS(loc); }
-"end"          { printf("END\n"); return yy::vhdl_parser::make_T_END(loc); }
-"std_logic"    { printf("STD_LOGIC\n"); return yy::vhdl_parser::make_STD_LOGIC(loc); }
-"in"           { printf("IN\n"); return yy::vhdl_parser::make_IN(loc); }
-"out"          { printf("OUT\n"); return yy::vhdl_parser::make_OUT(loc); }
-"architecture" { printf("ARCHITECTURE\n"); return yy::vhdl_parser::make_ARCHITECTURE(loc); }
-"of"           { printf("OF\n"); return yy::vhdl_parser::make_OF(loc); }
-"begin"        { printf("BEGIN\n"); return yy::vhdl_parser::make_BEGIN(loc); }
-"<="           { printf("<=\n"); return yy::vhdl_parser::make_ASSIGN(loc); }
-"process"      { printf("PROCESS\n"); return yy::vhdl_parser::make_PROCESS(loc); }
-"and"          { printf("AND\n"); return yy::vhdl_parser::make_AND(loc); }
-","            { printf(",\n"); return yy::vhdl_parser::make_COMMA(loc); }
-";"            { printf("SEMICOLON\n"); return yy::vhdl_parser::make_SEMICOLON(loc); }
-":"            { printf("COLON\n"); return yy::vhdl_parser::make_COLON(loc); }
-"("            { printf("(\n"); return yy::vhdl_parser::make_LPAREN(loc); }
-")"            { printf(")\n"); return yy::vhdl_parser::make_RPAREN(loc); }
+"--".*\n       { loc.lines (yyleng); loc.step (); }
+"library"      { return yy::vhdl_parser::make_LIBRARY(loc); }
+"use"          { return yy::vhdl_parser::make_USE(loc); }
+"port"         { return yy::vhdl_parser::make_PORT(loc); }
+"entity"       { return yy::vhdl_parser::make_ENTITY(loc); }
+"is"           { return yy::vhdl_parser::make_IS(loc); }
+"end"          { return yy::vhdl_parser::make_T_END(loc); }
+"std_logic"    { return yy::vhdl_parser::make_STD_LOGIC(loc); }
+"in"           { return yy::vhdl_parser::make_IN(loc); }
+"out"          { return yy::vhdl_parser::make_OUT(loc); }
+"architecture" { return yy::vhdl_parser::make_ARCHITECTURE(loc); }
+"of"           { return yy::vhdl_parser::make_OF(loc); }
+"begin"        { return yy::vhdl_parser::make_BEGIN(loc); }
+"<="           { return yy::vhdl_parser::make_ASSIGN(loc); }
+"process"      { return yy::vhdl_parser::make_PROCESS(loc); }
+"and"          { return yy::vhdl_parser::make_AND(loc); }
+","            { return yy::vhdl_parser::make_COMMA(loc); }
+";"            { return yy::vhdl_parser::make_SEMICOLON(loc); }
+":"            { return yy::vhdl_parser::make_COLON(loc); }
+"("            { return yy::vhdl_parser::make_LPAREN(loc); }
+")"            { return yy::vhdl_parser::make_RPAREN(loc); }
 
 {int}          {
                  errno = 0;
@@ -66,7 +66,7 @@ loc.step ();
                  return yy::vhdl_parser::make_NUMBER(n, loc);
                }
 
-{id}           { printf("ID\n"); return yy::vhdl_parser::make_IDENTIFIER(yytext, loc); }
+{id}           { return yy::vhdl_parser::make_IDENTIFIER(yytext, loc); }
 .              driver.error (loc, "invalid character");
 <<EOF>>        return yy::vhdl_parser::make_END(loc);
 %%

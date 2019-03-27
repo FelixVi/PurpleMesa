@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 project(PurpleMesa)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(BISON)
 find_package(FLEX)
@@ -14,6 +14,8 @@ add_subdirectory(external/googletest/googletest)
 include_directories(
         ${CMAKE_CURRENT_BINARY_DIR}
         src/driver
+        src/ast
+        src/ast/AstNodes
         external/googletest/googletest/include
         )
 
@@ -32,6 +34,15 @@ add_executable(test_parser
         )
 
 target_link_libraries(test_parser
+        gtest
+        gtest_main
+        )
+
+add_executable(test_ast
+        tests/test_ast.cpp
+        )
+
+target_link_libraries(test_ast
         gtest
         gtest_main
         )

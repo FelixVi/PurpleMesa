@@ -3,6 +3,9 @@
 
 TEST(ParserTests, simple) {
     vhdl_driver driver;
+
+    std::cout << "\n\n";
+
     ASSERT_FALSE(driver.parse ("../tests/hdl/simple.vhd"));
 }
 
