@@ -1,5 +1,22 @@
+#include <vhdl_parser_driver.h>
 #include "gtest/gtest.h"
-#include "NodeFactory.h"
+#include "AstVisitors/AstPrintVisitor.h"
+
+TEST(VisitorTests, simple) {
+    AstPrintVisitor v;
+
+    std::cout << "\n\n";
+
+    ASSERT_FALSE(0);
+}
+
+TEST(ParserTests, simple) {
+    vhdl_driver driver;
+
+    std::cout << "\n\n";
+
+    ASSERT_FALSE(driver.parse ("../tests/hdl/simple.vhd"));
+}
 
 TEST(ASTTests, simple) {
     auto nf = NodeFactory();

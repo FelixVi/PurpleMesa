@@ -26,23 +26,15 @@ add_executable(PurpleMesa
         src/driver/vhdl_parser_driver.cpp
         )
 
-add_executable(test_parser
+add_executable(tests
+        tests/tests.cpp
+
         ${FLEX_VhdlLexer_OUTPUTS}
         ${BISON_VhdlParser_OUTPUTS}
         src/driver/vhdl_parser_driver.cpp
-        tests/test_parser.cpp
         )
 
-target_link_libraries(test_parser
-        gtest
-        gtest_main
-        )
-
-add_executable(test_ast
-        tests/test_ast.cpp
-        )
-
-target_link_libraries(test_ast
+target_link_libraries(tests
         gtest
         gtest_main
         )
