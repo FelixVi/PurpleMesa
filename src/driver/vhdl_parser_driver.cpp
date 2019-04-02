@@ -11,14 +11,12 @@ vhdl_driver::~vhdl_driver ()
 
 int vhdl_driver::parse (const std::string &f)
 {
-    //top  = std::make_unique<AST::AstNode>(AstNodeType::DESIGN, nullptr, nullptr, nullptr);
     file = f;
     scan_begin ();
     yy::vhdl_parser parser (*this);
     parser.set_debug_level (trace_parsing);
     int res = parser.parse ();
     scan_end ();
-    //top->dumpAst("");
     return res;
 }
 

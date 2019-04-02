@@ -9,10 +9,10 @@ main (int argc, char *argv[])
 {
     std::cout << std::endl << "Creating factory..." << std::endl;
     NodeFactory nf;
-    auto N_assign = nf.make_node(AstNodeType::ASSIGN);
-    auto N_and = nf.make_node(AstNodeType::LOGICAL_AND);
-    auto N_andtwo = nf.make_node(AstNodeType::LOGICAL_AND);
-    auto N_top = nf.make_node(AstNodeType::TOP);
+    auto N_assign = nf.make_node(AstNodeType::ASSIGN, nullptr);
+    auto N_and = nf.make_node(AstNodeType::LOGICAL_AND, N_assign);
+    auto N_andtwo = nf.make_node(AstNodeType::LOGICAL_AND, N_assign);
+    auto N_top = nf.make_node(AstNodeType::TOP, N_assign);
 
     N_assign->addChild(N_and);
     N_and->addChild(N_andtwo);

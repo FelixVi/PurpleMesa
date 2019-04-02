@@ -15,54 +15,54 @@
 
 class NodeFactory
 {
-    std::map<AstNodeType , std::function<std::shared_ptr<AstNode>()>> factories;
+    std::map<AstNodeType , std::function<std::shared_ptr<AstNode>(std::shared_ptr<AstNode> parent)>> factories;
 public:
 
     NodeFactory()
     {
-        factories[AstNodeType::ASSIGN] = [] {
-            auto node = std::make_shared<AssignNode>();
+        factories[AstNodeType::ASSIGN] = [](auto parent) {
+            auto node = std::make_shared<AssignNode>(parent);
             return node;
         };
 
-        factories[AstNodeType::LOGICAL_AND] = [] {
-            auto node = std::make_shared<LogicalAndNode>();
+        factories[AstNodeType::LOGICAL_AND] = [](auto parent) {
+            auto node = std::make_shared<LogicalAndNode>(parent);
             return node;
         };
 
-        factories[AstNodeType::TOP] = [] {
-            auto node = std::make_shared<TopNode>();
+        factories[AstNodeType::TOP] = [](auto parent) {
+            auto node = std::make_shared<TopNode>(parent);
             return node;
         };
 
-        factories[AstNodeType::ENTITY] = [] {
-            auto node = std::make_shared<EntityNode>();
+        factories[AstNodeType::ENTITY] = [](auto parent) {
+            auto node = std::make_shared<EntityNode>(parent);
             return node;
         };
 
-        factories[AstNodeType::PORT] = [] {
-            auto node = std::make_shared<PortNode>();
+        factories[AstNodeType::PORT] = [](auto parent) {
+            auto node = std::make_shared<PortNode>(parent);
             return node;
         };
 
-        factories[AstNodeType::ARCHITECTURE] = [] {
-            auto node = std::make_shared<ArchitectureNode>();
+        factories[AstNodeType::ARCHITECTURE] = [](auto parent) {
+            auto node = std::make_shared<ArchitectureNode>(parent);
             return node;
         };
 
-        factories[AstNodeType::PROCESS] = [] {
-            auto node = std::make_shared<ProcessNode>();
+        factories[AstNodeType::PROCESS] = [](auto parent) {
+            auto node = std::make_shared<ProcessNode>(parent);
             return node;
         };
 
-        factories[AstNodeType::IDENTIFIER] = [] {
-            auto node = std::make_shared<IdentifierNode>();
+        factories[AstNodeType::IDENTIFIER] = [](auto parent) {
+            auto node = std::make_shared<IdentifierNode>(parent);
             return node;
         };
     }
 
-    std::shared_ptr<AstNode> make_node(const AstNodeType &type) {
-        return factories[type]();
+    std::shared_ptr<AstNode> make_node(const AstNodeType &type, std::shared_ptr<AstNode> parent) {
+        return factories[type](parent);
     }
 };
 

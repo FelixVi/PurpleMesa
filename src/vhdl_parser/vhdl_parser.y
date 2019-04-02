@@ -8,8 +8,6 @@
 %code requires
 {
     #include "NodeFactory.h"
-    #include <memory>
-    #include <map>
     class vhdl_driver;
 }
 // The parsing context.
@@ -24,35 +22,34 @@
 %define parse.error verbose
 %code
 {
-#include "vhdl_parser_driver.h"
-NodeFactory nf = NodeFactory();
-std::shared_ptr<AstNode> current_ast;
-std::vector<std::shared_ptr<AstNode>> ast_stack;
+    #include "vhdl_parser_driver.h"
+    NodeFactory nf = NodeFactory();
+    std::shared_ptr<AstNode> current_node;
 }
 %define api.token.prefix {TOK_}
 %token
-        END  0  "end of file"
-LIBRARY "library"
-USE "use"
-LINECOMMENT "--"
-ASSIGN  "<="
-LPAREN  "("
-RPAREN  ")"
-COMMA  ","
-SEMICOLON  ";"
-COLON  ":"
-PORT "port"
-ENTITY "entity"
-IS "is"
-T_END "end"
-STD_LOGIC "std_logic"
-IN "in"
-OUT "out"
-ARCHITECTURE "architecture"
-OF "of"
-BEGIN "begin"
-PROCESS "process"
-AND "and"
+    END  0  "end of file"
+    LIBRARY "library"
+    USE "use"
+    LINECOMMENT "--"
+    ASSIGN  "<="
+    LPAREN  "("
+    RPAREN  ")"
+    COMMA  ","
+    SEMICOLON  ";"
+    COLON  ":"
+    PORT "port"
+    ENTITY "entity"
+    IS "is"
+    T_END "end"
+    STD_LOGIC "std_logic"
+    IN "in"
+    OUT "out"
+    ARCHITECTURE "architecture"
+    OF "of"
+    BEGIN "begin"
+    PROCESS "process"
+    AND "and"
 ;
 %token <std::string> IDENTIFIER "identifier"
 %token <int> NUMBER "number"
@@ -60,11 +57,10 @@ AND "and"
 %%
 %start unit;
 unit: {
-    current_ast = nf.make_node(AstNodeType::TOP);
-    ast_stack.clear();
-    ast_stack.push_back(current_ast);
+    current_node = nf.make_node(AstNodeType::TOP, nullptr);
 } assignments {
-    current_ast->dumpAst("");
+    assert(("Current Node at end of parse is not TOP", current_node->type() == AstNodeType::TOP));
+    driver.AST = std::static_pointer_cast<TopNode>(current_node);
 }
 
 assignments:
@@ -74,7 +70,7 @@ assignments:
 sensitivitylist:
 %empty
 | "identifier" {
-    auto pn = std::dynamic_pointer_cast<ProcessNode>(ast_stack.back());
+    auto pn = std::dynamic_pointer_cast<ProcessNode>(current_node);
     pn->sensitivitylist.push_back($1);
 }
 endsensitivitylist
@@ -92,8 +88,8 @@ direction:
 
 portassigns:
 "identifier" ":" direction "std_logic" {
-    auto node = nf.make_node(AstNodeType::PORT);
-    ast_stack.back()->addChild(node);
+    auto node = nf.make_node(AstNodeType::PORT, current_node);
+    current_node->addChild(node);
     }
 endportassigns
 
@@ -103,37 +99,43 @@ endportassigns:
 
 logicexpr:
 "identifier" {
-    auto rhs = nf.make_node(AstNodeType::IDENTIFIER);
-    ast_stack.back()->addChild(rhs);
+    auto rhs = nf.make_node(AstNodeType::IDENTIFIER, current_node);
+    current_node->addChild(rhs);
 }
 | "identifier" "and" "identifier" {
-    auto rhs = nf.make_node(AstNodeType::LOGICAL_AND);
-    auto c1 = nf.make_node(AstNodeType::IDENTIFIER);
-    auto c2 = nf.make_node(AstNodeType::IDENTIFIER);
+    auto rhs = nf.make_node(AstNodeType::LOGICAL_AND, current_node);
+    auto c1 = nf.make_node(AstNodeType::IDENTIFIER, rhs);
+    auto c2 = nf.make_node(AstNodeType::IDENTIFIER, rhs);
     rhs->addChild(c1);
     rhs->addChild(c2);
-    ast_stack.back()->addChild(rhs);
+    current_node->addChild(rhs);
 }
 
 processbody:
 %empty
 |"identifier" processbody
 | "identifier" "<=" {
-    auto node = nf.make_node(AstNodeType::ASSIGN);
-    auto lhs = nf.make_node(AstNodeType::IDENTIFIER);
+    auto node = nf.make_node(AstNodeType::ASSIGN, current_node);
+    auto lhs = nf.make_node(AstNodeType::IDENTIFIER,node);
     node->addChild(lhs);
-    ast_stack.back()->addChild(node);
-    ast_stack.push_back(node);
+    current_node->addChild(node);
+    current_node = node;
 }
-logicexpr ";" processbody
+logicexpr ";" {
+    current_node = current_node->getParent();
+}
+    processbody
+
 
 process:
 "identifier" ":" "process" "(" {
-    auto node = nf.make_node(AstNodeType::PROCESS);
-    ast_stack.back()->addChild(node);
-    ast_stack.push_back(node);
+    auto node = nf.make_node(AstNodeType::PROCESS, current_node);
+    current_node->addChild(node);
+    current_node = node;
 }
-sensitivitylist ")" "begin" processbody "end" "process" "identifier" ";"
+sensitivitylist ")" "begin" processbody "end" "process" "identifier" ";" {
+    current_node = current_node->getParent();
+};
 
 archbody:
 %empty
@@ -143,21 +145,21 @@ archbody:
 
 architecture:
 "architecture" "identifier" "of" "identifier" "is" "begin" {
-    auto node = nf.make_node(AstNodeType::ARCHITECTURE);
-    ast_stack.back()->addChild(node);
-    ast_stack.push_back(node);
+    auto node = nf.make_node(AstNodeType::ARCHITECTURE, current_node);
+    current_node->addChild(node);
+    current_node = node;
 } archbody "end" "identifier" ";" {
-    ast_stack.pop_back();
+    current_node = current_node->getParent();
 };
 
 entity:
 "entity" "identifier" "is" {
-    auto node = nf.make_node(AstNodeType::ENTITY);
-    ast_stack.back()->addChild(node);
-    ast_stack.push_back(node);
+    auto node = nf.make_node(AstNodeType::ENTITY, current_node);
+    current_node->addChild(node);
+    current_node = node;
 }
 ports entityend ";"{
-    ast_stack.pop_back();
+    current_node = current_node->getParent();
 };
 
 entityend:

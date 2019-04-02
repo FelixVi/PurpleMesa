@@ -5,17 +5,26 @@
 
 struct LogicalAndNode : AstNode
 {
+    LogicalAndNode(std::shared_ptr<AstNode> parent) : AstNode(parent) {}
     std::string getString() const override
     {
         return "LOGICAL_AND";
+    }
+
+    AstNodeType type() const override {
+        return AstNodeType::LOGICAL_AND;
+    }
+
+    void accept(const AstVisitor &visitor) override {
+        if(visitor.getTraversalFilter()->passes(*this))visitor.visit(*this);
     }
 };
 
 struct LogicalAndFactory : AstNodeFactory
 {
-    std::shared_ptr<AstNode> make() const override
+    std::shared_ptr<AstNode> make(std::shared_ptr<AstNode> parent) const override
     {
-        return std::make_shared<LogicalAndNode>();
+        return std::make_shared<LogicalAndNode>(parent);
     }
 };
 
