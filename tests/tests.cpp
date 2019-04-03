@@ -1,21 +1,22 @@
 #include <vhdl_parser_driver.h>
 #include "gtest/gtest.h"
 #include "AstVisitors/AstPrintVisitor.h"
+#include "AstTraversals/PreOrder.h"
 
 TEST(VisitorTests, simple) {
+    PreOrderTraversal t;
     AstPrintVisitor v;
 
-    auto nf = NodeFactory();
-    std::vector<std::shared_ptr<AstNode>> nodes;
-    auto top = nf.make_node(AstNodeType::TOP, nullptr);
-    nodes.push_back(top);
-    auto child1 = nf.make_node(AstNodeType::ENTITY, top);
-    nodes.push_back(child1);
-    auto child2 = nf.make_node(AstNodeType::IDENTIFIER, top);
-    nodes.push_back(child2);
+    std::cout << "\n\n";
 
-    for(auto& node : nodes)
-        node->accept(v);
+    auto nf = NodeFactory();
+    auto top = nf.make_node(AstNodeType::TOP, nullptr);
+    auto child1 = nf.make_node(AstNodeType::ENTITY, top);
+    top->addChild(child1);
+    auto child2 = nf.make_node(AstNodeType::IDENTIFIER, top);
+    top->addChild(child2);
+
+    t.traverse(*top, v);
 
     std::cout << "\n\n";
 
