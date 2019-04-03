@@ -9,19 +9,23 @@
 
 enum class AstNodeType
 {
-    TOP,
-    ENTITY,
-    PORT,
     ARCHITECTURE,
-    PROCESS,
-    IDENTIFIER,
     ASSIGN,
-    LOGICAL_AND
+    ENTITY,
+    IDENTIFIER,
+    LOGICAL_AND,
+    PORT,
+    PROCESS,
+    TOP
 };
 
 struct AstNode
 {
     virtual ~AstNode() = default;
+
+    AstNode(std::shared_ptr<AstNode> parent) {
+        this->parent = parent;
+    }
 
     virtual std::string getString() const = 0;
 
@@ -32,6 +36,9 @@ struct AstNode
             child->dumpAst(indent + "  ");
         }
     }
+
+    //the parent node
+    std::shared_ptr<AstNode> parent;
 
     //list of child nodes
     std::vector<std::shared_ptr<AstNode>> children;
@@ -47,7 +54,7 @@ struct AstNode
 
 struct AstNodeFactory
 {
-    virtual std::shared_ptr<AstNode> make() const = 0;
+    virtual std::shared_ptr<AstNode> make(std::shared_ptr<AstNode> parent) const = 0;
 };
 
 #endif //PURPLEMESA_ASTNODE_H

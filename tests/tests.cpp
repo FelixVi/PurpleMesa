@@ -20,9 +20,9 @@ TEST(ParserTests, simple) {
 
 TEST(ASTTests, simple) {
     auto nf = NodeFactory();
-    auto top = nf.make_node(AstNodeType::TOP);
-    auto child1 = nf.make_node(AstNodeType::ENTITY);
-    auto child2 = nf.make_node(AstNodeType::IDENTIFIER);
+    auto top = nf.make_node(AstNodeType::TOP, nullptr);
+    auto child1 = nf.make_node(AstNodeType::ENTITY, top);
+    auto child2 = nf.make_node(AstNodeType::IDENTIFIER, top);
 
     top->addChild(child1);
     top->addChild(child2);

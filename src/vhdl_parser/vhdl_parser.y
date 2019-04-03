@@ -60,7 +60,7 @@ AND "and"
 %%
 %start unit;
 unit: {
-    current_ast = nf.make_node(AstNodeType::TOP);
+    current_ast = nf.make_node(AstNodeType::TOP, nullptr);
     ast_stack.clear();
     ast_stack.push_back(current_ast);
 } assignments {
@@ -92,7 +92,7 @@ direction:
 
 portassigns:
 "identifier" ":" direction "std_logic" {
-    auto node = nf.make_node(AstNodeType::PORT);
+    auto node = nf.make_node(AstNodeType::PORT, ast_stack.back());
     ast_stack.back()->addChild(node);
     }
 endportassigns
@@ -103,13 +103,13 @@ endportassigns:
 
 logicexpr:
 "identifier" {
-    auto rhs = nf.make_node(AstNodeType::IDENTIFIER);
+    auto rhs = nf.make_node(AstNodeType::IDENTIFIER, ast_stack.back());
     ast_stack.back()->addChild(rhs);
 }
 | "identifier" "and" "identifier" {
-    auto rhs = nf.make_node(AstNodeType::LOGICAL_AND);
-    auto c1 = nf.make_node(AstNodeType::IDENTIFIER);
-    auto c2 = nf.make_node(AstNodeType::IDENTIFIER);
+    auto rhs = nf.make_node(AstNodeType::LOGICAL_AND, ast_stack.back());
+    auto c1 = nf.make_node(AstNodeType::IDENTIFIER, rhs);
+    auto c2 = nf.make_node(AstNodeType::IDENTIFIER, rhs);
     rhs->addChild(c1);
     rhs->addChild(c2);
     ast_stack.back()->addChild(rhs);
@@ -119,8 +119,8 @@ processbody:
 %empty
 |"identifier" processbody
 | "identifier" "<=" {
-    auto node = nf.make_node(AstNodeType::ASSIGN);
-    auto lhs = nf.make_node(AstNodeType::IDENTIFIER);
+    auto node = nf.make_node(AstNodeType::ASSIGN, ast_stack.back());
+    auto lhs = nf.make_node(AstNodeType::IDENTIFIER,node);
     node->addChild(lhs);
     ast_stack.back()->addChild(node);
     ast_stack.push_back(node);
@@ -129,7 +129,7 @@ logicexpr ";" processbody
 
 process:
 "identifier" ":" "process" "(" {
-    auto node = nf.make_node(AstNodeType::PROCESS);
+    auto node = nf.make_node(AstNodeType::PROCESS, ast_stack.back());
     ast_stack.back()->addChild(node);
     ast_stack.push_back(node);
 }
@@ -143,7 +143,7 @@ archbody:
 
 architecture:
 "architecture" "identifier" "of" "identifier" "is" "begin" {
-    auto node = nf.make_node(AstNodeType::ARCHITECTURE);
+    auto node = nf.make_node(AstNodeType::ARCHITECTURE, ast_stack.back());
     ast_stack.back()->addChild(node);
     ast_stack.push_back(node);
 } archbody "end" "identifier" ";" {
@@ -152,7 +152,7 @@ architecture:
 
 entity:
 "entity" "identifier" "is" {
-    auto node = nf.make_node(AstNodeType::ENTITY);
+    auto node = nf.make_node(AstNodeType::ENTITY, ast_stack.back());
     ast_stack.back()->addChild(node);
     ast_stack.push_back(node);
 }

@@ -5,6 +5,9 @@
 
 struct TopNode : AstNode
 {
+    TopNode(std::shared_ptr<AstNode> parent) : AstNode(parent) {
+
+    }
     std::string getString() const override
     {
         return "TOP";
@@ -13,9 +16,9 @@ struct TopNode : AstNode
 
 struct TopFactory : AstNodeFactory
 {
-    std::shared_ptr<AstNode> make() const override
+    std::shared_ptr<AstNode> make(std::shared_ptr<AstNode> parent) const override
     {
-        return std::make_shared<TopNode>();
+        return std::make_shared<TopNode>(parent);
     }
 };
 
