@@ -10,6 +10,10 @@ struct ArchitectureNode : AstNode
     {
         return "ARCHITECTURE";
     }
+
+    void accept(AstVisitor &visitor) override {
+        visitor.visit(*this);
+    }
 };
 
 struct ArchitectureFactory : AstNodeFactory

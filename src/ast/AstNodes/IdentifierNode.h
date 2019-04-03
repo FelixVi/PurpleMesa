@@ -10,6 +10,10 @@ struct IdentifierNode : AstNode
     {
         return "IDENTIFIER";
     }
+
+    void accept(AstVisitor &visitor) override {
+        visitor.visit(*this);
+    }
 };
 
 struct IdentifierFactory : AstNodeFactory

@@ -10,6 +10,10 @@ struct LogicalAndNode : AstNode
     {
         return "LOGICAL_AND";
     }
+
+    void accept(AstVisitor &visitor) override {
+        visitor.visit(*this);
+    }
 };
 
 struct LogicalAndFactory : AstNodeFactory

@@ -10,6 +10,10 @@ struct PortNode : AstNode
     {
         return "PORT";
     }
+
+    void accept(AstVisitor &visitor) override {
+        visitor.visit(*this);
+    }
 };
 
 struct PortFactory : AstNodeFactory

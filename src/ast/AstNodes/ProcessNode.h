@@ -19,6 +19,10 @@ struct ProcessNode : AstNode
         return myID;
     }
 
+    void accept(AstVisitor &visitor) override {
+        visitor.visit(*this);
+    }
+
     std::vector<std::string> sensitivitylist;
 };
 

@@ -5,6 +5,18 @@
 TEST(VisitorTests, simple) {
     AstPrintVisitor v;
 
+    auto nf = NodeFactory();
+    std::vector<std::shared_ptr<AstNode>> nodes;
+    auto top = nf.make_node(AstNodeType::TOP, nullptr);
+    nodes.push_back(top);
+    auto child1 = nf.make_node(AstNodeType::ENTITY, top);
+    nodes.push_back(child1);
+    auto child2 = nf.make_node(AstNodeType::IDENTIFIER, top);
+    nodes.push_back(child2);
+
+    for(auto& node : nodes)
+        node->accept(v);
+
     std::cout << "\n\n";
 
     ASSERT_FALSE(0);

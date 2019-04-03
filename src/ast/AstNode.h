@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <map>
+#include "AstVisitor.h"
 
 enum class AstNodeType
 {
@@ -21,6 +22,7 @@ enum class AstNodeType
 
 struct AstNode
 {
+public:
     virtual ~AstNode() = default;
 
     AstNode(std::shared_ptr<AstNode> parent) {
@@ -28,6 +30,12 @@ struct AstNode
     }
 
     virtual std::string getString() const = 0;
+
+    friend std::ostream& operator<<(std::ostream& os, const std::shared_ptr<AstNode> &node) {
+        return os << node->getString();
+    }
+
+    virtual void accept(AstVisitor &visitor) = 0;
 
     void dumpAst(std::string indent) {
         std::cout << indent << this->getString() << std::endl;
@@ -37,19 +45,24 @@ struct AstNode
         }
     }
 
+    void addChild(std::shared_ptr<AstNode> child) {
+        children.push_back(std::move(child));
+    }
+
+    const std::vector<std::shared_ptr<AstNode>> &getChildren() const {
+        return children;
+    }
+
+    const std::shared_ptr<AstNode> &getParent() const {
+        return parent;
+    }
+
+private:
     //the parent node
     std::shared_ptr<AstNode> parent;
 
     //list of child nodes
     std::vector<std::shared_ptr<AstNode>> children;
-
-    void addChild(std::shared_ptr<AstNode> child) {
-        children.push_back(std::move(child));
-    }
-
-    friend std::ostream& operator<<(std::ostream& os, const std::shared_ptr<AstNode> &node) {
-        return os << node->getString();
-    }
 };
 
 struct AstNodeFactory

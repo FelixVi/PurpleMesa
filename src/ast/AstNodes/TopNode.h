@@ -12,6 +12,10 @@ struct TopNode : AstNode
     {
         return "TOP";
     }
+
+    void accept(AstVisitor &visitor) override {
+        visitor.visit(*this);
+    }
 };
 
 struct TopFactory : AstNodeFactory

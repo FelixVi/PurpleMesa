@@ -10,6 +10,10 @@ struct AssignNode : AstNode
     {
         return "ASSIGN";
     }
+
+    void accept(AstVisitor &visitor) override {
+        visitor.visit(*this);
+    }
 };
 
 struct AssignFactory : AstNodeFactory

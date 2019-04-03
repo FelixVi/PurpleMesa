@@ -10,6 +10,10 @@ struct EntityNode : AstNode
     {
         return "ENTITY";
     }
+
+    void accept(AstVisitor &visitor) override {
+        visitor.visit(*this);
+    }
 };
 
 struct EntityFactory : AstNodeFactory
