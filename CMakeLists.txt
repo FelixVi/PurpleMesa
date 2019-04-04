@@ -24,6 +24,7 @@ add_executable(PurpleMesa
         ${FLEX_VhdlLexer_OUTPUTS}
         ${BISON_VhdlParser_OUTPUTS}
         src/driver/vhdl_parser_driver.cpp
+        src/ast/AstTraversals/Filters/AstTraversalFilters.cpp
         )
 
 add_executable(tests
@@ -32,6 +33,7 @@ add_executable(tests
         ${FLEX_VhdlLexer_OUTPUTS}
         ${BISON_VhdlParser_OUTPUTS}
         src/driver/vhdl_parser_driver.cpp
+        src/ast/AstTraversals/Filters/AstTraversalFilters.cpp
         )
 
 target_link_libraries(tests

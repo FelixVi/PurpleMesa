@@ -1,8 +1,6 @@
 #ifndef PURPLEMESA_ASTTRAVERSALFILTER_H
 #define PURPLEMESA_ASTTRAVERSALFILTER_H
 
-//#include <AstNode.h>
-
 class AstNode;
 
 enum class AstTraversalFilter
@@ -14,7 +12,7 @@ enum class AstTraversalFilter
 struct TraversalFilter
 {
     virtual ~TraversalFilter() = default;
-    virtual bool passes(const AstNode& node) {return true;};
+    virtual bool passes(const AstNode& node);
 };
 
 struct ShowAll : TraversalFilter
@@ -23,11 +21,7 @@ struct ShowAll : TraversalFilter
 
 struct ShowPorts : TraversalFilter
 {
-    bool passes(const AstNode &node) override{
-        if(node.type() == AstNodeType::PORT)
-            return true;
-        return false;
-    };
+    bool passes(const AstNode &node) override;
 };
 
 #endif //PURPLEMESA_ASTTRAVERSALFILTERS_H
