@@ -6,35 +6,35 @@
 class AstPrintVisitor : public AstVisitor
 {
 public:
-    void visit(AssignNode &node) const override {
+    void visitFiltered(AssignNode &node) const override {
         std::cout << indent << node.getString() << std::endl;
     }
 
-    void visit(ArchitectureNode &node) const override {
+    void visitFiltered(ArchitectureNode &node) const override {
         std::cout << indent << node.getString() << std::endl;
     }
 
-    void visit(EntityNode &node) const override {
+    void visitFiltered(EntityNode &node) const override {
         std::cout << indent << node.getString() << std::endl;
     }
 
-    void visit(IdentifierNode &node) const override {
+    void visitFiltered(IdentifierNode &node) const override {
         std::cout << indent << node.getString() << std::endl;
     }
 
-    void visit(LogicalAndNode &node) const override {
+    void visitFiltered(LogicalAndNode &node) const override {
         std::cout << indent << node.getString() << std::endl;
     }
 
-    void visit(PortNode &node) const override {
+    void visitFiltered(PortNode &node) const override {
         std::cout << indent << node.getString() << std::endl;
     }
 
-    void visit(ProcessNode &node) const override {
+    void visitFiltered(ProcessNode &node) const override {
         std::cout << indent << node.getString() << std::endl;
     }
 
-    void visit(TopNode &node) const override {
+    void visitFiltered(TopNode &node) const override {
         std::cout << indent << node.getString() << std::endl;
     }
 
