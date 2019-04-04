@@ -11,7 +11,11 @@ struct PortNode : AstNode
         return "PORT";
     }
 
-    void accept(AstVisitor &visitor) override {
+    AstNodeType type() const override {
+        return AstNodeType::PORT;
+    }
+
+    void accept(const AstVisitor &visitor) override {
         visitor.visit(*this);
     }
 };

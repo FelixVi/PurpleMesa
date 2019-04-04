@@ -9,10 +9,16 @@ public:
     void traverse(AstNode &node, AstVisitor &visitor) override {
         node.accept(visitor);
 
-        for(auto const& child : node.getChildren()){
-            child->accept(visitor);
+        auto children = node.getChildren();
+        if(node.hasChildren()){
+            visitor.increaseLevel();
+            for(auto const& child : children){
+                traverse(*child, visitor);
+            }
         }
     }
+
+
 };
 
 #endif //PURPLEMESA_PREORDER_H

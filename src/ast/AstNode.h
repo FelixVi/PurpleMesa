@@ -35,7 +35,7 @@ public:
         return os << node->getString();
     }
 
-    virtual void accept(AstVisitor &visitor) = 0;
+    virtual void accept(const AstVisitor &visitor) = 0;
 
     void dumpAst(std::string indent) {
         std::cout << indent << this->getString() << std::endl;
@@ -45,12 +45,18 @@ public:
         }
     }
 
+    virtual AstNodeType type() const = 0;
+
     void addChild(std::shared_ptr<AstNode> child) {
         children.push_back(std::move(child));
     }
 
     const std::vector<std::shared_ptr<AstNode>> &getChildren() const {
         return children;
+    }
+
+    const bool hasChildren() const {
+        return !children.empty();
     }
 
     const std::shared_ptr<AstNode> &getParent() const {

@@ -13,7 +13,11 @@ struct TopNode : AstNode
         return "TOP";
     }
 
-    void accept(AstVisitor &visitor) override {
+    AstNodeType type() const override {
+        return AstNodeType::TOP;
+    }
+
+    void accept(const AstVisitor &visitor) override {
         visitor.visit(*this);
     }
 };

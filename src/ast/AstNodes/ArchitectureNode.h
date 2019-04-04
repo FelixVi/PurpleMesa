@@ -11,7 +11,11 @@ struct ArchitectureNode : AstNode
         return "ARCHITECTURE";
     }
 
-    void accept(AstVisitor &visitor) override {
+    AstNodeType type() const override {
+        return AstNodeType::ARCHITECTURE;
+    }
+
+    void accept(const AstVisitor &visitor) override {
         visitor.visit(*this);
     }
 };

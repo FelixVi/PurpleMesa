@@ -11,7 +11,11 @@ struct AssignNode : AstNode
         return "ASSIGN";
     }
 
-    void accept(AstVisitor &visitor) override {
+    AstNodeType type() const override {
+        return AstNodeType::ASSIGN;
+    }
+
+    void accept(const AstVisitor &visitor) override {
         visitor.visit(*this);
     }
 };

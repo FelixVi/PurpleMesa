@@ -6,19 +6,16 @@
 TEST(VisitorTests, simple) {
     PreOrderTraversal t;
     AstPrintVisitor v;
+    vhdl_driver driver;
 
-    std::cout << "\n\n";
+    ASSERT_FALSE(driver.parse ("../tests/hdl/simple.vhd"));
 
-    auto nf = NodeFactory();
-    auto top = nf.make_node(AstNodeType::TOP, nullptr);
-    auto child1 = nf.make_node(AstNodeType::ENTITY, top);
-    top->addChild(child1);
-    auto child2 = nf.make_node(AstNodeType::IDENTIFIER, top);
-    top->addChild(child2);
+    std::cout << "\n\nTraversing AST...\n";
 
-    t.traverse(*top, v);
+    t.setFilter(AstTraversalFilter::ShowPorts);
+    t.traverse(*driver.AST, v);
 
-    std::cout << "\n\n";
+    std::cout << "\n\nEnd Traversing AST...\n";
 
     ASSERT_FALSE(0);
 }

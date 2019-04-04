@@ -65,6 +65,7 @@ unit: {
     ast_stack.push_back(current_ast);
 } assignments {
     current_ast->dumpAst("");
+    driver.AST = std::dynamic_pointer_cast<TopNode>(current_ast);
 }
 
 assignments:

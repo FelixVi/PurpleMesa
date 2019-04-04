@@ -11,7 +11,11 @@ struct LogicalAndNode : AstNode
         return "LOGICAL_AND";
     }
 
-    void accept(AstVisitor &visitor) override {
+    AstNodeType type() const override {
+        return AstNodeType::LOGICAL_AND;
+    }
+
+    void accept(const AstVisitor &visitor) override {
         visitor.visit(*this);
     }
 };
