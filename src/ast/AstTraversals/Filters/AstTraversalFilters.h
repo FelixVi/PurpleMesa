@@ -3,6 +3,8 @@
 
 //#include <AstNode.h>
 
+class AstNode;
+
 enum class AstTraversalFilter
 {
     ShowAll,
@@ -12,8 +14,7 @@ enum class AstTraversalFilter
 struct TraversalFilter
 {
     virtual ~TraversalFilter() = default;
-    virtual bool passes() {return true;}
-    //virtual bool passes(const AstNode& node) {return true;}
+    virtual bool passes(const AstNode& node) {return true;};
 };
 
 struct ShowAll : TraversalFilter
@@ -22,14 +23,11 @@ struct ShowAll : TraversalFilter
 
 struct ShowPorts : TraversalFilter
 {
-    /*bool passes(const AstNode &node) override {
+    bool passes(const AstNode &node) override{
         if(node.type() == AstNodeType::PORT)
             return true;
         return false;
-    }*/
-    bool passes() override {
-        return false;
-    }
+    };
 };
 
 #endif //PURPLEMESA_ASTTRAVERSALFILTERS_H

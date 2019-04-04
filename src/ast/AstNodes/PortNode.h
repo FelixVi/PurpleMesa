@@ -16,7 +16,7 @@ struct PortNode : AstNode
     }
 
     void accept(const AstVisitor &visitor) override {
-        if(visitor.getTraversalFilter()->passes())visitor.visit(*this);
+        if(visitor.getTraversalFilter()->passes(*this))visitor.visit(*this);
     }
 };
 
