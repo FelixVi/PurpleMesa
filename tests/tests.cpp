@@ -12,8 +12,8 @@ TEST(VisitorTests, simple) {
 
     std::cout << "\n\nTraversing AST...\n";
 
-    //v.setFilter(AstTraversalFilter::ShowPorts);
-    v.setFilter(AstTraversalFilter::ShowAll);
+    v.setFilter(AstTraversalFilter::ShowPorts);
+    //v.setFilter(AstTraversalFilter::ShowAll);
     t.traverse(*driver.AST, v);
 
     std::cout << "\n\nEnd Traversing AST...\n";

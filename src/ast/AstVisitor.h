@@ -15,23 +15,14 @@ class TopNode;
 class AstVisitor
 {
 public:
-    void visit(ArchitectureNode& node) const {if(traversalFilter->passes())visitFiltered(node);}
-    void visit(AssignNode& node) const {if(traversalFilter->passes())visitFiltered(node);}
-    void visit(EntityNode& node) const {if(traversalFilter->passes())visitFiltered(node);}
-    void visit(IdentifierNode& node) const {if(traversalFilter->passes())visitFiltered(node);}
-    void visit(LogicalAndNode& node) const {if(traversalFilter->passes())visitFiltered(node);}
-    void visit(PortNode& node) const {if(traversalFilter->passes())visitFiltered(node);}
-    void visit(ProcessNode& node) const {if(traversalFilter->passes())visitFiltered(node);}
-    void visit(TopNode& node) const {if(traversalFilter->passes())visitFiltered(node);}
-
-    virtual void visitFiltered(ArchitectureNode& node) const = 0;
-    virtual void visitFiltered(AssignNode& node) const = 0;
-    virtual void visitFiltered(EntityNode& node) const = 0;
-    virtual void visitFiltered(IdentifierNode& node) const = 0;
-    virtual void visitFiltered(LogicalAndNode& node) const = 0;
-    virtual void visitFiltered(PortNode& node) const = 0;
-    virtual void visitFiltered(ProcessNode& node) const = 0;
-    virtual void visitFiltered(TopNode& node) const = 0;
+    virtual void visit(ArchitectureNode& node) const = 0;
+    virtual void visit(AssignNode& node) const = 0;
+    virtual void visit(EntityNode& node) const = 0;
+    virtual void visit(IdentifierNode& node) const = 0;
+    virtual void visit(LogicalAndNode& node) const = 0;
+    virtual void visit(PortNode& node) const = 0;
+    virtual void visit(ProcessNode& node) const = 0;
+    virtual void visit(TopNode& node) const = 0;
 
     virtual void increaseLevel() = 0;
     virtual void decreaseLevel() = 0;
@@ -49,6 +40,11 @@ public:
                 throw std::runtime_error("Unsupported AST traversal filter.");
         }
     }
+
+    const std::unique_ptr<TraversalFilter> &getTraversalFilter() const {
+        return traversalFilter;
+    }
+
 private:
     std::unique_ptr<TraversalFilter> traversalFilter;
 };

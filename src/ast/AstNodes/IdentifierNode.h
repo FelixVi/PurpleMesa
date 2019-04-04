@@ -16,7 +16,7 @@ struct IdentifierNode : AstNode
     }
 
     void accept(const AstVisitor &visitor) override {
-        visitor.visit(*this);
+        if(visitor.getTraversalFilter()->passes())visitor.visit(*this);
     }
 };
 
