@@ -15,10 +15,9 @@ public:
             for(auto const& child : children){
                 traverse(*child, visitor);
             }
+            visitor.decreaseLevel();
         }
     }
-
-
 };
 
 #endif //PURPLEMESA_PREORDER_H
