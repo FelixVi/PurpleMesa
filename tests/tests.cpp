@@ -12,8 +12,8 @@ TEST(VisitorTests, simple) {
 
     std::cout << "\n\nTraversing AST...\n";
 
-    v.setFilter(AstTraversalFilter::ShowPorts);
-    //v.setFilter(AstTraversalFilter::ShowAll);
+    //v.setFilter(AstTraversalFilter::ShowPorts);
+    v.setFilter(AstTraversalFilter::ShowAll);
     t.traverse(*driver.AST, v);
 
     std::cout << "\n\nEnd Traversing AST...\n";
@@ -30,6 +30,9 @@ TEST(ParserTests, simple) {
 }
 
 TEST(ASTTests, simple) {
+    PreOrderTraversal t;
+    AstPrintVisitor v;
+
     auto nf = NodeFactory();
     auto top = nf.make_node(AstNodeType::TOP, nullptr);
     auto child1 = nf.make_node(AstNodeType::ENTITY, top);
@@ -39,7 +42,8 @@ TEST(ASTTests, simple) {
     top->addChild(child2);
 
     std::cout << "\n\n";
-    top->dumpAst("");
+    v.setFilter(AstTraversalFilter::ShowAll);
+    t.traverse(*top, v);
 
     ASSERT_FALSE(0);
 }

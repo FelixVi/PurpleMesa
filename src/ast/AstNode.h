@@ -37,14 +37,6 @@ public:
 
     virtual void accept(const AstVisitor &visitor) = 0;
 
-    void dumpAst(std::string indent) {
-        std::cout << indent << this->getString() << std::endl;
-
-        for(auto const& child : children){
-            child->dumpAst(indent + "  ");
-        }
-    }
-
     virtual AstNodeType type() const = 0;
 
     void addChild(std::shared_ptr<AstNode> child) {
