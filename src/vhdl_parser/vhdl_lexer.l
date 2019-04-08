@@ -17,6 +17,7 @@
 static yy::location loc;
 %}
 %option noyywrap nounput batch debug noinput
+%option yylineno
 id    [a-zA-Z][a-zA-Z_0-9\._]*
 int   [0-9]+
 blank [ \t]

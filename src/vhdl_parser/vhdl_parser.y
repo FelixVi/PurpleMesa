@@ -25,6 +25,7 @@
     #include "vhdl_parser_driver.h"
     NodeFactory nf = NodeFactory();
     std::shared_ptr<AstNode> current_node;
+    extern int yylineno;
 }
 %define api.token.prefix {TOK_}
 %token
@@ -58,6 +59,7 @@
 %start unit;
 unit: {
     current_node = nf.make_node(AstNodeType::TOP, nullptr);
+    std::cout << "Hello" << driver.file << "\n";
 } assignments {
     assert(("Current Node at end of parse is not TOP", current_node->type() == AstNodeType::TOP));
     driver.AST = std::static_pointer_cast<TopNode>(current_node);
@@ -90,6 +92,7 @@ portassigns:
 "identifier" ":" direction "std_logic" {
     auto node = nf.make_node(AstNodeType::PORT, current_node);
     current_node->addChild(node);
+    std::cout << "LOC of port: " << $1 << " : " << @1 << "\n";
     }
 endportassigns
 
@@ -132,9 +135,11 @@ process:
     auto node = nf.make_node(AstNodeType::PROCESS, current_node);
     current_node->addChild(node);
     current_node = node;
+    std::cout << "LOC of process: " << $1 << " : " << @1 << "\n";
 }
 sensitivitylist ")" "begin" processbody "end" "process" "identifier" ";" {
     current_node = current_node->getParent();
+    std::cout << "LOC of process end: " << $1 << " : " << @1 << "\n";
 };
 
 archbody:
@@ -150,6 +155,7 @@ architecture:
     current_node = node;
 } archbody "end" "identifier" ";" {
     current_node = current_node->getParent();
+    std::cout << "LOC of architecture end: " << $2 << " : " << @2 << "    " << yylineno << "\n";
 };
 
 entity:
@@ -177,5 +183,5 @@ void
 yy::vhdl_parser::error (const location_type& l,
                           const std::string& m)
 {
-    driver.error (l, m);
+    driver.error (l, m, yylineno);
 }

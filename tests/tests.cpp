@@ -1,11 +1,12 @@
 #include <vhdl_parser_driver.h>
 #include "gtest/gtest.h"
 #include "AstVisitors/AstPrintVisitor.h"
+#include "AstVisitors/AstAnnotatedPrintVisitor.h"
 #include "AstTraversals/PreOrder.h"
 
 TEST(VisitorTests, simple) {
     PreOrderTraversal t;
-    AstPrintVisitor v;
+    AstAnnotatedPrintVisitor v;
     vhdl_driver driver;
 
     ASSERT_FALSE(driver.parse ("../tests/hdl/simple.vhd"));
