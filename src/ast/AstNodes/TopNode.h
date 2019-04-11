@@ -5,16 +5,11 @@
 
 struct TopNode : AstNode
 {
-    TopNode(std::shared_ptr<AstNode> parent) : AstNode(parent) {
+    TopNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent) : AstNode(nt, parent) {}
 
-    }
     std::string getString() const override
     {
         return "TOP";
-    }
-
-    AstNodeType type() const override {
-        return AstNodeType::TOP;
     }
 
     void accept(const AstVisitor &visitor) override {
@@ -24,9 +19,9 @@ struct TopNode : AstNode
 
 struct TopFactory : AstNodeFactory
 {
-    std::shared_ptr<AstNode> make(std::shared_ptr<AstNode> parent) const override
+    std::shared_ptr<AstNode> make(AstNodeType NodeType, std::shared_ptr<AstNode> parent) const override
     {
-        return std::make_shared<TopNode>(parent);
+        return std::make_shared<TopNode>(NodeType, parent);
     }
 };
 

@@ -21,42 +21,42 @@ public:
     NodeFactory()
     {
         factories[AstNodeType::ASSIGN] = [](auto parent) {
-            auto node = std::make_shared<AssignNode>(parent);
+            auto node = std::make_shared<AssignNode>(AstNodeType::ASSIGN, parent);
             return node;
         };
 
         factories[AstNodeType::LOGICAL_AND] = [](auto parent) {
-            auto node = std::make_shared<LogicalAndNode>(parent);
+            auto node = std::make_shared<LogicalAndNode>(AstNodeType::LOGICAL_AND, parent);
             return node;
         };
 
         factories[AstNodeType::TOP] = [](auto parent) {
-            auto node = std::make_shared<TopNode>(parent);
+            auto node = std::make_shared<TopNode>(AstNodeType::TOP, parent);
             return node;
         };
 
         factories[AstNodeType::ENTITY] = [](auto parent) {
-            auto node = std::make_shared<EntityNode>(parent);
+            auto node = std::make_shared<EntityNode>(AstNodeType::ENTITY, parent);
             return node;
         };
 
         factories[AstNodeType::PORT] = [](auto parent) {
-            auto node = std::make_shared<PortNode>(parent);
+            auto node = std::make_shared<PortNode>(AstNodeType::PORT, parent);
             return node;
         };
 
         factories[AstNodeType::ARCHITECTURE] = [](auto parent) {
-            auto node = std::make_shared<ArchitectureNode>(parent);
+            auto node = std::make_shared<ArchitectureNode>(AstNodeType::ARCHITECTURE, parent);
             return node;
         };
 
         factories[AstNodeType::PROCESS] = [](auto parent) {
-            auto node = std::make_shared<ProcessNode>(parent);
+            auto node = std::make_shared<ProcessNode>(AstNodeType::PROCESS, parent);
             return node;
         };
 
         factories[AstNodeType::IDENTIFIER] = [](auto parent) {
-            auto node = std::make_shared<IdentifierNode>(parent);
+            auto node = std::make_shared<IdentifierNode>(AstNodeType::IDENTIFIER, parent);
             return node;
         };
     }

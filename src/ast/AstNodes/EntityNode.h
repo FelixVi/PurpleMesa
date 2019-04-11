@@ -5,14 +5,11 @@
 
 struct EntityNode : AstNode
 {
-    EntityNode(std::shared_ptr<AstNode> parent) : AstNode(parent) {}
+    EntityNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent) : AstNode(nt, parent) {}
+
     std::string getString() const override
     {
         return "ENTITY";
-    }
-
-    AstNodeType type() const override {
-        return AstNodeType::ENTITY;
     }
 
     void accept(const AstVisitor &visitor) override {
@@ -22,9 +19,9 @@ struct EntityNode : AstNode
 
 struct EntityFactory : AstNodeFactory
 {
-    std::shared_ptr<AstNode> make(std::shared_ptr<AstNode> parent) const override
+    std::shared_ptr<AstNode> make(AstNodeType NodeType, std::shared_ptr<AstNode> parent) const override
     {
-        return std::make_shared<EntityNode>(parent);
+        return std::make_shared<EntityNode>(NodeType, parent);
     }
 };
 

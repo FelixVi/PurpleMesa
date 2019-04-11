@@ -5,14 +5,11 @@
 
 struct AssignNode : AstNode
 {
-    AssignNode(std::shared_ptr<AstNode> parent) : AstNode(parent) {}
+    AssignNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent) : AstNode(nt, parent) {}
+
     std::string getString() const override
     {
         return "ASSIGN";
-    }
-
-    AstNodeType type() const override {
-        return AstNodeType::ASSIGN;
     }
 
     void accept(const AstVisitor &visitor) override {
@@ -22,8 +19,8 @@ struct AssignNode : AstNode
 
 struct AssignFactory : AstNodeFactory
 {
-    std::shared_ptr<AstNode> make(std::shared_ptr<AstNode> parent) const override {
-        return std::make_shared<AssignNode>(parent);
+    std::shared_ptr<AstNode> make(AstNodeType NodeType, std::shared_ptr<AstNode> parent) const override {
+        return std::make_shared<AssignNode>(NodeType, parent);
     }
 };
 

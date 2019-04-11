@@ -16,9 +16,8 @@ class AstNodeBase
 public:
     virtual ~AstNodeBase() = default;
 
-    AstNodeBase<TNode>(std::shared_ptr<TNode> parent)
-    :parent(parent)
-    {}
+    //creation of nodes
+    AstNodeBase(AstNodeType NodeType, const std::shared_ptr<TNode> &parent) : Nodetype(NodeType), parent(parent) {}
 
     virtual std::string getString() const = 0;
 
@@ -28,7 +27,7 @@ public:
 
     virtual void accept(const AstVisitor &visitor) = 0;
 
-    virtual AstNodeType type() const = 0;
+    constexpr AstNodeType type() const {return Nodetype;}
 
     void addChild(std::shared_ptr<TNode> child) {
         children.push_back(child);
@@ -47,6 +46,7 @@ public:
     }
 
 private:
+    const AstNodeType Nodetype;
     //the parent node
     std::shared_ptr<TNode> parent;
 
