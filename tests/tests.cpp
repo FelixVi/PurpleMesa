@@ -11,14 +11,20 @@ TEST(VisitorTests, simple) {
 
     ASSERT_FALSE(driver.parse ("../tests/hdl/simple.vhd"));
 
-    std::cout << "\n\nTraversing AST...\n";
+    std::cout << "\n\nTraversing AST ports...\n";
 
     v.setFilter(AstTraversalFilter::ShowPorts);
     t.traverse(*driver.AST, v);
+
+    std::cout << "End traversing AST ports...\n";
+
+
+    std::cout << "\nTraversing AST...\n";
+
     v.setFilter(AstTraversalFilter::ShowAll);
     t.traverse(*driver.AST, v);
 
-    std::cout << "\n\nEnd Traversing AST...\n";
+    std::cout << "End traversing AST...\n";
 
     ASSERT_FALSE(0);
 }
