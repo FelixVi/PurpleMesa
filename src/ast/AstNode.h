@@ -6,7 +6,6 @@
 #include <vector>
 #include <iostream>
 #include <map>
-#include "AstNodeBase.h"
 #include "AstVisitor.h"
 
 extern int yylineno;
@@ -25,19 +24,40 @@ enum class AstNodeType
     TOP
 };
 
-class AstNode : public AstNodeBase<AstNode>
+class AstNode
 {
 public:
     virtual ~AstNode() = default;
 
-    //creation of new node
-    AstNode(AstNodeType nt, std::shared_ptr<AstNode> parent)
-            : AstNodeBase<AstNode>(nt, parent), lineno(yylineno), filename(::filename)
-    {}
+    //creation of nodes
+    AstNode(AstNodeType NodeType, const std::shared_ptr<AstNode> &parent)
+        : Nodetype(NodeType), parent(parent), lineno(yylineno), filename(::filename) {}
 
-    std::string getString() const override {return "";}
+    virtual std::string getString() const = 0;
 
-    virtual void accept(const AstVisitor &visitor) override{}
+    friend std::ostream& operator<<(std::ostream& os, const std::shared_ptr<AstNode> &node) {
+        return os << node->getString();
+    }
+
+    virtual void accept(const AstVisitor &visitor) = 0;
+
+    constexpr AstNodeType type() const {return Nodetype;}
+
+    void addChild(std::shared_ptr<AstNode> child) {
+        children.push_back(child);
+    }
+
+    const std::vector<std::shared_ptr<AstNode>> &getChildren() const {
+        return children;
+    }
+
+    const bool hasChildren() const {
+        return !children.empty();
+    }
+
+    const std::shared_ptr<AstNode> &getParent() const {
+        return parent;
+    }
 
     int getLineno() const {
         return lineno;
@@ -48,6 +68,13 @@ public:
     }
 
 private:
+    const AstNodeType Nodetype;
+    //the parent node
+    std::shared_ptr<AstNode> parent;
+
+    //list of child nodes
+    std::vector<std::shared_ptr<AstNode>> children;
+
     int lineno;
     std::string filename;
 };

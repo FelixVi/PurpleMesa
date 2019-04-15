@@ -46,7 +46,7 @@ public:
     }
 
 private:
-    std::unique_ptr<TraversalFilter> traversalFilter;
+    std::unique_ptr<TraversalFilter> traversalFilter = std::make_unique<ShowAll>();
 };
 
 #endif //PURPLEMESA_ASTVISITOR_H

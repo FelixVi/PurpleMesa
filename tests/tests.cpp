@@ -26,6 +26,10 @@ TEST(VisitorTests, simple) {
 
     std::cout << "End traversing AST...\n";
 
+    std::cout << "\nCopy AST...\n";
+    //AstCopyVisitor cv;
+    //t.traverse(*driver.AST, cv);
+
     ASSERT_FALSE(0);
 }
 

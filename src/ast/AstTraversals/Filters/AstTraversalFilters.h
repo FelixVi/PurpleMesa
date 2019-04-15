@@ -1,6 +1,8 @@
 #ifndef PURPLEMESA_ASTTRAVERSALFILTER_H
 #define PURPLEMESA_ASTTRAVERSALFILTER_H
 
+#include <AstNode.h>
+
 class AstNode;
 
 enum class AstTraversalFilter
