@@ -13,7 +13,6 @@ extern std::string filename;
 
 enum class AstNodeType
 {
-    NONE,
     ARCHITECTURE,
     ASSIGN,
     ENTITY,
@@ -77,11 +76,6 @@ private:
 
     int lineno;
     std::string filename;
-};
-
-struct AstNodeFactory
-{
-    virtual std::shared_ptr<AstNode> make(AstNodeType NodeType, std::shared_ptr<AstNode> parent) const = 0;
 };
 
 #endif //PURPLEMESA_ASTNODE_H

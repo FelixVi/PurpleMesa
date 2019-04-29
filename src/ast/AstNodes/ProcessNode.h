@@ -27,12 +27,4 @@ struct ProcessNode : AstNode
     std::vector<std::string> sensitivitylist;
 };
 
-struct ProcessFactory : AstNodeFactory
-{
-    std::shared_ptr<AstNode> make(AstNodeType NodeType, std::shared_ptr<AstNode> parent) const override
-    {
-        return std::make_shared<ProcessNode>(NodeType, parent);
-    }
-};
-
 #endif //PURPLEMESA_PROCESSNODE_H

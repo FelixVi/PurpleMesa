@@ -17,11 +17,4 @@ struct IdentifierNode : AstNode
     }
 };
 
-struct IdentifierFactory : AstNodeFactory
-{
-    std::shared_ptr<AstNode> make(AstNodeType NodeType, std::shared_ptr<AstNode> parent) const override {
-        return std::make_shared<IdentifierNode>(NodeType, parent);
-    }
-};
-
 #endif //PURPLEMESA_IDENTIFIERNODE_H

@@ -17,12 +17,4 @@ struct EntityNode : AstNode
     }
 };
 
-struct EntityFactory : AstNodeFactory
-{
-    std::shared_ptr<AstNode> make(AstNodeType NodeType, std::shared_ptr<AstNode> parent) const override
-    {
-        return std::make_shared<EntityNode>(NodeType, parent);
-    }
-};
-
 #endif //PURPLEMESA_ENTITYNODE_H

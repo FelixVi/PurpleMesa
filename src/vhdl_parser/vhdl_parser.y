@@ -23,7 +23,6 @@
 %code
 {
     #include "vhdl_parser_driver.h"
-    NodeFactory nf = NodeFactory();
     std::shared_ptr<AstNode> current_node;
     extern int yylineno;
 }
@@ -58,7 +57,7 @@
 %%
 %start unit;
 unit: {
-    current_node = nf.make_node(AstNodeType::TOP, nullptr);
+    current_node = NodeFactory::make_node(AstNodeType::TOP, nullptr);
 } assignments {
     assert(("Current Node at end of parse is not TOP", current_node->type() == AstNodeType::TOP));
     driver.AST = std::static_pointer_cast<TopNode>(current_node);
@@ -89,7 +88,7 @@ direction:
 
 portassigns:
 "identifier" ":" direction "std_logic" {
-    auto node = nf.make_node(AstNodeType::PORT, current_node);
+    auto node = NodeFactory::make_node(AstNodeType::PORT, current_node);
     current_node->addChild(node);
     }
 endportassigns
@@ -100,13 +99,13 @@ endportassigns:
 
 logicexpr:
 "identifier" {
-    auto rhs = nf.make_node(AstNodeType::IDENTIFIER, current_node);
+    auto rhs = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
     current_node->addChild(rhs);
 }
 | "identifier" "and" "identifier" {
-    auto rhs = nf.make_node(AstNodeType::LOGICAL_AND, current_node);
-    auto c1 = nf.make_node(AstNodeType::IDENTIFIER, rhs);
-    auto c2 = nf.make_node(AstNodeType::IDENTIFIER, rhs);
+    auto rhs = NodeFactory::make_node(AstNodeType::LOGICAL_AND, current_node);
+    auto c1 = NodeFactory::make_node(AstNodeType::IDENTIFIER, rhs);
+    auto c2 = NodeFactory::make_node(AstNodeType::IDENTIFIER, rhs);
     rhs->addChild(c1);
     rhs->addChild(c2);
     current_node->addChild(rhs);
@@ -116,8 +115,8 @@ processbody:
 %empty
 |"identifier" processbody
 | "identifier" "<=" {
-    auto node = nf.make_node(AstNodeType::ASSIGN, current_node);
-    auto lhs = nf.make_node(AstNodeType::IDENTIFIER,node);
+    auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
+    auto lhs = NodeFactory::make_node(AstNodeType::IDENTIFIER,node);
     node->addChild(lhs);
     current_node->addChild(node);
     current_node = node;
@@ -130,7 +129,7 @@ logicexpr ";" {
 
 process:
 "identifier" ":" "process" "(" {
-    auto node = nf.make_node(AstNodeType::PROCESS, current_node);
+    auto node = NodeFactory::make_node(AstNodeType::PROCESS, current_node);
     current_node->addChild(node);
     current_node = node;
 }
@@ -146,7 +145,7 @@ archbody:
 
 architecture:
 "architecture" "identifier" "of" "identifier" "is" "begin" {
-    auto node = nf.make_node(AstNodeType::ARCHITECTURE, current_node);
+    auto node = NodeFactory::make_node(AstNodeType::ARCHITECTURE, current_node);
     current_node->addChild(node);
     current_node = node;
 } archbody "end" "identifier" ";" {
@@ -155,7 +154,7 @@ architecture:
 
 entity:
 "entity" "identifier" "is" {
-    auto node = nf.make_node(AstNodeType::ENTITY, current_node);
+    auto node = NodeFactory::make_node(AstNodeType::ENTITY, current_node);
     current_node->addChild(node);
     current_node = node;
 }

@@ -17,12 +17,4 @@ struct LogicalAndNode : AstNode
     }
 };
 
-struct LogicalAndFactory : AstNodeFactory
-{
-    std::shared_ptr<AstNode> make(AstNodeType NodeType, std::shared_ptr<AstNode> parent) const override
-    {
-        return std::make_shared<LogicalAndNode>(NodeType, parent);
-    }
-};
-
 #endif //PURPLEMESA_LOGICALANDNODE_H
