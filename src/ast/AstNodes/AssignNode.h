@@ -6,6 +6,7 @@
 struct AssignNode : AstNode
 {
     AssignNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent) : AstNode(nt, parent) {}
+    AssignNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent, int lineno, const std::string &filename) : AstNode(nt, parent, lineno, filename) {}
 
     std::string getString() const override
     {

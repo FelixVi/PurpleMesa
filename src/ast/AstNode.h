@@ -32,6 +32,10 @@ public:
     AstNode(AstNodeType NodeType, const std::shared_ptr<AstNode> &parent)
         : Nodetype(NodeType), parent(parent), lineno(yylineno), filename(::filename) {}
 
+    //creation of nodes
+    AstNode(AstNodeType NodeType, const std::shared_ptr<AstNode> &parent, int lineno, const std::string &filename)
+            : Nodetype(NodeType), parent(parent), lineno(lineno), filename(filename) {}
+
     virtual std::string getString() const = 0;
 
     friend std::ostream& operator<<(std::ostream& os, const std::shared_ptr<AstNode> &node) {
@@ -67,11 +71,8 @@ public:
     }
 
 private:
-    const AstNodeType Nodetype;
-    //the parent node
+    AstNodeType Nodetype;
     std::shared_ptr<AstNode> parent;
-
-    //list of child nodes
     std::vector<std::shared_ptr<AstNode>> children;
 
     int lineno;

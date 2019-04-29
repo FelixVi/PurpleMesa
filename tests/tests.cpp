@@ -27,8 +27,11 @@ TEST(VisitorTests, simple) {
     std::cout << "End traversing AST...\n";
 
     std::cout << "\nCopy AST...\n";
-    //AstCopyVisitor cv;
-    //t.traverse(*driver.AST, cv);
+    auto newAst = NodeFactory::copy_node(*driver.AST);
+    newAst->addChild(NodeFactory::make_node(AstNodeType::PORT, newAst));
+    t.traverse(*newAst, v);
+
+    t.traverse(*driver.AST, v);
 
     ASSERT_FALSE(0);
 }
