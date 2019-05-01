@@ -5,7 +5,7 @@
 
 class ArchitectureNode;
 class AssignNode;
-class EntityNode;
+class EntityDeclarationNode;
 class IdentifierNode;
 class LogicalAndNode;
 class PortNode;
@@ -17,7 +17,7 @@ class AstVisitor
 public:
     virtual void visit(ArchitectureNode& node) const = 0;
     virtual void visit(AssignNode& node) const = 0;
-    virtual void visit(EntityNode& node) const = 0;
+    virtual void visit(EntityDeclarationNode& node) const = 0;
     virtual void visit(IdentifierNode& node) const = 0;
     virtual void visit(LogicalAndNode& node) const = 0;
     virtual void visit(PortNode& node) const = 0;

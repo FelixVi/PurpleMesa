@@ -15,7 +15,7 @@ enum class AstNodeType
 {
     ARCHITECTURE,
     ASSIGN,
-    ENTITY,
+    ENTITYDECLARATION,
     IDENTIFIER,
     LOGICAL_AND,
     PORT,

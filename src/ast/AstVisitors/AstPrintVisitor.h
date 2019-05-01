@@ -14,7 +14,7 @@ public:
         std::cout << indent << node.getString() << std::endl;
     }
 
-    void visit(EntityNode &node) const override {
+    void visit(EntityDeclarationNode &node) const override {
         std::cout << indent << node.getString() << std::endl;
     }
 

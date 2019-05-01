@@ -6,7 +6,7 @@
 #include "IdentifierNode.h"
 #include "ProcessNode.h"
 #include "PortNode.h"
-#include "EntityNode.h"
+#include "EntityDeclarationNode.h"
 #include "AssignNode.h"
 #include "ArchitectureNode.h"
 #include "LogicalAndNode.h"
@@ -24,8 +24,8 @@ public:
                 return std::make_shared<LogicalAndNode>(AstNodeType::LOGICAL_AND, parent);
             case AstNodeType::TOP:
                 return std::make_shared<TopNode>(AstNodeType::TOP, parent);
-            case AstNodeType::ENTITY:
-                return std::make_shared<EntityNode>(AstNodeType::ENTITY, parent);
+            case AstNodeType::ENTITYDECLARATION:
+                return std::make_shared<EntityDeclarationNode>(AstNodeType::ENTITYDECLARATION, parent);
             case AstNodeType::PORT:
                 return std::make_shared<PortNode>(AstNodeType::PORT, parent);
             case AstNodeType::ARCHITECTURE:
@@ -36,6 +36,28 @@ public:
                 return std::make_shared<IdentifierNode>(AstNodeType::IDENTIFIER, parent);
         }
         throw "Invalid node type.";
+    }
+
+    static std::shared_ptr<AstNode> make_node(const AstNodeType &type, std::shared_ptr<AstNode> parent, std::string arg) {
+        switch (type) {
+//            case AstNodeType::ASSIGN:
+//                return std::make_shared<AssignNode>(AstNodeType::ASSIGN, parent);
+//            case AstNodeType::LOGICAL_AND:
+//                return std::make_shared<LogicalAndNode>(AstNodeType::LOGICAL_AND, parent);
+//            case AstNodeType::TOP:
+//                return std::make_shared<TopNode>(AstNodeType::TOP, parent);
+//            case AstNodeType::ENTITYDECLARATION:
+//                return std::make_shared<EntityDeclarationNode>(AstNodeType::ENTITYDECLARATION, parent);
+//            case AstNodeType::PORT:
+//                return std::make_shared<PortNode>(AstNodeType::PORT, parent);
+//            case AstNodeType::ARCHITECTURE:
+//                return std::make_shared<ArchitectureNode>(AstNodeType::ARCHITECTURE, parent);
+//            case AstNodeType::PROCESS:
+//                return std::make_shared<ProcessNode>(AstNodeType::PROCESS, parent);
+            case AstNodeType::IDENTIFIER:
+                return std::make_shared<IdentifierNode>(AstNodeType::IDENTIFIER, parent, arg);
+        }
+        throw "Make node with single string argument not supported for this type.";
     }
 
     static std::shared_ptr<AstNode> copy_node(const AstNode &src) {
@@ -51,8 +73,8 @@ public:
             case AstNodeType::TOP:
                 thisNode = std::make_shared<TopNode>(AstNodeType::TOP, src.getParent(), src.getLineno(), src.getFilename());
                 break;
-            case AstNodeType::ENTITY:
-                thisNode = std::make_shared<EntityNode>(AstNodeType::ENTITY, src.getParent(), src.getLineno(), src.getFilename());
+            case AstNodeType::ENTITYDECLARATION:
+                thisNode = std::make_shared<EntityDeclarationNode>(AstNodeType::ENTITYDECLARATION, src.getParent(), src.getLineno(), src.getFilename());
                 break;
             case AstNodeType::PORT:
                 thisNode = std::make_shared<PortNode>(AstNodeType::PORT, src.getParent(), src.getLineno(), src.getFilename());
