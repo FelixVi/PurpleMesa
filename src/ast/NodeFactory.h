@@ -2,6 +2,7 @@
 #define PURPLEMESA_NODEFACTORY_H
 
 #include "AstNode.h"
+
 #include "TopNode.h"
 #include "IdentifierNode.h"
 #include "ProcessNode.h"
@@ -10,6 +11,8 @@
 #include "AssignNode.h"
 #include "ArchitectureNode.h"
 #include "LogicalAndNode.h"
+#include "SensitivityListNode.h"
+
 #include <functional>
 #include <memory>
 
@@ -34,30 +37,18 @@ public:
                 return std::make_shared<ProcessNode>(AstNodeType::PROCESS, parent);
             case AstNodeType::IDENTIFIER:
                 return std::make_shared<IdentifierNode>(AstNodeType::IDENTIFIER, parent);
+            case AstNodeType::SENSITIVITYLIST:
+                return std::make_shared<SensitivityListNode>(AstNodeType::SENSITIVITYLIST, parent);
         }
         throw "Invalid node type.";
     }
 
     static std::shared_ptr<AstNode> make_node(const AstNodeType &type, std::shared_ptr<AstNode> parent, std::string arg) {
         switch (type) {
-//            case AstNodeType::ASSIGN:
-//                return std::make_shared<AssignNode>(AstNodeType::ASSIGN, parent);
-//            case AstNodeType::LOGICAL_AND:
-//                return std::make_shared<LogicalAndNode>(AstNodeType::LOGICAL_AND, parent);
-//            case AstNodeType::TOP:
-//                return std::make_shared<TopNode>(AstNodeType::TOP, parent);
-//            case AstNodeType::ENTITYDECLARATION:
-//                return std::make_shared<EntityDeclarationNode>(AstNodeType::ENTITYDECLARATION, parent);
-//            case AstNodeType::PORT:
-//                return std::make_shared<PortNode>(AstNodeType::PORT, parent);
-//            case AstNodeType::ARCHITECTURE:
-//                return std::make_shared<ArchitectureNode>(AstNodeType::ARCHITECTURE, parent);
-//            case AstNodeType::PROCESS:
-//                return std::make_shared<ProcessNode>(AstNodeType::PROCESS, parent);
             case AstNodeType::IDENTIFIER:
                 return std::make_shared<IdentifierNode>(AstNodeType::IDENTIFIER, parent, arg);
         }
-        throw "Make node with single string argument not supported for this type.";
+        throw "Make node with single string argument not implemented for this type.";
     }
 
     static std::shared_ptr<AstNode> copy_node(const AstNode &src) {
@@ -87,6 +78,9 @@ public:
                 break;
             case AstNodeType::IDENTIFIER:
                 thisNode = std::make_shared<IdentifierNode>(AstNodeType::IDENTIFIER, src.getParent(), src.getLineno(), src.getFilename());
+                break;
+            case AstNodeType::SENSITIVITYLIST:
+                thisNode = std::make_shared<SensitivityListNode>(AstNodeType::SENSITIVITYLIST, src.getParent(), src.getLineno(), src.getFilename());
                 break;
             default:
                 throw "Invalid node type.";

@@ -38,6 +38,10 @@ public:
         std::cout << indent << node.getString() << std::endl;
     }
 
+    void visit(SensitivityListNode & node) const override {
+        std::cout << indent << node.getString() << std::endl;
+    }
+
     void increaseLevel() override {
         indent += "  ";
     }

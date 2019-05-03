@@ -103,17 +103,18 @@ entity_header:
 %empty
 | formal_port_clause
 
-sensitivitylist:
+optional_sensitivitylist:
 %empty
-| "identifier" {
-    auto pn = std::dynamic_pointer_cast<ProcessNode>(current_node);
-    pn->sensitivitylist.push_back($1);
-}
-endsensitivitylist
-
-endsensitivitylist:
-%empty
-| "," sensitivitylist
+| "identifier" "," optional_sensitivitylist
+  {
+    auto signal = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node, $1);
+    current_node->addChild(signal);
+  }
+| "identifier"
+  {
+    auto signal = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node, $1);
+    current_node->addChild(signal);
+  }
 
 formal_port_clause:
 "port" "(" port_list ")" ";"
@@ -147,46 +148,71 @@ logicexpr:
     current_node->addChild(rhs);
 }
 
-processbody:
+process_statement_part:
 %empty
-|"identifier" processbody
-| "identifier" "<=" {
+|"identifier" process_statement_part
+| "identifier" "<="
+  {
     auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
     auto lhs = NodeFactory::make_node(AstNodeType::IDENTIFIER,node);
     node->addChild(lhs);
     current_node->addChild(node);
     current_node = node;
-}
-logicexpr ";" {
+  }
+logicexpr ";"
+  {
     current_node = current_node->getParent();
-}
-    processbody
+  }
+process_statement_part
 
 
-process:
-"identifier" ":" "process" "(" {
+process_statement:
+optional_process_label "process" "("
+  {
     auto node = NodeFactory::make_node(AstNodeType::PROCESS, current_node);
     current_node->addChild(node);
     current_node = node;
-}
-sensitivitylist ")" "begin" processbody "end" "process" "identifier" ";" {
-    current_node = current_node->getParent();
-};
 
-archbody:
+    auto snode = NodeFactory::make_node(AstNodeType::SENSITIVITYLIST, current_node);
+    current_node->addChild(snode);
+    current_node = snode;
+  }
+optional_sensitivitylist ")"
+  {
+    current_node = current_node->getParent();
+  }
+optional_is
+process_declarative_part
+"begin"
+process_statement_part
+"end" "process" "identifier" ";"
+  {
+    current_node = current_node->getParent();
+  };
+
+optional_is:
 %empty
-| "identifier" archbody
-| "identifier" "assign" "identifier" archbody
-| process
+| "is"
+
+optional_process_label:
+%empty
+| "identifier" ":"
+
+process_declarative_part:
+%empty
 
 architecture_body:
-"architecture" "identifier" "of" "identifier" "is" "begin"
+"architecture" "identifier" "of" "identifier" "is"
   {
     auto node = NodeFactory::make_node(AstNodeType::ARCHITECTURE, current_node);
     current_node->addChild(node);
     current_node = node;
   }
-archbody architecture_body_end
+architecture_declarative_part
+"begin"
+architecture_statement_part
+
+architecture_body_end
   {
     current_node = current_node->getParent();
   }
@@ -196,6 +222,16 @@ architecture_body_end:
 | "end" "architecture" ";"
 | "end" "architecture" "identifier" ";"
 | "end" "identifier" ";"
+
+architecture_declarative_part:
+%empty
+
+architecture_statement_part:
+%empty
+| concurrent_statement architecture_statement_part
+
+concurrent_statement:
+process_statement
 
 %%
 void

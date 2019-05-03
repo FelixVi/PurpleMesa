@@ -39,6 +39,10 @@ public:
         std::cout << indent << node.getString() << " at " << node.getLineno() << " (" << node.getFilename() << ")" << std::endl;
     }
 
+    void visit(SensitivityListNode &node) const override {
+        std::cout << indent << node.getString() << " at " << node.getLineno() << " (" << node.getFilename() << ")" << std::endl;
+    }
+
     void increaseLevel() override {
         indent += "  ";
     }

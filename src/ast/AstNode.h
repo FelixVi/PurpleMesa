@@ -20,6 +20,7 @@ enum class AstNodeType
     LOGICAL_AND,
     PORT,
     PROCESS,
+    SENSITIVITYLIST,
     TOP
 };
 

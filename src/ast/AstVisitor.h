@@ -11,6 +11,7 @@ class LogicalAndNode;
 class PortNode;
 class ProcessNode;
 class TopNode;
+class SensitivityListNode;
 
 class AstVisitor
 {
@@ -23,6 +24,7 @@ public:
     virtual void visit(PortNode& node) const = 0;
     virtual void visit(ProcessNode& node) const = 0;
     virtual void visit(TopNode& node) const = 0;
+    virtual void visit(SensitivityListNode& node) const = 0;
 
     virtual void increaseLevel() = 0;
     virtual void decreaseLevel() = 0;
