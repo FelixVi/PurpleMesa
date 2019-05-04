@@ -18,7 +18,7 @@ public:
         std::cout << indent << node.getString() << std::endl;
     }
 
-    void visit(IdentifierNode &node) const override {
+    void visit(SignalNode &node) const override {
         std::cout << indent << node.getString() << std::endl;
     }
 

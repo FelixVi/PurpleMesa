@@ -16,11 +16,11 @@ enum class AstNodeType
     ARCHITECTURE,
     ASSIGN,
     ENTITYDECLARATION,
-    IDENTIFIER,
     LOGICAL_AND,
     PORT,
     PROCESS,
     SENSITIVITYLIST,
+    SIGNAL,
     TOP
 };
 
@@ -31,11 +31,11 @@ public:
 
     //creation of nodes
     AstNode(AstNodeType NodeType, const std::shared_ptr<AstNode> &parent)
-        : Nodetype(NodeType), parent(parent), lineno(yylineno), filename(::filename) {}
+        : Nodetype(NodeType), parent(parent), lineno(yylineno), sourcepath(::filename) {}
 
     //creation of nodes
-    AstNode(AstNodeType NodeType, const std::shared_ptr<AstNode> &parent, int lineno, const std::string &filename)
-            : Nodetype(NodeType), parent(parent), lineno(lineno), filename(filename) {}
+    AstNode(AstNodeType NodeType, const std::shared_ptr<AstNode> &parent, int lineno, const std::string &sourcepath)
+            : Nodetype(NodeType), parent(parent), lineno(lineno), sourcepath(sourcepath) {}
 
     virtual std::string getString() const = 0;
 
@@ -63,21 +63,51 @@ public:
         return parent;
     }
 
+    //get and set node properties
+    const std::string &getProperty(const std::string name) {
+        auto it = properties.find(name);
+        if(it != properties.end())
+            return it->second;
+        else
+            throw std::invalid_argument("Property " + name + " not set in " + this->getString() + ".");
+    }
+
+    virtual void setProperty(const std::string name, const std::string property) = 0;
+
     int getLineno() const {
         return lineno;
     }
 
-    const std::string &getFilename() const {
-        return filename;
+    const std::string getFilename() const {
+        std::string name = "";
+        size_t i = sourcepath.rfind('/', sourcepath.length());
+        if (i != std::string::npos) {
+            name = sourcepath.substr(i+1, sourcepath.length() - i);
+        }
+        return name;
     }
 
+    const std::map<std::string, std::string> &getProperties() const {
+        return properties;
+    }
+
+    void setProperties(const std::map<std::string, std::string> &properties) {
+        AstNode::properties = properties;
+    }
+
+    const std::string &getSourcepath() const {
+        return sourcepath;
+    }
+
+protected:
+    std::map<std::string, std::string> properties;
 private:
     AstNodeType Nodetype;
     std::shared_ptr<AstNode> parent;
     std::vector<std::shared_ptr<AstNode>> children;
 
     int lineno;
-    std::string filename;
+    std::string sourcepath;
 };
 
 #endif //PURPLEMESA_ASTNODE_H

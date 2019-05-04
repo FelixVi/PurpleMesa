@@ -10,22 +10,16 @@ struct ProcessNode : AstNode
 
     std::string getString() const override
     {
-        std::string myID = "PROCESS(";
-
-        for(auto const& ID : sensitivitylist){
-            myID += " " + ID;
-        }
-
-        myID += " )";
-
-        return myID;
+        return "PROCESS";
     }
 
     void accept(const AstVisitor &visitor) override {
         if(visitor.getTraversalFilter()->passes(*this))visitor.visit(*this);
     }
 
-    std::vector<std::string> sensitivitylist;
+    void setProperty(const std::string name, const std::string property) override {
+        throw std::invalid_argument("Property does not exist in " + this->getString() + ".");
+    }
 };
 
 #endif //PURPLEMESA_PROCESSNODE_H

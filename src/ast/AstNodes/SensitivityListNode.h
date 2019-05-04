@@ -18,6 +18,10 @@ struct SensitivityListNode : AstNode
     void accept(const AstVisitor &visitor) override {
         if(visitor.getTraversalFilter()->passes(*this))visitor.visit(*this);
     }
+
+    void setProperty(const std::string name, const std::string property) override {
+        throw std::invalid_argument("Property does not exist in " + this->getString() + ".");
+    }
 };
 
 #endif //PURPLEMESA_SENSITIVITYLISTNODE_H

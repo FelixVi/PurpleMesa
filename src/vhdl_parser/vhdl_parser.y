@@ -82,8 +82,7 @@ entity_declaration:
 "entity" "identifier" "is"
   {
     auto node = NodeFactory::make_node(AstNodeType::ENTITYDECLARATION, current_node);
-    auto id   = NodeFactory::make_node(AstNodeType::IDENTIFIER, node, $2);
-    node->addChild(id);
+    node->setProperty("identifier", $2);
     current_node->addChild(node);
     current_node = node;
   }
@@ -107,27 +106,47 @@ optional_sensitivitylist:
 %empty
 | "identifier" "," optional_sensitivitylist
   {
-    auto signal = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node, $1);
+    auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+    signal->setProperty("identifier", $1);
     current_node->addChild(signal);
   }
 | "identifier"
   {
-    auto signal = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node, $1);
+    auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+signal->setProperty("identifier", $1);
     current_node->addChild(signal);
   }
 
 formal_port_clause:
 "port" "(" port_list ")" ";"
 
-direction:
+interface_mode:
 "in"
+  {
+    current_node->setProperty("direction", "in");
+  }
 | "out"
+  {
+    current_node->setProperty("direction", "out");
+  }
+
+subtype_indication:
+"std_logic"
+  {
+    current_node->setProperty("subtype", "std_logic");
+  }
 
 port_list:
-"identifier" ":" direction "std_logic" {
+"identifier" ":" {
     auto node = NodeFactory::make_node(AstNodeType::PORT, current_node);
+    node->setProperty("identifier", $1);
     current_node->addChild(node);
+    current_node = node;
     }
+interface_mode subtype_indication
+  {
+    current_node = current_node->getParent();
+  }
 endportassigns
 
 endportassigns:
@@ -136,13 +155,16 @@ endportassigns:
 
 logicexpr:
 "identifier" {
-    auto rhs = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
+    auto rhs = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+    rhs->setProperty("identifier", $1);
     current_node->addChild(rhs);
 }
 | "identifier" "and" "identifier" {
     auto rhs = NodeFactory::make_node(AstNodeType::LOGICAL_AND, current_node);
-    auto c1 = NodeFactory::make_node(AstNodeType::IDENTIFIER, rhs);
-    auto c2 = NodeFactory::make_node(AstNodeType::IDENTIFIER, rhs);
+    auto c1 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
+    c1->setProperty("identifier", $1);
+    auto c2 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
+    c2->setProperty("identifier", $3);
     rhs->addChild(c1);
     rhs->addChild(c2);
     current_node->addChild(rhs);
@@ -154,7 +176,8 @@ process_statement_part:
 | "identifier" "<="
   {
     auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
-    auto lhs = NodeFactory::make_node(AstNodeType::IDENTIFIER,node);
+    auto lhs = NodeFactory::make_node(AstNodeType::SIGNAL,node);
+    lhs->setProperty("identifier", $1);
     node->addChild(lhs);
     current_node->addChild(node);
     current_node = node;

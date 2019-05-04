@@ -28,7 +28,9 @@ TEST(VisitorTests, simple) {
 
     std::cout << "\nCopy AST...\n";
     auto newAst = NodeFactory::copy_node(*driver.AST);
-    newAst->addChild(NodeFactory::make_node(AstNodeType::PORT, newAst));
+    auto addNode = NodeFactory::make_node(AstNodeType::PORT, newAst);
+    addNode->setProperty("identifier", "injected Node");
+    newAst->addChild(addNode);
     t.traverse(*newAst, v);
 
     t.traverse(*driver.AST, v);
@@ -51,7 +53,8 @@ TEST(ASTTests, simple) {
     auto nf = NodeFactory();
     auto top = nf.make_node(AstNodeType::TOP, nullptr);
     auto child1 = nf.make_node(AstNodeType::ENTITYDECLARATION, top);
-    auto child2 = nf.make_node(AstNodeType::IDENTIFIER, top);
+    auto child2 = nf.make_node(AstNodeType::SIGNAL, top);
+    child2->setProperty("identifier", "testsignal");
 
     top->addChild(child1);
     top->addChild(child2);

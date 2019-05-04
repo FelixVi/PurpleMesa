@@ -16,11 +16,7 @@ public:
     }
 
     void visit(EntityDeclarationNode &node) const override {
-        std::cout << indent << node.getString() << " at " << node.getLineno() << " (" << node.getFilename() << ")" << std::endl;
-    }
-
-    void visit(IdentifierNode &node) const override {
-        std::cout << indent << node.getString() << " at " << node.getLineno() << " (" << node.getFilename() << ")" << std::endl;
+        std::cout << indent << node.getString() << " " << node.getProperty("identifier") << " at " << node.getLineno() << " (" << node.getFilename() << ")" << std::endl;
     }
 
     void visit(LogicalAndNode &node) const override {
@@ -28,7 +24,7 @@ public:
     }
 
     void visit(PortNode &node) const override {
-        std::cout << indent << node.getString() << " at " << node.getLineno() << " (" << node.getFilename() << ")" << std::endl;
+        std::cout << indent << node.getString() << " " << node.getProperty("identifier") << " at " << node.getLineno() << " (" << node.getFilename() << ")" << std::endl;
     }
 
     void visit(ProcessNode &node) const override {
@@ -41,6 +37,10 @@ public:
 
     void visit(SensitivityListNode &node) const override {
         std::cout << indent << node.getString() << " at " << node.getLineno() << " (" << node.getFilename() << ")" << std::endl;
+    }
+
+    void visit(SignalNode &node) const override {
+        std::cout << indent << node.getString() << " " << node.getProperty("identifier") << " at " << node.getLineno() << " (" << node.getFilename() << ")" << std::endl;
     }
 
     void increaseLevel() override {
