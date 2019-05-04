@@ -1,12 +1,11 @@
 #include <vhdl_parser_driver.h>
 #include "gtest/gtest.h"
 #include "AstVisitors/AstPrintVisitor.h"
-#include "AstVisitors/AstAnnotatedPrintVisitor.h"
 #include "AstTraversals/PreOrder.h"
 
 TEST(VisitorTests, simple) {
     PreOrderTraversal t;
-    AstAnnotatedPrintVisitor v;
+    AstPrintVisitor v;
     vhdl_driver driver;
 
     ASSERT_FALSE(driver.parse ("../tests/hdl/simple.vhd"));
@@ -53,6 +52,7 @@ TEST(ASTTests, simple) {
     auto nf = NodeFactory();
     auto top = nf.make_node(AstNodeType::TOP, nullptr);
     auto child1 = nf.make_node(AstNodeType::ENTITYDECLARATION, top);
+    child1->setProperty("identifier", "testentity");
     auto child2 = nf.make_node(AstNodeType::SIGNAL, top);
     child2->setProperty("identifier", "testsignal");
 
