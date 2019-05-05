@@ -7,14 +7,29 @@ class PreOrderTraversal : public AstTraversal
 {
 public:
     void traverse(AstNode &node, AstVisitor &visitor) override {
-        node.accept(visitor);
+        if(visitor.isDoublePass())
+        {
+            node.accept(visitor, AstVisitType::TRANSLATE_PRE);
 
-        if(node.hasChildren()){
-            visitor.increaseLevel();
-            for(auto const& child : node.getChildren()){
-                traverse(*child, visitor);
+            if(node.hasChildren()){
+                for(auto const& child : node.getChildren()){
+                    traverse(*child, visitor);
+                }
             }
-            visitor.decreaseLevel();
+
+            node.accept(visitor, AstVisitType::TRANSLATE_POST);
+        }
+        else
+        {
+            node.accept(visitor, AstVisitType::SINGLE);
+
+            if(node.hasChildren()){
+                visitor.increaseLevel();
+                for(auto const& child : node.getChildren()){
+                    traverse(*child, visitor);
+                }
+                visitor.decreaseLevel();
+            }
         }
     }
 };

@@ -1,6 +1,7 @@
 #include <vhdl_parser_driver.h>
 #include "gtest/gtest.h"
 #include "AstVisitors/AstPrintVisitor.h"
+#include "AstVisitors/RTILVisitor.h"
 #include "AstTraversals/PreOrder.h"
 
 TEST(VisitorTests, simple) {
@@ -27,12 +28,9 @@ TEST(VisitorTests, simple) {
 
     std::cout << "\nCopy AST...\n";
     auto newAst = NodeFactory::copy_node(*driver.AST);
-    auto addNode = NodeFactory::make_node(AstNodeType::PORT, newAst);
-    addNode->setProperty("identifier", "injected Node");
-    newAst->addChild(addNode);
-    t.traverse(*newAst, v);
 
-    t.traverse(*driver.AST, v);
+    RTILVisitor translator;
+    t.traverse(*newAst, translator);
 
     ASSERT_FALSE(0);
 }

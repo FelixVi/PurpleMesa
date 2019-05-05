@@ -43,7 +43,7 @@ public:
         return os << node->getString();
     }
 
-    virtual void accept(const AstVisitor &visitor) = 0;
+    virtual void accept(AstVisitor &visitor, const AstVisitType &type) = 0;
 
     constexpr AstNodeType type() const {return Nodetype;}
 

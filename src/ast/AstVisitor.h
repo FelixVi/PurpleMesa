@@ -13,21 +13,30 @@ class ProcessNode;
 class TopNode;
 class SensitivityListNode;
 
+enum class AstVisitType
+{
+    SINGLE,
+    TRANSLATE_PRE,
+    TRANSLATE_POST
+};
+
 class AstVisitor
 {
 public:
-    virtual void visit(ArchitectureNode& node) const = 0;
-    virtual void visit(AssignNode& node) const = 0;
-    virtual void visit(EntityDeclarationNode& node) const = 0;
-    virtual void visit(SignalNode& node) const = 0;
-    virtual void visit(LogicalAndNode& node) const = 0;
-    virtual void visit(PortNode& node) const = 0;
-    virtual void visit(ProcessNode& node) const = 0;
-    virtual void visit(TopNode& node) const = 0;
-    virtual void visit(SensitivityListNode& node) const = 0;
+    virtual void visit(ArchitectureNode& node, const AstVisitType& type) = 0;
+    virtual void visit(AssignNode& node, const AstVisitType& type) = 0;
+    virtual void visit(EntityDeclarationNode& node, const AstVisitType& type) = 0;
+    virtual void visit(SignalNode& node, const AstVisitType& type) = 0;
+    virtual void visit(LogicalAndNode& node, const AstVisitType& type) = 0;
+    virtual void visit(PortNode& node, const AstVisitType& type) = 0;
+    virtual void visit(ProcessNode& node, const AstVisitType& type) = 0;
+    virtual void visit(TopNode& node, const AstVisitType& type) = 0;
+    virtual void visit(SensitivityListNode& node, const AstVisitType& type) = 0;
 
     virtual void increaseLevel() = 0;
     virtual void decreaseLevel() = 0;
+
+    virtual bool isDoublePass(){return false;}
 
     void setFilter(const AstTraversalFilter filter)
     {

@@ -13,8 +13,8 @@ struct PortNode : AstNode
         return "PORT";
     }
 
-    void accept(const AstVisitor &visitor) override {
-        if(visitor.getTraversalFilter()->passes(*this))visitor.visit(*this);
+    void accept(AstVisitor &visitor, const AstVisitType &type) override {
+        if(visitor.getTraversalFilter()->passes(*this))visitor.visit(*this, type);
     }
 
     void setProperty(const std::string name, const std::string property) override {

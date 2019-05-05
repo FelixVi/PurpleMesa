@@ -6,29 +6,24 @@
 class AstPrintVisitor : public AstVisitor
 {
 public:
-    void visit(AssignNode &node) const override {
+    void visit(AssignNode &node, const AstVisitType &type) override {
+        checkPasses(type);
         std::cout << indent << node.getString();
         if(!hideLocation)
             std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
         std::cout << std::endl;
     }
 
-    void visit(ArchitectureNode &node) const override {
+    void visit(ArchitectureNode &node, const AstVisitType &type) override {
+        checkPasses(type);
         std::cout << indent << node.getString();
-        if(!hideLocation)
+        if (!hideLocation)
             std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
         std::cout << std::endl;
     }
 
-    void visit(EntityDeclarationNode &node) const override {
-        std::cout << indent << node.getString();
-        std::cout << " " << node.getProperty("identifier");
-        if(!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
-    }
-
-    void visit(SignalNode &node) const override {
+    void visit(EntityDeclarationNode &node, const AstVisitType &type) override {
+        checkPasses(type);
         std::cout << indent << node.getString();
         std::cout << " " << node.getProperty("identifier");
         if(!hideLocation)
@@ -36,14 +31,8 @@ public:
         std::cout << std::endl;
     }
 
-    void visit(LogicalAndNode &node) const override {
-        std::cout << indent << node.getString();
-        if(!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
-    }
-
-    void visit(PortNode &node) const override {
+    void visit(SignalNode &node, const AstVisitType &type) override {
+        checkPasses(type);
         std::cout << indent << node.getString();
         std::cout << " " << node.getProperty("identifier");
         if(!hideLocation)
@@ -51,21 +40,41 @@ public:
         std::cout << std::endl;
     }
 
-    void visit(ProcessNode &node) const override {
+    void visit(LogicalAndNode &node, const AstVisitType &type) override {
+        checkPasses(type);
         std::cout << indent << node.getString();
         if(!hideLocation)
             std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
         std::cout << std::endl;
     }
 
-    void visit(TopNode &node) const override {
+    void visit(PortNode &node, const AstVisitType &type) override {
+        checkPasses(type);
+        std::cout << indent << node.getString();
+        std::cout << " " << node.getProperty("identifier");
+        if(!hideLocation)
+            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+        std::cout << std::endl;
+    }
+
+    void visit(ProcessNode &node, const AstVisitType &type) override {
+        checkPasses(type);
         std::cout << indent << node.getString();
         if(!hideLocation)
             std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
         std::cout << std::endl;
     }
 
-    void visit(SensitivityListNode & node) const override {
+    void visit(TopNode &node, const AstVisitType &type) override {
+        checkPasses(type);
+        std::cout << indent << node.getString();
+        if(!hideLocation)
+            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+        std::cout << std::endl;
+    }
+
+    void visit(SensitivityListNode & node, const AstVisitType &type) override {
+        checkPasses(type);
         std::cout << indent << node.getString();
         if(!hideLocation)
             std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
@@ -86,6 +95,10 @@ public:
 private:
     std::string indent;
     bool hideLocation;
+    void checkPasses(const AstVisitType& type) const{
+        if(!(type==AstVisitType::SINGLE))
+            throw std::invalid_argument("AstPrintVisitor requires single visit.");
+    };
 };
 
 #endif //PURPLEMESA_ASTPRINTVISITOR_H
