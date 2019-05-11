@@ -135,6 +135,11 @@ subtype_indication:
   {
     current_node->setProperty("subtype", "std_logic");
   }
+| "std_logic_vector"
+  {
+    // TODO
+    // Parse range for vector
+  }
 
 port_list:
 "identifier" ":" {
@@ -160,7 +165,8 @@ logicexpr:
     current_node->addChild(rhs);
 }
 | "identifier" "and" "identifier" {
-    auto rhs = NodeFactory::make_node(AstNodeType::LOGICAL_AND, current_node);
+    auto rhs = NodeFactory::make_node(AstNodeType::BINARY_OPERATOR, current_node);
+    rhs->setProperty("operator", "and");
     auto c1 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
     c1->setProperty("identifier", $1);
     auto c2 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
@@ -228,6 +234,8 @@ architecture_body:
 "architecture" "identifier" "of" "identifier" "is"
   {
     auto node = NodeFactory::make_node(AstNodeType::ARCHITECTURE, current_node);
+    node->setProperty("identifier", $2);
+    node->setProperty("entity_name", $4);
     current_node->addChild(node);
     current_node = node;
   }

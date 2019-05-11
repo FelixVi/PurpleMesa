@@ -31,8 +31,22 @@ public:
 
     }
 
-    void visit(LogicalAndNode &node, const AstVisitType &type) override {
-
+    void visit(BinaryOperatorNode &node, const AstVisitType &type) override {
+        if(type==AstVisitType::TRANSLATE_PRE) {
+            std::cout << "\n";
+            std::cout << indent;
+            std::cout << "attribute \\src \"" << node.getFilename() << ":" << node.getLineno() << "\"" << "\n";
+            std::cout << indent;
+            std::cout << "cell ";
+            std::cout << "$";
+            std::cout << node.getProperty("operator") << "\n";
+            increaseLevel();
+        }
+        if(type==AstVisitType::TRANSLATE_POST) {
+            decreaseLevel();
+            std::cout << indent;
+            std::cout << "end\n";
+        }
     }
 
     void visit(PortNode &node, const AstVisitType &type) override {

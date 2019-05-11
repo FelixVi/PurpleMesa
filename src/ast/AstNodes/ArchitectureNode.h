@@ -18,7 +18,12 @@ struct ArchitectureNode : AstNode
     }
 
     void setProperty(const std::string name, const std::string property) override {
-        throw std::invalid_argument("Property does not exist in " + this->getString() + ".");
+        if (name == "identifier")
+            properties.insert(std::pair<std::string, std::string>(name, property));
+        else if (name == "entity_name")
+            properties.insert(std::pair<std::string, std::string>(name, property));
+        else
+            throw std::invalid_argument("Property does not exist in " + this->getString() + ".");
     }
 };
 

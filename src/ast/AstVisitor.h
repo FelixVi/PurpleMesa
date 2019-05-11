@@ -5,9 +5,9 @@
 
 class ArchitectureNode;
 class AssignNode;
+class BinaryOperatorNode;
 class EntityDeclarationNode;
 class SignalNode;
-class LogicalAndNode;
 class PortNode;
 class ProcessNode;
 class TopNode;
@@ -25,9 +25,9 @@ class AstVisitor
 public:
     virtual void visit(ArchitectureNode& node, const AstVisitType& type) = 0;
     virtual void visit(AssignNode& node, const AstVisitType& type) = 0;
+    virtual void visit(BinaryOperatorNode& node, const AstVisitType& type) = 0;
     virtual void visit(EntityDeclarationNode& node, const AstVisitType& type) = 0;
     virtual void visit(SignalNode& node, const AstVisitType& type) = 0;
-    virtual void visit(LogicalAndNode& node, const AstVisitType& type) = 0;
     virtual void visit(PortNode& node, const AstVisitType& type) = 0;
     virtual void visit(ProcessNode& node, const AstVisitType& type) = 0;
     virtual void visit(TopNode& node, const AstVisitType& type) = 0;

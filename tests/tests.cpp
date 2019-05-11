@@ -1,7 +1,7 @@
 #include <vhdl_parser_driver.h>
 #include "gtest/gtest.h"
 #include "AstVisitors/AstPrintVisitor.h"
-#include "AstVisitors/RTILVisitor.h"
+#include "AstVisitors/RTIL/RTILVisitor.h"
 #include "AstTraversals/PreOrder.h"
 
 TEST(VisitorTests, simple) {

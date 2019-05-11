@@ -17,6 +17,9 @@ public:
     void visit(ArchitectureNode &node, const AstVisitType &type) override {
         checkPasses(type);
         std::cout << indent << node.getString();
+        std::cout << " " << node.getProperty("identifier");
+        std::cout << " of";
+        std::cout << " " << node.getProperty("entity_name");
         if (!hideLocation)
             std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
         std::cout << std::endl;
@@ -40,9 +43,10 @@ public:
         std::cout << std::endl;
     }
 
-    void visit(LogicalAndNode &node, const AstVisitType &type) override {
+    void visit(BinaryOperatorNode &node, const AstVisitType &type) override {
         checkPasses(type);
         std::cout << indent << node.getString();
+        std::cout << " (" << node.getProperty("operator") << ")";
         if(!hideLocation)
             std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
         std::cout << std::endl;
@@ -95,6 +99,7 @@ public:
 private:
     std::string indent;
     bool hideLocation;
+
     void checkPasses(const AstVisitType& type) const{
         if(!(type==AstVisitType::SINGLE))
             throw std::invalid_argument("AstPrintVisitor requires single visit.");

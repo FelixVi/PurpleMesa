@@ -5,8 +5,8 @@
 
 #include "AssignNode.h"
 #include "ArchitectureNode.h"
+#include "BinaryOperatorNode.h"
 #include "EntityDeclarationNode.h"
-#include "LogicalAndNode.h"
 #include "ProcessNode.h"
 #include "PortNode.h"
 #include "SensitivityListNode.h"
@@ -23,8 +23,8 @@ public:
         switch (type) {
             case AstNodeType::ASSIGN:
                 return std::make_shared<AssignNode>(AstNodeType::ASSIGN, parent);
-            case AstNodeType::LOGICAL_AND:
-                return std::make_shared<LogicalAndNode>(AstNodeType::LOGICAL_AND, parent);
+            case AstNodeType::BINARY_OPERATOR:
+                return std::make_shared<BinaryOperatorNode>(AstNodeType::BINARY_OPERATOR, parent);
             case AstNodeType::TOP:
                 return std::make_shared<TopNode>(AstNodeType::TOP, parent);
             case AstNodeType::ENTITYDECLARATION:
@@ -50,8 +50,8 @@ public:
             case AstNodeType::ASSIGN:
                 thisNode = std::make_shared<AssignNode>(AstNodeType::ASSIGN, src.getParent(), src.getLineno(), src.getSourcepath());
                 break;
-            case AstNodeType::LOGICAL_AND:
-                thisNode = std::make_shared<LogicalAndNode>(AstNodeType::LOGICAL_AND, src.getParent(), src.getLineno(), src.getSourcepath());
+            case AstNodeType::BINARY_OPERATOR:
+                thisNode = std::make_shared<BinaryOperatorNode>(AstNodeType::BINARY_OPERATOR, src.getParent(), src.getLineno(), src.getSourcepath());
                 break;
             case AstNodeType::TOP:
                 thisNode = std::make_shared<TopNode>(AstNodeType::TOP, src.getParent(), src.getLineno(), src.getSourcepath());
