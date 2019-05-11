@@ -43,6 +43,8 @@
     IS "is"
     T_END "end"
     STD_LOGIC "std_logic"
+    STD_LOGIC_VECTOR "std_logic_vector"
+    DOWNTO "downto"
     IN "in"
     OUT "out"
     ARCHITECTURE "architecture"
@@ -135,8 +137,10 @@ subtype_indication:
   {
     current_node->setProperty("subtype", "std_logic");
   }
-| "std_logic_vector"
+| "std_logic_vector" "(" "number" "downto" "number" ")"
   {
+    current_node->setProperty("subtype", "std_logic_vector");
+    current_node->setProperty("subtype_width", std::to_string($3 - $5 + 1));
     // TODO
     // Parse range for vector
   }

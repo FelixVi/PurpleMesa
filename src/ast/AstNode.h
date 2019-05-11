@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <map>
+#include <algorithm>
 #include "AstVisitor.h"
 
 extern int yylineno;
@@ -53,6 +54,12 @@ public:
 
     const std::vector<std::shared_ptr<AstNode>> &getChildren() const {
         return children;
+    }
+
+    void deleteChild(std::shared_ptr<AstNode> object) {
+        auto it = std::find(children.begin(), children.end(), object);
+        if (it != children.end()) { children.erase(it); }
+        else { throw std::invalid_argument("Child could not be deleted."); }
     }
 
     const bool hasChildren() const {

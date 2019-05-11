@@ -45,6 +45,8 @@ loc.step ();
 "is"           { return yy::vhdl_parser::make_IS(loc); }
 "end"          { return yy::vhdl_parser::make_T_END(loc); }
 "std_logic"    { return yy::vhdl_parser::make_STD_LOGIC(loc); }
+"std_logic_vector"    { return yy::vhdl_parser::make_STD_LOGIC_VECTOR(loc); }
+"downto"    { return yy::vhdl_parser::make_DOWNTO(loc); }
 "in"           { return yy::vhdl_parser::make_IN(loc); }
 "out"          { return yy::vhdl_parser::make_OUT(loc); }
 "architecture" { return yy::vhdl_parser::make_ARCHITECTURE(loc); }

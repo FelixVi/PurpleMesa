@@ -58,6 +58,9 @@ public:
             std::cout << "attribute \\src \"" << node.getFilename() << ":" << node.getLineno() << "\"" << "\n";
             std::cout << indent;
             std::cout << "wire ";
+
+            if (node.getProperty("subtype") == "std_logic_vector")
+                std::cout << "width " << node.getProperty("subtype_width")<< " ";
             if (node.getProperty("direction") == "in")
                 std::cout << "input ";
             else if (node.getProperty("direction") == "out")

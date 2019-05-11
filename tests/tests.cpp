@@ -28,6 +28,19 @@ TEST(VisitorTests, simple) {
 
     std::cout << "\nCopy AST...\n";
     auto newAst = NodeFactory::copy_node(*driver.AST);
+    std::cout << "Starting RTIL translation of AST copy...\n";
+
+    //Need to handle configuration here
+    for(auto const& arch : newAst->getChildren()){
+        if(arch->type() == AstNodeType::ARCHITECTURE){
+            for(auto const& entity : newAst->getChildren()) {
+                if (entity->type() == AstNodeType::ENTITYDECLARATION) {
+                    entity->addChild(arch);
+                    newAst->deleteChild(arch);
+                }
+            }
+        }
+    }
 
     RTILVisitor translator;
     t.traverse(*newAst, translator);
