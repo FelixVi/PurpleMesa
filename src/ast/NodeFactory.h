@@ -1,6 +1,7 @@
 #ifndef PURPLEMESA_NODEFACTORY_H
 #define PURPLEMESA_NODEFACTORY_H
 
+//class AstNode;
 #include "AstNode.h"
 
 #include "AssignNode.h"

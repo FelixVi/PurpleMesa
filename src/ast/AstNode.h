@@ -7,7 +7,9 @@
 #include <iostream>
 #include <map>
 #include <algorithm>
-#include "AstVisitor.h"
+
+class AstVisitor;
+#include "AstVisitType.h"
 
 extern int yylineno;
 extern std::string filename;
@@ -40,71 +42,36 @@ public:
 
     virtual std::string getString() const = 0;
 
-    friend std::ostream& operator<<(std::ostream& os, const std::shared_ptr<AstNode> &node) {
-        return os << node->getString();
-    }
+    friend std::ostream& operator<<(std::ostream& os, const std::shared_ptr<AstNode> &node);
 
     virtual void accept(AstVisitor &visitor, const AstVisitType &type) = 0;
 
-    constexpr AstNodeType type() const {return Nodetype;}
+    AstNodeType type() const;
 
-    void addChild(std::shared_ptr<AstNode> child) {
-        children.push_back(child);
-    }
+    void addChild(std::shared_ptr<AstNode> child);
 
-    const std::vector<std::shared_ptr<AstNode>> &getChildren() const {
-        return children;
-    }
+    const std::vector<std::shared_ptr<AstNode>> &getChildren() const { return children; }
 
-    void deleteChild(std::shared_ptr<AstNode> object) {
-        auto it = std::find(children.begin(), children.end(), object);
-        if (it != children.end()) { children.erase(it); }
-        else { throw std::invalid_argument("Child could not be deleted."); }
-    }
+    void deleteChild(std::shared_ptr<AstNode> object);
 
-    const bool hasChildren() const {
-        return !children.empty();
-    }
+    const bool hasChildren() const { return !children.empty(); }
 
-    const std::shared_ptr<AstNode> &getParent() const {
-        return parent;
-    }
+    const std::shared_ptr<AstNode> &getParent() const;
 
     //get and set node properties
-    const std::string &getProperty(const std::string name) {
-        auto it = properties.find(name);
-        if(it != properties.end())
-            return it->second;
-        else
-            throw std::invalid_argument("Property " + name + " not set in " + this->getString() + ".");
-    }
+    const std::string &getProperty(const std::string name);
 
     virtual void setProperty(const std::string name, const std::string property) = 0;
 
-    int getLineno() const {
-        return lineno;
-    }
+    int getLineno() const { return lineno; }
 
-    const std::string getFilename() const {
-        std::string name = "";
-        size_t i = sourcepath.rfind('/', sourcepath.length());
-        if (i != std::string::npos) {
-            name = sourcepath.substr(i+1, sourcepath.length() - i);
-        }
-        return name;
-    }
+    const std::string getFilename() const;
 
-    const std::map<std::string, std::string> &getProperties() const {
-        return properties;
-    }
+    const std::map<std::string, std::string> &getProperties() const { return properties; }
 
-    void setProperties(const std::map<std::string, std::string> &properties) {
-        AstNode::properties = properties;
-    }
+    void setProperties(const std::map<std::string, std::string> &properties) { AstNode::properties = properties; }
 
-    const std::string &getSourcepath() const {
-        return sourcepath;
-    }
+    const std::string &getSourcepath() const { return sourcepath; }
 
 protected:
     std::map<std::string, std::string> properties;

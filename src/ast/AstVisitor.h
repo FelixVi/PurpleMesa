@@ -1,7 +1,11 @@
 #ifndef PURPLEMESA_ASTVISITOR_H
 #define PURPLEMESA_ASTVISITOR_H
 
-#include "AstTraversals/Filters/AstTraversalFilters.h"
+#include <memory>
+#include "AstVisitType.h"
+
+class TraversalFilter;
+class ShowAll;
 
 class ArchitectureNode;
 class AssignNode;
@@ -13,16 +17,17 @@ class ProcessNode;
 class TopNode;
 class SensitivityListNode;
 
-enum class AstVisitType
+enum class AstTraversalFilter
 {
-    SINGLE,
-    TRANSLATE_PRE,
-    TRANSLATE_POST
+    ShowAll,
+    ShowPorts
 };
 
 class AstVisitor
 {
 public:
+    AstVisitor();
+
     virtual void visit(ArchitectureNode& node, const AstVisitType& type) = 0;
     virtual void visit(AssignNode& node, const AstVisitType& type) = 0;
     virtual void visit(BinaryOperatorNode& node, const AstVisitType& type) = 0;
@@ -38,26 +43,14 @@ public:
 
     virtual bool isDoublePass(){return false;}
 
-    void setFilter(const AstTraversalFilter filter)
-    {
-        switch(filter){
-            case AstTraversalFilter::ShowAll:
-                traversalFilter = std::make_unique<ShowAll>();
-                break;
-            case AstTraversalFilter::ShowPorts:
-                traversalFilter = std::make_unique<ShowPorts>();
-                break;
-            default:
-                throw std::runtime_error("Unsupported AST traversal filter.");
-        }
-    }
+    void setFilter(const AstTraversalFilter filter);
 
     const std::unique_ptr<TraversalFilter> &getTraversalFilter() const {
         return traversalFilter;
     }
 
 private:
-    std::unique_ptr<TraversalFilter> traversalFilter = std::make_unique<ShowAll>();
+    std::unique_ptr<TraversalFilter> traversalFilter;
 };
 
 #endif //PURPLEMESA_ASTVISITOR_H

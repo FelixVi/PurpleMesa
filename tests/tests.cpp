@@ -1,35 +1,38 @@
+#include <NodeFactory.h>
+#include <AstVisitors/AstPrintVisitor.h>
+#include <AstTraversals/PreOrder.h>
 #include <vhdl_parser_driver.h>
 #include "gtest/gtest.h"
-#include "AstVisitors/AstPrintVisitor.h"
 #include "AstVisitors/RTIL/RTILVisitor.h"
-#include "AstTraversals/PreOrder.h"
+#include "PurpleMesa.h"
+#include "AstNode.h"
 
 TEST(VisitorTests, simple) {
     PreOrderTraversal t;
     AstPrintVisitor v;
-    vhdl_driver driver;
+    PurpleMesa PM;
 
-    ASSERT_FALSE(driver.parse ("../tests/hdl/simple.vhd"));
+    auto AST = PM.parseFile("../tests/hdl/simple.vhd");
 
     std::cout << "\n\nTraversing AST ports...\n";
 
     v.setFilter(AstTraversalFilter::ShowPorts);
-    t.traverse(*driver.AST, v);
+    t.traverse(*AST, v);
 
     std::cout << "End traversing AST ports...\n";
 
 
     std::cout << "\nTraversing AST...\n";
 
-    v.setFilter(AstTraversalFilter::ShowAll);
-    t.traverse(*driver.AST, v);
+    PM.printAST(*AST);
 
     std::cout << "End traversing AST...\n";
 
     std::cout << "\nCopy AST...\n";
-    auto newAst = NodeFactory::copy_node(*driver.AST);
+    auto newAst = NodeFactory::copy_node(*AST);
     std::cout << "Starting RTIL translation of AST copy...\n";
 
+    //TODO
     //Need to handle configuration here
     for(auto const& arch : newAst->getChildren()){
         if(arch->type() == AstNodeType::ARCHITECTURE){

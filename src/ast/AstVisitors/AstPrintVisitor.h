@@ -6,104 +6,33 @@
 class AstPrintVisitor : public AstVisitor
 {
 public:
-    void visit(AssignNode &node, const AstVisitType &type) override {
-        checkPasses(type);
-        std::cout << indent << node.getString();
-        if(!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
-    }
+    void visit(AssignNode &node, const AstVisitType &type) override;
 
-    void visit(ArchitectureNode &node, const AstVisitType &type) override {
-        checkPasses(type);
-        std::cout << indent << node.getString();
-        std::cout << " " << node.getProperty("identifier");
-        std::cout << " of";
-        std::cout << " " << node.getProperty("entity_name");
-        if (!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
-    }
+    void visit(ArchitectureNode &node, const AstVisitType &type) override;
 
-    void visit(EntityDeclarationNode &node, const AstVisitType &type) override {
-        checkPasses(type);
-        std::cout << indent << node.getString();
-        std::cout << " " << node.getProperty("identifier");
-        if(!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
-    }
+    void visit(EntityDeclarationNode &node, const AstVisitType &type) override;
 
-    void visit(SignalNode &node, const AstVisitType &type) override {
-        checkPasses(type);
-        std::cout << indent << node.getString();
-        std::cout << " " << node.getProperty("identifier");
-        if(!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
-    }
+    void visit(SignalNode &node, const AstVisitType &type) override;
 
-    void visit(BinaryOperatorNode &node, const AstVisitType &type) override {
-        checkPasses(type);
-        std::cout << indent << node.getString();
-        std::cout << " (" << node.getProperty("operator") << ")";
-        if(!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
-    }
+    void visit(BinaryOperatorNode &node, const AstVisitType &type) override;
 
-    void visit(PortNode &node, const AstVisitType &type) override {
-        checkPasses(type);
-        std::cout << indent << node.getString();
-        std::cout << " " << node.getProperty("identifier");
-        if(!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
-    }
+    void visit(PortNode &node, const AstVisitType &type) override;
 
-    void visit(ProcessNode &node, const AstVisitType &type) override {
-        checkPasses(type);
-        std::cout << indent << node.getString();
-        if(!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
-    }
+    void visit(ProcessNode &node, const AstVisitType &type) override;
 
-    void visit(TopNode &node, const AstVisitType &type) override {
-        checkPasses(type);
-        std::cout << indent << node.getString();
-        if(!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
-    }
+    void visit(TopNode &node, const AstVisitType &type) override;
 
-    void visit(SensitivityListNode & node, const AstVisitType &type) override {
-        checkPasses(type);
-        std::cout << indent << node.getString();
-        if(!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
-    }
+    void visit(SensitivityListNode & node, const AstVisitType &type) override;
 
-    void increaseLevel() override {
-        indent += "  ";
-    }
+    void increaseLevel() override;
 
-    void decreaseLevel() override {
-        if(!indent.empty())
-            indent.pop_back();
-        if(!indent.empty())
-            indent.pop_back();
-    }
+    void decreaseLevel() override;
 
 private:
     std::string indent;
     bool hideLocation;
 
-    void checkPasses(const AstVisitType& type) const{
-        if(!(type==AstVisitType::SINGLE))
-            throw std::invalid_argument("AstPrintVisitor requires single visit.");
-    };
+    void checkPasses(const AstVisitType& type) const;
 };
 
 #endif //PURPLEMESA_ASTPRINTVISITOR_H

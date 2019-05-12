@@ -2,6 +2,8 @@
 #define PURPLEMESA_ENTITYDECLARATIONNODE_H
 
 #include "AstNode.h"
+#include "AstTraversals/Filters/AstTraversalFilters.h"
+#include "AstVisitor.h"
 
 struct EntityDeclarationNode : AstNode
 {

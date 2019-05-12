@@ -2,6 +2,8 @@
 #define PURPLEMESA_TOPNODE_H
 
 #include "AstNode.h"
+#include "AstTraversals/Filters/AstTraversalFilters.h"
+#include "AstVisitor.h"
 
 struct TopNode : AstNode
 {
@@ -14,7 +16,8 @@ struct TopNode : AstNode
     }
 
     void accept(AstVisitor &visitor, const AstVisitType &type) override {
-        if(visitor.getTraversalFilter()->passes(*this))visitor.visit(*this, type);
+        if(visitor.getTraversalFilter()->passes(*this))
+            visitor.visit(*this, type);
     }
 
     void setProperty(const std::string name, const std::string property) override {

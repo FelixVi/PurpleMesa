@@ -1,7 +1,9 @@
 #ifndef PURPLEMESA_ARCHITECTURENODE_H
 #define PURPLEMESA_ARCHITECTURENODE_H
 
-#include "AstNode.h"
+#include <AstNode.h>
+#include "AstTraversals/Filters/AstTraversalFilters.h"
+#include "AstVisitor.h"
 
 struct ArchitectureNode : AstNode
 {
