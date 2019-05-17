@@ -1,7 +1,7 @@
 #ifndef PURPLEMESA_BINDARCHPASS_H
 #define PURPLEMESA_BINDARCHPASS_H
 
-#include <AstPass.h>
+#include <Passes/AstPass.h>
 
 class BindArchPass : public AstPass
 {

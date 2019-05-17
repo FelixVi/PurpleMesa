@@ -3,7 +3,7 @@
 
 #include "AstNode.h"
 #include "Traversals/Filters/AstTraversalFilters.h"
-#include "AstVisitor.h"
+#include "Visitors/AstVisitor.h"
 
 struct EntityDeclarationNode : AstNode
 {

@@ -1,7 +1,7 @@
 #ifndef PURPLEMESA_ASTPRINTVISITOR_H
 #define PURPLEMESA_ASTPRINTVISITOR_H
 
-#include <AstVisitor.h>
+#include <Visitors/AstVisitor.h>
 
 class AstPrintVisitor : public AstVisitor
 {

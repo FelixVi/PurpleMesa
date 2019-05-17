@@ -17,11 +17,12 @@ SET (SRCS src/PurpleMesa.cpp
 
         src/AST/Passes/BindArchPass.cpp
 
+        src/AST/Visitors/AstVisitor.cpp
         src/AST/Visitors/AstPrintVisitor.cpp
         src/AST/Visitors/RTIL/RTILVisitor.cpp
 
-        src/AST/AstNode.cpp
-        src/AST/AstVisitor.cpp)
+        src/AST/Nodes/AstNode.cpp
+        )
 
 include_directories(
         ${CMAKE_CURRENT_BINARY_DIR}

@@ -9,7 +9,7 @@
 #include <algorithm>
 
 class AstVisitor;
-#include "AstVisitType.h"
+#include "Visitors/AstVisitType.h"
 
 extern int yylineno;
 extern std::string filename;
