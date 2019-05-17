@@ -22,7 +22,7 @@
 %define parse.error verbose
 %code
 {
-    #include "vhdl_parser_driver.h"
+    #include "vhdl_parser/vhdl_parser_driver.h"
     std::shared_ptr<AstNode> current_node;
     extern int yylineno;
 }

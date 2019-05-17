@@ -2,7 +2,7 @@
 #define PURPLEMESA_TOPNODE_H
 
 #include "AstNode.h"
-#include "AstTraversals/Filters/AstTraversalFilters.h"
+#include "Traversals/Filters/AstTraversalFilters.h"
 #include "AstVisitor.h"
 
 struct TopNode : AstNode
@@ -23,6 +23,8 @@ struct TopNode : AstNode
     void setProperty(const std::string name, const std::string property) override {
         throw std::invalid_argument("Property does not exist in " + this->getString() + ".");
     }
+
+    void run() {std::cout << "RUN TOP\n";}
 };
 
 #endif //PURPLEMESA_TOPNODE_H

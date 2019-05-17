@@ -2,7 +2,7 @@
 #define PURPLEMESA_ASSIGNNODE_H
 
 #include <AstNode.h>
-#include "AstTraversals/Filters/AstTraversalFilters.h"
+#include "Traversals/Filters/AstTraversalFilters.h"
 #include "AstVisitor.h"
 
 struct AssignNode : AstNode

@@ -13,18 +13,20 @@ add_subdirectory(external/googletest/googletest)
 
 SET (SRCS src/PurpleMesa.cpp
 
-        src/driver/vhdl_parser_driver.cpp
+        src/vhdl_parser/vhdl_parser_driver.cpp
 
-        src/ast/AstVisitors/AstPrintVisitor.cpp
-        src/ast/AstVisitors/RTIL/RTILVisitor.cpp
-        src/ast/AstNode.cpp
-        src/ast/AstVisitor.cpp)
+        src/AST/Passes/BindArchPass.cpp
+
+        src/AST/Visitors/AstPrintVisitor.cpp
+        src/AST/Visitors/RTIL/RTILVisitor.cpp
+
+        src/AST/AstNode.cpp
+        src/AST/AstVisitor.cpp)
 
 include_directories(
         ${CMAKE_CURRENT_BINARY_DIR}
-        src/driver
-        src/ast
-        src/ast/AstNodes
+        src/AST
+        src/AST/Nodes
         src
         external/googletest/googletest/include
         )

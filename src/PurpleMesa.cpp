@@ -1,8 +1,8 @@
 #include "PurpleMesa.h"
-#include <AstNodes/TopNode.h>
-#include <AstVisitors/AstPrintVisitor.h>
-#include <AstTraversals/PreOrder.h>
-#include <vhdl_parser_driver.h>
+#include <TopNode.h>
+#include <Visitors/AstPrintVisitor.h>
+#include <Traversals/PreOrder.h>
+#include "vhdl_parser/vhdl_parser_driver.h"
 
 int autoidx = 1;
 

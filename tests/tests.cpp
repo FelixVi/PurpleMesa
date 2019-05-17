@@ -1,9 +1,10 @@
 #include <NodeFactory.h>
-#include <AstVisitors/AstPrintVisitor.h>
-#include <AstTraversals/PreOrder.h>
-#include <vhdl_parser_driver.h>
+#include <Visitors/AstPrintVisitor.h>
+#include <Traversals/PreOrder.h>
+#include "vhdl_parser/vhdl_parser_driver.h"
 #include "gtest/gtest.h"
-#include "AstVisitors/RTIL/RTILVisitor.h"
+#include "Visitors/RTIL/RTILVisitor.h"
+#include "Passes/BindArchPass.h"
 #include "PurpleMesa.h"
 #include "AstNode.h"
 
@@ -30,7 +31,13 @@ TEST(VisitorTests, simple) {
 
     std::cout << "\nCopy AST...\n";
     auto newAst = NodeFactory::copy_node(*AST);
+
     std::cout << "Starting RTIL translation of AST copy...\n";
+
+    std::static_pointer_cast<TopNode>(newAst)->run();
+
+    auto pass = BindArchPass();
+    pass.run();
 
     //TODO
     //Need to handle configuration here

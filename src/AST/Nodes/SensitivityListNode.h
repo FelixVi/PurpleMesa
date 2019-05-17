@@ -2,7 +2,7 @@
 #define PURPLEMESA_SENSITIVITYLISTNODE_H
 
 #include "AstNode.h"
-#include "AstTraversals/Filters/AstTraversalFilters.h"
+#include "Traversals/Filters/AstTraversalFilters.h"
 #include "AstVisitor.h"
 
 struct SensitivityListNode : AstNode

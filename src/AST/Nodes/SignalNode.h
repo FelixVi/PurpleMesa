@@ -2,7 +2,7 @@
 #define PURPLEMESA_SIGNALNODE_H
 
 #include "AstNode.h"
-#include "AstTraversals/Filters/AstTraversalFilters.h"
+#include "Traversals/Filters/AstTraversalFilters.h"
 #include "AstVisitor.h"
 
 struct SignalNode : AstNode

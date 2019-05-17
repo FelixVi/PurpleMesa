@@ -1,4 +1,4 @@
-#include <AstTraversals/Filters/AstTraversalFilters.h>
+#include <Traversals/Filters/AstTraversalFilters.h>
 #include "AstVisitor.h"
 
 void AstVisitor::setFilter(const AstTraversalFilter filter) {
