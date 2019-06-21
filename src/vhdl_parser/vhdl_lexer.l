@@ -21,7 +21,6 @@ static yy::location loc;
 id    [a-zA-Z][a-zA-Z_0-9\._]*
 int   [0-9]+
 blank [ \t]
-linebreak 
 
 %{
 // Code run each time a pattern is matched.
@@ -32,11 +31,12 @@ linebreak
 
 %{
 // Code run each time yylex is called.
-loc.step ();
+loc.step();
 %}
 
-{blank}+   loc.step ();
-[\n]+      loc.lines (yyleng); loc.step ();
+{blank}+            { loc.step(); }
+"\r\n"              { loc.lines (yyleng); loc.step(); }
+"\n"                { loc.lines (yyleng); loc.step(); }
 
   /* comments */
 "--".*\n            { loc.lines (yyleng); loc.step (); }
