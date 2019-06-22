@@ -58,6 +58,56 @@ TEST(VisitorTests, simple) {
     ASSERT_FALSE(0);
 }
 
+TEST(FIFOTests, simple) {
+    PreOrderTraversal t;
+    AstPrintVisitor v;
+    PurpleMesa PM;
+
+    auto AST = PM.parseFile("../tests/hdl/fifo_async.vhd");
+
+    std::cout << "\n\nTraversing AST ports...\n";
+
+    v.setFilter(AstTraversalFilter::ShowPorts);
+    t.traverse(*AST, v);
+
+    std::cout << "End traversing AST ports...\n";
+
+
+    std::cout << "\nTraversing AST...\n";
+
+    PM.printAST(*AST);
+
+    std::cout << "End traversing AST...\n";
+
+    std::cout << "\nCopy AST...\n";
+    auto newAst = NodeFactory::copy_node(*AST);
+
+    std::cout << "Starting RTIL translation of AST copy...\n";
+
+    std::static_pointer_cast<TopNode>(newAst)->run();
+
+    auto pass = BindArchPass();
+    pass.run();
+
+    //TODO
+    //Need to handle configuration here
+    for(auto const& arch : newAst->getChildren()){
+        if(arch->type() == AstNodeType::ARCHITECTURE){
+            for(auto const& entity : newAst->getChildren()) {
+                if (entity->type() == AstNodeType::ENTITYDECLARATION) {
+                    entity->addChild(arch);
+                    newAst->deleteChild(arch);
+                }
+            }
+        }
+    }
+
+    RTILVisitor translator;
+    t.traverse(*newAst, translator);
+
+    ASSERT_FALSE(0);
+}
+
 TEST(ParserTests, simple) {
     vhdl_driver driver;
 

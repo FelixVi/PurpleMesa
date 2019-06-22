@@ -163,8 +163,6 @@ loc.step();
 "xnor"              { return yy::vhdl_parser::make_T_XNOR(loc); }
 "xor"               { return yy::vhdl_parser::make_T_XOR(loc); }
 
-
-
   /* special characters as defined in 13.1c */
 "\""                { return yy::vhdl_parser::make_T_QUOTE(loc); }
 "#"                 { return yy::vhdl_parser::make_T_POUND(loc); }
