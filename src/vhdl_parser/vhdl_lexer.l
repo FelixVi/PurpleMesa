@@ -172,6 +172,7 @@ loc.step();
 ")"                 { return yy::vhdl_parser::make_T_RPAREN(loc); }
 "*"                 { return yy::vhdl_parser::make_T_STAR(loc); }
 "+"                 { return yy::vhdl_parser::make_T_PLUS(loc); }
+","                 { return yy::vhdl_parser::make_T_COMMA(loc); }
 "-"                 { return yy::vhdl_parser::make_T_MINUS(loc); }
 "."                 { return yy::vhdl_parser::make_T_DOT(loc); }
 "/"                 { return yy::vhdl_parser::make_T_FORWARDSLASH(loc); }
@@ -195,7 +196,7 @@ loc.step();
 "<>"                { return yy::vhdl_parser::make_T_BOX(loc); }
 
   /* more tokens not defined in standard */
-","                 { return yy::vhdl_parser::make_T_COMMA(loc); }
+
 "natural"           { return yy::vhdl_parser::make_NATURAL(loc); }
 "std_logic"         { return yy::vhdl_parser::make_STD_LOGIC(loc); }
 "std_logic_vector"  { return yy::vhdl_parser::make_STD_LOGIC_VECTOR(loc); }

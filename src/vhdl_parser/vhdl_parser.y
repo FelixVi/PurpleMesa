@@ -168,6 +168,7 @@
     T_RPAREN        ")"
     T_STAR          "*"
     T_PLUS          "+"
+    T_COMMA         ","
     T_MINUS         "-"
     T_DOT           "."
     T_FORWARDSLASH  "/"
@@ -185,7 +186,6 @@
     NATURAL "natural"
     STD_LOGIC "std_logic"
     STD_LOGIC_VECTOR "std_logic_vector"
-    T_COMMA           ","
 ;
 %token <std::string> IDENTIFIER "identifier"
 %token <int> NUMBER "number"
