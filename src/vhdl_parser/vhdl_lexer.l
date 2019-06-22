@@ -35,12 +35,12 @@ loc.step();
 %}
 
 {blank}+            { loc.step(); }
-"\r\n"              { loc.lines (yyleng); loc.step(); std::cout << "NEWLINE " << loc << std::endl; }
-"\n"                { loc.lines (yyleng); loc.step(); std::cout << "NEWLINE " << loc << std::endl; }
+"\r\n"              { loc.lines(); loc.step(); }
+"\n"                { loc.lines(); loc.step(); }
 
   /* comments as defined in 13.8 */
-"--".*"\r\n"        { loc.lines (yyleng); loc.step (); std::cout << "NEWLINE " << loc << std::endl; }
-"--".*"\n"          { loc.lines (yyleng); loc.step (); std::cout << "NEWLINE " << loc << std::endl; }
+"--".*"\r\n"        { loc.lines(); loc.step(); }
+"--".*"\n"          { loc.lines(); loc.step(); }
 
   /* reserved words as defined in 13.9 */
 "abs"               { return yy::vhdl_parser::make_T_ABS(loc); }
@@ -163,6 +163,8 @@ loc.step();
 "xnor"              { return yy::vhdl_parser::make_T_XNOR(loc); }
 "xor"               { return yy::vhdl_parser::make_T_XOR(loc); }
 
+
+
   /* special characters as defined in 13.1c */
 "\""                { return yy::vhdl_parser::make_T_QUOTE(loc); }
 "#"                 { return yy::vhdl_parser::make_T_POUND(loc); }
@@ -185,7 +187,17 @@ loc.step();
 "_"                 { return yy::vhdl_parser::make_T_UNDERSCORE(loc); }
 "|"                 { return yy::vhdl_parser::make_T_PIPE(loc); }
 
+  /* compound delimiters as defined in 13.2 */
+"=>"                { return yy::vhdl_parser::make_T_ARROW(loc); }
+"**"                { return yy::vhdl_parser::make_T_EXPONENTIATE(loc); }
+":="                { return yy::vhdl_parser::make_T_VAR_ASSIGNMENT(loc); }
+"/="                { return yy::vhdl_parser::make_T_INEQUALITY(loc); }
+">="                { return yy::vhdl_parser::make_T_GREATERTHANOREQUAL(loc); }
+"<="                { return yy::vhdl_parser::make_T_LESSTHANOREQUAL(loc); }
+"<>"                { return yy::vhdl_parser::make_T_BOX(loc); }
+
   /* more tokens not defined in standard */
+","                 { return yy::vhdl_parser::make_T_COMMA(loc); }
 "natural"           { return yy::vhdl_parser::make_NATURAL(loc); }
 "std_logic"         { return yy::vhdl_parser::make_STD_LOGIC(loc); }
 "std_logic_vector"  { return yy::vhdl_parser::make_STD_LOGIC_VECTOR(loc); }
@@ -215,6 +227,8 @@ vhdl_driver::scan_begin ()
         error ("cannot open " + file + ": " + strerror(errno));
         exit (EXIT_FAILURE);
     }
+    yylineno = 1;
+    loc.initialize();
 }
 
 

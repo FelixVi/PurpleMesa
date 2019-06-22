@@ -150,6 +150,15 @@
     T_XNOR "xnor"
     T_XOR "xor"
     
+    // compound delimiters as defined in 13.2
+    T_ARROW               "=>"
+    T_EXPONENTIATE        "**"
+    T_VAR_ASSIGNMENT      ":="
+    T_INEQUALITY          "/="
+    T_GREATERTHANOREQUAL  ">="
+    T_LESSTHANOREQUAL     "<="
+    T_BOX                 "<>"
+    
     //special characters as defined in 13.1c
     T_QUOTE         "quote"
     T_POUND         "#"
@@ -176,6 +185,7 @@
     NATURAL "natural"
     STD_LOGIC "std_logic"
     STD_LOGIC_VECTOR "std_logic_vector"
+    T_COMMA           ","
 ;
 %token <std::string> IDENTIFIER "identifier"
 %token <int> NUMBER "number"
