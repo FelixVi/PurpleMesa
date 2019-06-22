@@ -150,24 +150,32 @@
     T_XNOR "xnor"
     T_XOR "xor"
     
-    //more tokens not defined in standard
-    LINECOMMENT "--"
-    ASSIGN  "<="
-    LPAREN  "("
-    RPAREN  ")"
-    COMMA  ","
-    SEMICOLON  ";"
-    COLON  ":"
-    ASSIGNINIT  ":="
+    //special characters as defined in 13.1c
+    T_QUOTE         "quote"
+    T_POUND         "#"
+    T_AMPERSAND     "&"
+    T_SINGLEQUOTE   "'"
+    T_LPAREN        "("
+    T_RPAREN        ")"
+    T_STAR          "*"
+    T_PLUS          "+"
+    T_MINUS         "-"
+    T_DOT           "."
+    T_FORWARDSLASH  "/"
+    T_COLON         ":"
+    T_SEMICOLON     ";"
+    T_LESSTHAN      "<"
+    T_EQUAL         "="
+    T_GREATERTHAN   ">"
+    T_LSQUAREPAREN  "["
+    T_RSQUAREPAREN  "]"
+    T_UNDERSCORE    "_"
+    T_PIPE          "|"
     
+    //more tokens not defined in standard
     NATURAL "natural"
     STD_LOGIC "std_logic"
     STD_LOGIC_VECTOR "std_logic_vector"
-    
-    
-    
-    
-    
 ;
 %token <std::string> IDENTIFIER "identifier"
 %token <int> NUMBER "number"

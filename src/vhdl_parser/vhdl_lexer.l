@@ -19,7 +19,7 @@ static yy::location loc;
 %option noyywrap nounput batch debug noinput
 %option yylineno
 id    [a-zA-Z][a-zA-Z_0-9\._]*
-int   [0-9]+
+Digits   [0-9]+
 blank [ \t]
 
 %{
@@ -35,11 +35,12 @@ loc.step();
 %}
 
 {blank}+            { loc.step(); }
-"\r\n"              { loc.lines (yyleng); loc.step(); }
-"\n"                { loc.lines (yyleng); loc.step(); }
+"\r\n"              { loc.lines (yyleng); loc.step(); std::cout << "NEWLINE " << loc << std::endl; }
+"\n"                { loc.lines (yyleng); loc.step(); std::cout << "NEWLINE " << loc << std::endl; }
 
-  /* comments */
-"--".*\n            { loc.lines (yyleng); loc.step (); }
+  /* comments as defined in 13.8 */
+"--".*"\r\n"        { loc.lines (yyleng); loc.step (); std::cout << "NEWLINE " << loc << std::endl; }
+"--".*"\n"          { loc.lines (yyleng); loc.step (); std::cout << "NEWLINE " << loc << std::endl; }
 
   /* reserved words as defined in 13.9 */
 "abs"               { return yy::vhdl_parser::make_T_ABS(loc); }
@@ -162,25 +163,41 @@ loc.step();
 "xnor"              { return yy::vhdl_parser::make_T_XNOR(loc); }
 "xor"               { return yy::vhdl_parser::make_T_XOR(loc); }
 
+  /* special characters as defined in 13.1c */
+"\""                { return yy::vhdl_parser::make_T_QUOTE(loc); }
+"#"                 { return yy::vhdl_parser::make_T_POUND(loc); }
+"&"                 { return yy::vhdl_parser::make_T_AMPERSAND(loc); }
+"'"                 { return yy::vhdl_parser::make_T_SINGLEQUOTE(loc); }
+"("                 { return yy::vhdl_parser::make_T_LPAREN(loc); }
+")"                 { return yy::vhdl_parser::make_T_RPAREN(loc); }
+"*"                 { return yy::vhdl_parser::make_T_STAR(loc); }
+"+"                 { return yy::vhdl_parser::make_T_PLUS(loc); }
+"-"                 { return yy::vhdl_parser::make_T_MINUS(loc); }
+"."                 { return yy::vhdl_parser::make_T_DOT(loc); }
+"/"                 { return yy::vhdl_parser::make_T_FORWARDSLASH(loc); }
+":"                 { return yy::vhdl_parser::make_T_COLON(loc); }
+";"                 { return yy::vhdl_parser::make_T_SEMICOLON(loc); }
+"<"                 { return yy::vhdl_parser::make_T_LESSTHAN(loc); }
+"="                 { return yy::vhdl_parser::make_T_EQUAL(loc); }
+">"                 { return yy::vhdl_parser::make_T_GREATERTHAN(loc); }
+"["                 { return yy::vhdl_parser::make_T_LSQUAREPAREN(loc); }
+"]"                 { return yy::vhdl_parser::make_T_RSQUAREPAREN(loc); }
+"_"                 { return yy::vhdl_parser::make_T_UNDERSCORE(loc); }
+"|"                 { return yy::vhdl_parser::make_T_PIPE(loc); }
+
   /* more tokens not defined in standard */
 "natural"           { return yy::vhdl_parser::make_NATURAL(loc); }
 "std_logic"         { return yy::vhdl_parser::make_STD_LOGIC(loc); }
 "std_logic_vector"  { return yy::vhdl_parser::make_STD_LOGIC_VECTOR(loc); }
-"<="                { return yy::vhdl_parser::make_ASSIGN(loc); }
-","                 { return yy::vhdl_parser::make_COMMA(loc); }
-";"                 { return yy::vhdl_parser::make_SEMICOLON(loc); }
-":="                { return yy::vhdl_parser::make_ASSIGNINIT(loc); }
-":"                 { return yy::vhdl_parser::make_COLON(loc); }
-"("                 { return yy::vhdl_parser::make_LPAREN(loc); }
-")"                 { return yy::vhdl_parser::make_RPAREN(loc); }
 
-{int}          {
-                 errno = 0;
-                 long n = strtol (yytext, NULL, 10);
-                 if (! (INT_MIN <= n && n <= INT_MAX && errno != ERANGE))
-                 driver.error (loc, "integer is out of range");
-                 return yy::vhdl_parser::make_NUMBER(n, loc);
-               }
+
+{Digits}            {
+                      errno = 0;
+                      long n = strtol (yytext, NULL, 10);
+                      if (! (INT_MIN <= n && n <= INT_MAX && errno != ERANGE))
+                      driver.error (loc, "integer is out of range");
+                      return yy::vhdl_parser::make_NUMBER(n, loc);
+                    }
 
 {id}           { return yy::vhdl_parser::make_IDENTIFIER(yytext, loc); }
 .              driver.error (loc, "invalid character");
