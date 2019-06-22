@@ -1,5 +1,4 @@
 %skeleton "lalr1.cc" /* -*- C++ -*- */
-%require ""
 %defines
 %define parser_class_name {vhdl_parser}
 %define api.token.constructor
@@ -193,257 +192,257 @@
 %%
 %start unit;
 
-
+//This is the starting point when parsing a file
+//Create a TOP node to which file content is added as child nodes
 unit:
-  {
-    current_node = NodeFactory::make_node(AstNodeType::TOP, nullptr);
-  }
-declarations
-  {
-    assert(("Current Node at end of parse is not TOP", current_node->type() == AstNodeType::TOP));
-    driver.AST = std::static_pointer_cast<TopNode>(current_node);
-  }
+    {
+      current_node = NodeFactory::make_node(AstNodeType::TOP, nullptr);
+    }
+  file_content
+    {
+      assert(("Current Node at end of parse is not TOP", current_node->type() == AstNodeType::TOP));
+      driver.AST = std::static_pointer_cast<TopNode>(current_node);
+    }
 
-declarations:
-%empty                 {}
-| declarations declaration {};
+file_content:
+  %empty
+| file_content main_section
 
-declaration:
-"library" "identifier" ";" {}
-| "use" "identifier" ";" {}
+main_section:
+  library_declaration
 | entity_declaration
 | architecture_body
 
+library_declaration:
+  "library" "identifier" ";"
+| "use" "identifier" ";"
+
 entity_declaration:
-"entity" "identifier" "is"
-  {
-    auto node = NodeFactory::make_node(AstNodeType::ENTITYDECLARATION, current_node);
-    node->setProperty("identifier", $2);
-    current_node->addChild(node);
-    current_node = node;
-  }
-entity_header entity_declaration_end
-  {
-    current_node = current_node->getParent();
-  }
+  "entity" "identifier" "is"
+    {
+      auto node = NodeFactory::make_node(AstNodeType::ENTITYDECLARATION, current_node);
+      node->setProperty("identifier", $2);
+      current_node->addChild(node);
+      current_node = node;
+    }
+  entity_header entity_declaration_end
+    {
+      current_node = current_node->getParent();
+    }
 
 entity_declaration_end:
-"end" ";"
+  "end" ";"
 | "end" "entity" ";"
 | "end" "entity" "identifier" ";"
 | "end" "identifier" ";"
 
 
 entity_header:
-%empty
+  %empty
 | formal_port_clause
 | formal_generic_clause formal_port_clause
 
 optional_sensitivitylist:
 %empty
 | "identifier" "," optional_sensitivitylist
-  {
-    auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
-    signal->setProperty("identifier", $1);
-    current_node->addChild(signal);
-  }
+    {
+      auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+      signal->setProperty("identifier", $1);
+      current_node->addChild(signal);
+    }
 | "identifier"
-  {
-    auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
-signal->setProperty("identifier", $1);
-    current_node->addChild(signal);
-  }
+    {
+      auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+      signal->setProperty("identifier", $1);
+      current_node->addChild(signal);
+    }
 
 formal_port_clause:
-"port" "(" port_list ")" ";"
+  "port" "(" port_list ")" ";"
 
 formal_generic_clause:
-"generic" "(" generic_list ")" ";"
+  "generic" "(" generic_list ")" ";"
 
 interface_mode:
-"in"
-  {
-    current_node->setProperty("direction", "in");
-  }
+  "in"
+    {
+      current_node->setProperty("direction", "in");
+    }
 | "out"
-  {
-    current_node->setProperty("direction", "out");
-  }
+    {
+      current_node->setProperty("direction", "out");
+    }
 
 subtype_indication:
-"std_logic"
-  {
-    current_node->setProperty("subtype", "std_logic");
-  }
+  "std_logic"
+    {
+      current_node->setProperty("subtype", "std_logic");
+    }
 | "std_logic_vector" "(" "number" "downto" "number" ")"
-  {
-    current_node->setProperty("subtype", "std_logic_vector");
-    current_node->setProperty("subtype_width", std::to_string($3 - $5 + 1));
-    // TODO
-    // Parse range for vector
-  }
+    {
+      current_node->setProperty("subtype", "std_logic_vector");
+      current_node->setProperty("subtype_width", std::to_string($3 - $5 + 1));
+      // TODO
+      // Parse range for vector
+    }
 
 port_list:
-"identifier" ":" {
-    auto node = NodeFactory::make_node(AstNodeType::PORT, current_node);
-    node->setProperty("identifier", $1);
-    current_node->addChild(node);
-    current_node = node;
+  "identifier" ":"
+    {
+      auto node = NodeFactory::make_node(AstNodeType::PORT, current_node);
+      node->setProperty("identifier", $1);
+      current_node->addChild(node);
+      current_node = node;
     }
-interface_mode subtype_indication
-  {
-    current_node = current_node->getParent();
-  }
-endportassigns
+  interface_mode subtype_indication
+    {
+      current_node = current_node->getParent();
+    }
+  endportassigns
 
 endportassigns:
-%empty
+  %empty
 | ";" port_list
 
-
-
-
-
 generic_list:
-"identifier" ":" {
-//auto node = NodeFactory::make_node(AstNodeType::PORT, current_node);
-//node->setProperty("identifier", $1);
-//current_node->addChild(node);
-//current_node = node;
-}
-data_type ":=" "number"
-        {
-                //current_node = current_node->getParent();
-        }
-endgenericassigns
+  "identifier" ":"
+    {
+      //auto node = NodeFactory::make_node(AstNodeType::PORT, current_node);
+      //node->setProperty("identifier", $1);
+      //current_node->addChild(node);
+      //current_node = node;
+    }
+  data_type ":=" "number"
+    {
+      //current_node = current_node->getParent();
+    }
+  endgenericassigns
 
 endgenericassigns:
-%empty
+  %empty
 | ";" generic_list
 
 data_type:
-"natural"
-{
-//current_node->setProperty("direction", "in");
-}
+  "natural"
+    {
+      //current_node->setProperty("direction", "in");
+    }
 //| "out"
 //{
 //current_node->setProperty("direction", "out");
 //}
 
-
-
-
 logicexpr:
-"identifier" {
-    auto rhs = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
-    rhs->setProperty("identifier", $1);
-    current_node->addChild(rhs);
-}
-| "identifier" "and" "identifier" {
-    auto rhs = NodeFactory::make_node(AstNodeType::BINARY_OPERATOR, current_node);
-    rhs->setProperty("operator", "and");
-    auto c1 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
-    c1->setProperty("identifier", $1);
-    auto c2 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
-    c2->setProperty("identifier", $3);
-    rhs->addChild(c1);
-    rhs->addChild(c2);
-    current_node->addChild(rhs);
-}
+  "identifier"
+    {
+      auto rhs = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+      rhs->setProperty("identifier", $1);
+      current_node->addChild(rhs);
+    }
+| "identifier" "and" "identifier"
+    {
+      auto rhs = NodeFactory::make_node(AstNodeType::BINARY_OPERATOR, current_node);
+      rhs->setProperty("operator", "and");
+      auto c1 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
+      c1->setProperty("identifier", $1);
+      auto c2 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
+      c2->setProperty("identifier", $3);
+      rhs->addChild(c1);
+      rhs->addChild(c2);
+      current_node->addChild(rhs);
+    }
 
 process_statement_part:
-%empty
-|"identifier" process_statement_part
+  %empty
+| "identifier" process_statement_part
 | "identifier" "<="
-  {
-    auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
-    auto lhs = NodeFactory::make_node(AstNodeType::SIGNAL,node);
-    lhs->setProperty("identifier", $1);
-    node->addChild(lhs);
-    current_node->addChild(node);
-    current_node = node;
-  }
-logicexpr ";"
-  {
-    current_node = current_node->getParent();
-  }
-process_statement_part
+    {
+      auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
+      auto lhs = NodeFactory::make_node(AstNodeType::SIGNAL,node);
+      lhs->setProperty("identifier", $1);
+      node->addChild(lhs);
+      current_node->addChild(node);
+      current_node = node;
+    }
+  logicexpr ";"
+    {
+      current_node = current_node->getParent();
+    }
+  process_statement_part
 
 
 process_statement:
-optional_process_label "process" "("
-  {
-    auto node = NodeFactory::make_node(AstNodeType::PROCESS, current_node);
-    current_node->addChild(node);
-    current_node = node;
+  optional_process_label "process" "("
+    {
+      auto node = NodeFactory::make_node(AstNodeType::PROCESS, current_node);
+      current_node->addChild(node);
+      current_node = node;
 
-    auto snode = NodeFactory::make_node(AstNodeType::SENSITIVITYLIST, current_node);
-    current_node->addChild(snode);
-    current_node = snode;
-  }
-optional_sensitivitylist ")"
-  {
-    current_node = current_node->getParent();
-  }
-optional_is
-process_declarative_part
-"begin"
-process_statement_part
-"end" "process" "identifier" ";"
-  {
-    current_node = current_node->getParent();
-  };
+      auto snode = NodeFactory::make_node(AstNodeType::SENSITIVITYLIST, current_node);
+      current_node->addChild(snode);
+      current_node = snode;
+    }
+  optional_sensitivitylist ")"
+    {
+      current_node = current_node->getParent();
+    }
+  optional_is
+  process_declarative_part
+  "begin"
+  process_statement_part
+  "end" "process" "identifier" ";"
+    {
+      current_node = current_node->getParent();
+    }
 
 optional_is:
-%empty
+  %empty
 | "is"
 
 optional_process_label:
-%empty
+  %empty
 | "identifier" ":"
 
 process_declarative_part:
-%empty
+  %empty
 
 architecture_body:
-"architecture" "identifier" "of" "identifier" "is"
-  {
-    auto node = NodeFactory::make_node(AstNodeType::ARCHITECTURE, current_node);
-    node->setProperty("identifier", $2);
-    node->setProperty("entity_name", $4);
-    current_node->addChild(node);
-    current_node = node;
-  }
-architecture_declarative_part
-"begin"
-architecture_statement_part
+  "architecture" "identifier" "of" "identifier" "is"
+    {
+      auto node = NodeFactory::make_node(AstNodeType::ARCHITECTURE, current_node);
+      node->setProperty("identifier", $2);
+      node->setProperty("entity_name", $4);
+      current_node->addChild(node);
+      current_node = node;
+    }
+  architecture_declarative_part
+  "begin"
+  architecture_statement_part
 
-architecture_body_end
-  {
-    current_node = current_node->getParent();
-  }
+  architecture_body_end
+    {
+      current_node = current_node->getParent();
+    }
 
 architecture_body_end:
-"end" ";"
+  "end" ";"
 | "end" "architecture" ";"
 | "end" "architecture" "identifier" ";"
 | "end" "identifier" ";"
 
 architecture_declarative_part:
-%empty
+  %empty
 
 architecture_statement_part:
-%empty
+  %empty
 | concurrent_statement architecture_statement_part
 
 concurrent_statement:
-process_statement
+  process_statement
 
 %%
-void
-yy::vhdl_parser::error (const location_type& l,
-                          const std::string& m)
-{
+void yy::vhdl_parser::error ( const location_type& l,
+                              const std::string& m )
+  {
     driver.error (l, m, yylineno);
-}
+  }
