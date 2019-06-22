@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(BISON)
 find_package(FLEX)
 
-BISON_TARGET(VhdlParser src/vhdl_parser/vhdl_parser.y ${CMAKE_CURRENT_BINARY_DIR}/vhdl_parser.cpp)
+BISON_TARGET(VhdlParser src/vhdl_parser/vhdl_parser.y ${CMAKE_CURRENT_BINARY_DIR}/vhdl_parser.cpp VERBOSE)
 FLEX_TARGET(VhdlLexer src/vhdl_parser/vhdl_lexer.l  ${CMAKE_CURRENT_BINARY_DIR}/vhdl_lexer.cpp)
 
 add_subdirectory(external/googletest/googletest)

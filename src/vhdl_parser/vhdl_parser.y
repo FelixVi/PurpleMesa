@@ -182,9 +182,9 @@
     T_PIPE          "|"
     
     //more tokens not defined in standard
-    NATURAL "natural"
-    STD_LOGIC "std_logic"
-    STD_LOGIC_VECTOR "std_logic_vector"
+    // NATURAL "natural"
+    //STD_LOGIC "std_logic"
+    //STD_LOGIC_VECTOR "std_logic_vector"
 ;
 %token <std::string> IDENTIFIER "identifier"
 %token <int> NUMBER "number"
@@ -230,146 +230,95 @@ entity_declaration:
       current_node = current_node->getParent();
     }
 
-entity_declaration_end:
-  "end" ";"
-| "end" "entity" ";"
-| "end" "entity" "identifier" ";"
-| "end" "identifier" ";"
+  entity_declaration_end:
+    "end" ";"
+  | "end" "entity" ";"
+  | "end" "entity" "identifier" ";"
+  | "end" "identifier" ";"
 
 
-entity_header:
-  %empty
-| formal_port_clause
-| formal_generic_clause formal_port_clause
+  entity_header:
+    %empty
+  | formal_port_clause
+  | formal_generic_clause formal_port_clause
 
-optional_sensitivitylist:
-%empty
-| "identifier" "," optional_sensitivitylist
+  formal_port_clause:
+    "port" "(" port_list ")" ";"
+
+  formal_generic_clause:
+    "generic" "(" generic_list ")" ";"
+
+  port_list:
+    "identifier" ":"
+      {
+        auto node = NodeFactory::make_node(AstNodeType::PORT, current_node);
+        node->setProperty("identifier", $1);
+        current_node->addChild(node);
+        current_node = node;
+      }
+    interface_mode subtype_indication
+      {
+        current_node = current_node->getParent();
+      }
+    endportassigns
+
+  endportassigns:
+    %empty
+  | ";" port_list
+
+  generic_list:
+    "identifier" ":"
+      {
+        //auto node = NodeFactory::make_node(AstNodeType::PORT, current_node);
+        //node->setProperty("identifier", $1);
+        //current_node->addChild(node);
+        //current_node = node;
+      }
+    "identifier" ":=" "number"
+      {
+        //current_node = current_node->getParent();
+      }
+    endgenericassigns
+
+  endgenericassigns:
+    %empty
+  | ";" generic_list
+
+  interface_mode:
+    "in"
+      {
+        current_node->setProperty("direction", "in");
+      }
+  | "out"
+      {
+        current_node->setProperty("direction", "out");
+      }
+
+  subtype_indication:
+    "identifier"
+      {
+        current_node->setProperty("subtype", $1);
+      }
+  | "identifier" "(" port_width_expression ")"
+      {
+        current_node->setProperty("subtype", $1);
+        // current_node->setProperty("subtype_width", std::to_string($3 - $5 + 1));
+      }
+
+  port_width_expression:
+    port_limit "downto" port_limit
+  | port_limit "to" "(" "number" "**" "identifier" ")" "-" "number"
     {
-      auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
-      signal->setProperty("identifier", $1);
-      current_node->addChild(signal);
-    }
-| "identifier"
-    {
-      auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
-      signal->setProperty("identifier", $1);
-      current_node->addChild(signal);
-    }
-
-formal_port_clause:
-  "port" "(" port_list ")" ";"
-
-formal_generic_clause:
-  "generic" "(" generic_list ")" ";"
-
-interface_mode:
-  "in"
-    {
-      current_node->setProperty("direction", "in");
-    }
-| "out"
-    {
-      current_node->setProperty("direction", "out");
-    }
-
-subtype_indication:
-  "std_logic"
-    {
-      current_node->setProperty("subtype", "std_logic");
-    }
-| "std_logic_vector" "(" "number" "downto" "number" ")"
-    {
-      current_node->setProperty("subtype", "std_logic_vector");
-      current_node->setProperty("subtype_width", std::to_string($3 - $5 + 1));
       // TODO
-      // Parse range for vector
+      // need to set width
+      //current_node->setProperty("subtype_width", std::to_string($3 - $5 + 1));
     }
-
-port_list:
-  "identifier" ":"
-    {
-      auto node = NodeFactory::make_node(AstNodeType::PORT, current_node);
-      node->setProperty("identifier", $1);
-      current_node->addChild(node);
-      current_node = node;
-    }
-  interface_mode subtype_indication
-    {
-      current_node = current_node->getParent();
-    }
-  endportassigns
-
-endportassigns:
-  %empty
-| ";" port_list
-
-generic_list:
-  "identifier" ":"
-    {
-      //auto node = NodeFactory::make_node(AstNodeType::PORT, current_node);
-      //node->setProperty("identifier", $1);
-      //current_node->addChild(node);
-      //current_node = node;
-    }
-  data_type ":=" "number"
-    {
-      //current_node = current_node->getParent();
-    }
-  endgenericassigns
-
-endgenericassigns:
-  %empty
-| ";" generic_list
-
-data_type:
-  "natural"
-    {
-      //current_node->setProperty("direction", "in");
-    }
-//| "out"
-//{
-//current_node->setProperty("direction", "out");
-//}
-
-logicexpr:
-  "identifier"
-    {
-      auto rhs = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
-      rhs->setProperty("identifier", $1);
-      current_node->addChild(rhs);
-    }
-| "identifier" "and" "identifier"
-    {
-      auto rhs = NodeFactory::make_node(AstNodeType::BINARY_OPERATOR, current_node);
-      rhs->setProperty("operator", "and");
-      auto c1 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
-      c1->setProperty("identifier", $1);
-      auto c2 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
-      c2->setProperty("identifier", $3);
-      rhs->addChild(c1);
-      rhs->addChild(c2);
-      current_node->addChild(rhs);
-    }
-
-process_statement_part:
-  %empty
-| "identifier" process_statement_part
-| "identifier" "<="
-    {
-      auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
-      auto lhs = NodeFactory::make_node(AstNodeType::SIGNAL,node);
-      lhs->setProperty("identifier", $1);
-      node->addChild(lhs);
-      current_node->addChild(node);
-      current_node = node;
-    }
-  logicexpr ";"
-    {
-      current_node = current_node->getParent();
-    }
-  process_statement_part
-
+  
+  port_limit:
+    "number"
+  | "identifier"
+  | "identifier" "+" "number"
+  | "identifier" "-" "number"
 
 process_statement:
   optional_process_label "process" "("
@@ -395,16 +344,105 @@ process_statement:
       current_node = current_node->getParent();
     }
 
-optional_is:
-  %empty
-| "is"
+  process_statement_part:
+    %empty
+  | "identifier" process_statement_part
+  | "identifier" "<="
+      {
+        auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
+        auto lhs = NodeFactory::make_node(AstNodeType::SIGNAL,node);
+        lhs->setProperty("identifier", $1);
+        node->addChild(lhs);
+        current_node->addChild(node);
+        current_node = node;
+      }
+    logicexpr ";" process_statement_part
+      {
+        current_node = current_node->getParent();
+      }
+  | "if" logiccondition "then" concurrent_statement_block "end" "if" ";" process_statement_part
+  | "if" "(" logiccondition ")" "then" concurrent_statement_block "end" "if" ";" process_statement_part
+  | "if" logiccondition "then" concurrent_statement_block "elsif" logiccondition "then" concurrent_statement_block "end" "if" ";" process_statement_part
+  | "if" "(" logiccondition ")" "then" concurrent_statement_block "elsif" logiccondition "then" concurrent_statement_block "end" "if" ";" process_statement_part
 
-optional_process_label:
-  %empty
-| "identifier" ":"
+  logiccondition:
+    "identifier" "=" logicexpr
+  | "identifier" "(" "identifier" ")" //to cover rising_edge
+  | "(" logiccondition ")"
+  | logiccondition "and" logiccondition
 
-process_declarative_part:
+  logicexpr:
+    "identifier"
+      {
+        auto rhs = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+        rhs->setProperty("identifier", $1);
+        current_node->addChild(rhs);
+      }
+  | "number"
+  | "'" "number" "'"
+  | "(" logicexpr ")"
+  | logicoperator logicexpr
+  | logicexpr logicoperator logicexpr
+  | logicexpr "&" logicexpr //concatenation
+  | "identifier" "(" logicexpr ")"
+  | "identifier" "'" "(" logicexpr ")"
+  | "identifier" "(" logicexpr "downto" logicexpr ")"
+  | "identifier" "(" logicexpr "," logicexpr ")"
+  | logicexpr numoperator logicexpr
+      {
+        //auto rhs = NodeFactory::make_node(AstNodeType::BINARY_OPERATOR, current_node);
+        //rhs->setProperty("operator", "and");
+        //auto c1 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
+        //c1->setProperty("identifier", $1);
+        //auto c2 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
+        //c2->setProperty("identifier", $3);
+        //rhs->addChild(c1);
+        //rhs->addChild(c2);
+        //current_node->addChild(rhs);
+      }
+  //~ |  "(" assign_rhs ")"
+  //~ | "identifier" "(" "identifier" ")"
+  //~ | "identifier" "(" assign_rhs ")"
+  //~ | "identifier" "(" "number" "," port_limit ")"
+  //~ | "identifier" "(" "identifier" "," "identifier" ")"
+  //~ | "identifier" "(" "identifier" "," "number" ")"
+
+  logicoperator:
+    "and"
+  | "not"
+  | "xor"
+
+  numoperator:
+    "+"
+  | "-"
+
+  optional_is:
+    %empty
+  | "is"
+
+  optional_process_label:
+    %empty
+  | "identifier" ":"
+
+  process_declarative_part:
+    %empty
+    | "variable" "identifier" ":" "identifier" ";" process_declarative_part
+    | "variable" "identifier" ":" "identifier" "(" port_width_expression ")" ";" process_declarative_part
+
+  optional_sensitivitylist:
   %empty
+  | "identifier" "," optional_sensitivitylist
+      {
+        auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+        signal->setProperty("identifier", $1);
+        current_node->addChild(signal);
+      }
+  | "identifier"
+      {
+        auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+        signal->setProperty("identifier", $1);
+        current_node->addChild(signal);
+      }
 
 architecture_body:
   "architecture" "identifier" "of" "identifier" "is"
@@ -424,21 +462,40 @@ architecture_body:
       current_node = current_node->getParent();
     }
 
-architecture_body_end:
-  "end" ";"
-| "end" "architecture" ";"
-| "end" "architecture" "identifier" ";"
-| "end" "identifier" ";"
+  architecture_body_end:
+    "end" ";"
+  | "end" "architecture" ";"
+  | "end" "architecture" "identifier" ";"
+  | "end" "identifier" ";"
 
-architecture_declarative_part:
-  %empty
+  architecture_declarative_part:
+    %empty
+  | "signal" "identifier" ":" "identifier" "(" port_width_expression ")" ";" architecture_declarative_part
+  | "signal" "identifier" ":" "identifier" ";" architecture_declarative_part
+  | "signal" "identifier" ":" "identifier" ":=" "'" "number" "'" ";" architecture_declarative_part
+  
+  | "attribute" "identifier" ":" "identifier" ";" architecture_declarative_part
+  | "attribute" "identifier" "of" "identifier" ":" "signal" "is" "quote" "identifier" "quote" ";" architecture_declarative_part
+  
+  | "type" "identifier" "is" "array" "(" port_width_expression ")" "of" "identifier" "(" port_width_expression ")" ";" architecture_declarative_part
 
-architecture_statement_part:
-  %empty
-| concurrent_statement architecture_statement_part
+  architecture_statement_part:
+    %empty
+  | concurrent_statement architecture_statement_part
+  | process_statement architecture_statement_part
 
-concurrent_statement:
-  process_statement
+  concurrent_statement:
+    "identifier" "<=" assign_rhs ";"
+  | "identifier" "(" logicexpr ")" "<=" assign_rhs ";"
+  | "identifier" ":=" assign_rhs ";"
+  | "if" logiccondition "then" concurrent_statement "end" "if" ";"
+  
+  assign_rhs:
+    logicexpr
+  
+  concurrent_statement_block:
+    %empty
+  | concurrent_statement concurrent_statement_block
 
 %%
 void yy::vhdl_parser::error ( const location_type& l,

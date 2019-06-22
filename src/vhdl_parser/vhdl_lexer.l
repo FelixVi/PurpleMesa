@@ -197,9 +197,9 @@ loc.step();
 
   /* more tokens not defined in standard */
 
-"natural"           { return yy::vhdl_parser::make_NATURAL(loc); }
-"std_logic"         { return yy::vhdl_parser::make_STD_LOGIC(loc); }
-"std_logic_vector"  { return yy::vhdl_parser::make_STD_LOGIC_VECTOR(loc); }
+  /* "natural"           { return yy::vhdl_parser::make_NATURAL(loc); } */
+  /* "std_logic"         { return yy::vhdl_parser::make_STD_LOGIC(loc); } */
+  /* "std_logic_vector"  { return yy::vhdl_parser::make_STD_LOGIC_VECTOR(loc); } */
 
 
 {Digits}            {
