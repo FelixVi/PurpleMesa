@@ -56,6 +56,10 @@ void RTILVisitor::visit(GenericNode &node, const AstVisitType &type) {
 
 }
 
+void RTILVisitor::visit(IntegerNode &node, const AstVisitType &type) {
+
+}
+
 void RTILVisitor::visit(PortNode &node, const AstVisitType &type) {
     if(type==AstVisitType::TRANSLATE_PRE)
     {
@@ -79,6 +83,10 @@ void RTILVisitor::visit(PortNode &node, const AstVisitType &type) {
 }
 
 void RTILVisitor::visit(ProcessNode &node, const AstVisitType &type) {
+
+}
+
+void RTILVisitor::visit(RangeNode &node, const AstVisitType &type) {
 
 }
 

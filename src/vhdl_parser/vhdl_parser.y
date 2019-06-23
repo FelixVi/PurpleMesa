@@ -187,8 +187,16 @@
     //STD_LOGIC_VECTOR "std_logic_vector"
 ;
 %token <std::string> IDENTIFIER "identifier"
-%token <int> NUMBER "number"
+%token <int> INTEGER "integer"
 %printer { yyoutput << $$; } <*>;
+
+//TODO operator precedence
+//%left "or"
+//%left "and"
+//%left "nor"
+//%left "xor"
+//%left "+" "-"
+
 %%
 %start unit;
 
@@ -267,10 +275,8 @@ entity_declaration:
   | ";" port_list
 
   generic_list:
-    "identifier" ":" "identifier" ":=" "number"
+    "identifier" ":" "identifier" ":=" "integer"
       {
-        //current_node = current_node->getParent();
-        std::cout << "Generic " << $1 << " " << $3 << " " << std::to_string($5) << "\n";
         auto node = NodeFactory::make_node(AstNodeType::GENERIC, current_node);
         node->setProperty("identifier", $1);
         node->setProperty("type_identifier", $3);
@@ -297,27 +303,17 @@ entity_declaration:
     "identifier"
       {
         current_node->setProperty("subtype", $1);
+        current_node->setProperty("subtype_width", "1");
       }
-  | "identifier" "(" port_width_expression ")"
+  | "identifier" "(" range_expression ")"
       {
         current_node->setProperty("subtype", $1);
         // current_node->setProperty("subtype_width", std::to_string($3 - $5 + 1));
       }
 
-  port_width_expression:
-    port_limit "downto" port_limit
-  | port_limit "to" "(" "number" "**" "identifier" ")" "-" "number"
-    {
-      // TODO
-      // need to set width
-      //current_node->setProperty("subtype_width", std::to_string($3 - $5 + 1));
-    }
-  
-  port_limit:
-    "number"
-  | "identifier"
-  | "identifier" "+" "number"
-  | "identifier" "-" "number"
+  range_expression:
+    logicexpr "downto" logicexpr
+  | logicexpr "to" logicexpr
 
 process_statement:
   optional_process_label "process" "("
@@ -355,20 +351,19 @@ process_statement:
         current_node->addChild(node);
         current_node = node;
       }
-    logicexpr ";" process_statement_part
+    logicexpr ";"
       {
         current_node = current_node->getParent();
       }
+    process_statement_part
   | "if" logiccondition "then" concurrent_statement_block "end" "if" ";" process_statement_part
-  | "if" "(" logiccondition ")" "then" concurrent_statement_block "end" "if" ";" process_statement_part
   | "if" logiccondition "then" concurrent_statement_block "elsif" logiccondition "then" concurrent_statement_block "end" "if" ";" process_statement_part
-  | "if" "(" logiccondition ")" "then" concurrent_statement_block "elsif" logiccondition "then" concurrent_statement_block "end" "if" ";" process_statement_part
 
   logiccondition:
     "identifier" "=" logicexpr
   | "identifier" "(" "identifier" ")" //to cover rising_edge
   | "(" logiccondition ")"
-  | logiccondition "and" logiccondition
+  | logiccondition logicoperator logiccondition
 
   logicexpr:
     "identifier"
@@ -377,8 +372,8 @@ process_statement:
         rhs->setProperty("identifier", $1);
         current_node->addChild(rhs);
       }
-  | "number"
-  | "'" "number" "'"
+  | "integer"
+  | "'" "integer" "'"
   | "(" logicexpr ")"
   | logicoperator logicexpr
   | logicexpr logicoperator logicexpr
@@ -399,12 +394,6 @@ process_statement:
         //rhs->addChild(c2);
         //current_node->addChild(rhs);
       }
-  //~ |  "(" assign_rhs ")"
-  //~ | "identifier" "(" "identifier" ")"
-  //~ | "identifier" "(" assign_rhs ")"
-  //~ | "identifier" "(" "number" "," port_limit ")"
-  //~ | "identifier" "(" "identifier" "," "identifier" ")"
-  //~ | "identifier" "(" "identifier" "," "number" ")"
 
   logicoperator:
     "and"
@@ -414,6 +403,7 @@ process_statement:
   numoperator:
     "+"
   | "-"
+  | "**"
 
   optional_is:
     %empty
@@ -426,7 +416,7 @@ process_statement:
   process_declarative_part:
     %empty
     | "variable" "identifier" ":" "identifier" ";" process_declarative_part
-    | "variable" "identifier" ":" "identifier" "(" port_width_expression ")" ";" process_declarative_part
+    | "variable" "identifier" ":" "identifier" "(" range_expression ")" ";" process_declarative_part
 
   optional_sensitivitylist:
   %empty
@@ -469,14 +459,14 @@ architecture_body:
 
   architecture_declarative_part:
     %empty
-  | "signal" "identifier" ":" "identifier" "(" port_width_expression ")" ";" architecture_declarative_part
+  | "signal" "identifier" ":" "identifier" "(" range_expression ")" ";" architecture_declarative_part
   | "signal" "identifier" ":" "identifier" ";" architecture_declarative_part
-  | "signal" "identifier" ":" "identifier" ":=" "'" "number" "'" ";" architecture_declarative_part
+  | "signal" "identifier" ":" "identifier" ":=" "'" "integer" "'" ";" architecture_declarative_part
   
   | "attribute" "identifier" ":" "identifier" ";" architecture_declarative_part
   | "attribute" "identifier" "of" "identifier" ":" "signal" "is" "quote" "identifier" "quote" ";" architecture_declarative_part
   
-  | "type" "identifier" "is" "array" "(" port_width_expression ")" "of" "identifier" "(" port_width_expression ")" ";" architecture_declarative_part
+  | "type" "identifier" "is" "array" "(" range_expression ")" "of" "identifier" "(" range_expression ")" ";" architecture_declarative_part
 
   architecture_statement_part:
     %empty
@@ -484,7 +474,19 @@ architecture_body:
   | process_statement architecture_statement_part
 
   concurrent_statement:
-    "identifier" "<=" assign_rhs ";"
+    "identifier" "<=" assign_rhs
+      {
+        auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
+        auto lhs = NodeFactory::make_node(AstNodeType::SIGNAL,node);
+        lhs->setProperty("identifier", $1);
+        node->addChild(lhs);
+        current_node->addChild(node);
+        current_node = node;
+      }
+    ";"
+      {
+        current_node = current_node->getParent();
+      }
   | "identifier" "(" logicexpr ")" "<=" assign_rhs ";"
   | "identifier" ":=" assign_rhs ";"
   | "if" logiccondition "then" concurrent_statement "end" "if" ";"

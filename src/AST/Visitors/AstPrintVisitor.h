@@ -16,9 +16,13 @@ public:
 
     void visit(GenericNode &node, const AstVisitType &type) override;
 
+    void visit(IntegerNode &node, const AstVisitType &type) override;
+
     void visit(PortNode &node, const AstVisitType &type) override;
 
     void visit(ProcessNode &node, const AstVisitType &type) override;
+
+    void visit(RangeNode & node, const AstVisitType &type) override;
 
     void visit(SensitivityListNode & node, const AstVisitType &type) override;
 

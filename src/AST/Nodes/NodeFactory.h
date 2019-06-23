@@ -11,6 +11,7 @@
 #include "GenericNode.h"
 #include "ProcessNode.h"
 #include "PortNode.h"
+#include "RangeNode.h"
 #include "SensitivityListNode.h"
 #include "SignalNode.h"
 #include "TopNode.h"
@@ -37,6 +38,8 @@ public:
                 return std::make_shared<PortNode>(AstNodeType::PORT, parent);
             case AstNodeType::PROCESS:
                 return std::make_shared<ProcessNode>(AstNodeType::PROCESS, parent);
+            case AstNodeType::RANGE:
+                return std::make_shared<RangeNode>(AstNodeType::RANGE, parent);
             case AstNodeType::SENSITIVITYLIST:
                 return std::make_shared<SensitivityListNode>(AstNodeType::SENSITIVITYLIST, parent);
             case AstNodeType::SIGNAL:
@@ -71,6 +74,9 @@ public:
                 break;
             case AstNodeType::PROCESS:
                 thisNode =  std::make_shared<ProcessNode>(AstNodeType::PROCESS, src.getParent(), src.getLineno(), src.getSourcepath());
+                break;
+            case AstNodeType::RANGE:
+                thisNode = std::make_shared<RangeNode>(AstNodeType::RANGE, src.getParent(), src.getLineno(), src.getSourcepath());
                 break;
             case AstNodeType::SENSITIVITYLIST:
                 thisNode = std::make_shared<SensitivityListNode>(AstNodeType::SENSITIVITYLIST, src.getParent(), src.getLineno(), src.getSourcepath());

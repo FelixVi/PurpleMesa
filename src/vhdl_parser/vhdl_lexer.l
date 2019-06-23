@@ -207,7 +207,7 @@ loc.step();
                       long n = strtol (yytext, NULL, 10);
                       if (! (INT_MIN <= n && n <= INT_MAX && errno != ERANGE))
                       driver.error (loc, "integer is out of range");
-                      return yy::vhdl_parser::make_NUMBER(n, loc);
+                      return yy::vhdl_parser::make_INTEGER(n, loc);
                     }
 
 {id}           { return yy::vhdl_parser::make_IDENTIFIER(yytext, loc); }

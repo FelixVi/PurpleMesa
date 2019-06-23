@@ -7,8 +7,10 @@
 #include "BinaryOperatorNode.h"
 #include "EntityDeclarationNode.h"
 #include "GenericNode.h"
+#include "IntegerNode.h"
 #include "PortNode.h"
 #include "ProcessNode.h"
+#include "RangeNode.h"
 #include "SensitivityListNode.h"
 #include "SignalNode.h"
 #include "TopNode.h"
@@ -59,6 +61,15 @@ void AstPrintVisitor::visit(GenericNode &node, const AstVisitType &type) {
     std::cout << std::endl;
 }
 
+void AstPrintVisitor::visit(IntegerNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
+    std::cout << " " << node.getProperty("value");
+    if(!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
+}
+
 void AstPrintVisitor::visit(PortNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
@@ -69,6 +80,14 @@ void AstPrintVisitor::visit(PortNode &node, const AstVisitType &type) {
 }
 
 void AstPrintVisitor::visit(ProcessNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
+    if(!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
+}
+
+void AstPrintVisitor::visit(RangeNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
     if(!hideLocation)

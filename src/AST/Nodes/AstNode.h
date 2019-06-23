@@ -23,6 +23,7 @@ enum class AstNodeType
     GENERIC,
     PORT,
     PROCESS,
+    RANGE,
     SENSITIVITYLIST,
     SIGNAL,
     TOP
