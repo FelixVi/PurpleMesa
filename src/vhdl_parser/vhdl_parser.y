@@ -346,31 +346,11 @@ process_statement:
   optional_is
   process_declarative_part
   "begin"
-  process_statement_part
+  concurrent_statement_block
   "end" "process" "identifier" ";"
     {
       current_node = current_node->getParent();
     }
-
-  process_statement_part:
-    %empty
-  | "identifier" process_statement_part
-  | "identifier" "<="
-      {
-        auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
-        auto lhs = NodeFactory::make_node(AstNodeType::IDENTIFIER,node);
-        lhs->setProperty("identifier", $1);
-        node->addChild(lhs);
-        current_node->addChild(node);
-        current_node = node;
-      }
-    logic_expr ";"
-      {
-        current_node = current_node->getParent();
-      }
-    process_statement_part
-  | "if" logiccondition "then" concurrent_statement_block "end" "if" ";" process_statement_part
-  | "if" logiccondition "then" concurrent_statement_block "elsif" logiccondition "then" concurrent_statement_block "end" "if" ";" process_statement_part
 
   logiccondition:
     "identifier" "=" logic_expr
@@ -420,11 +400,11 @@ process_statement:
       node->addChild($2);
       $$ = node;
     }
-  | "identifier" "'" "(" logic_expr ")"
+  | "identifier" "'" logic_expr
     {
       auto node = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
       node->setProperty("identifier", $1 + "'");
-      node->addChild($4);
+      node->addChild($3);
       $$ = node;
     }
   | "identifier" "(" range_expr ")"
@@ -533,7 +513,8 @@ architecture_body:
       }
   | "identifier" "(" logic_expr ")" "<=" logic_expr ";"
   | "identifier" ":=" logic_expr ";"
-  | "if" logiccondition "then" concurrent_statement "end" "if" ";"
+  | "if" logiccondition "then" concurrent_statement_block "end" "if" ";"
+  | "if" logiccondition "then" concurrent_statement_block "elsif" logiccondition "then" concurrent_statement_block "end" "if" ";"
   
   concurrent_statement_block:
     %empty
