@@ -20,6 +20,7 @@ enum class AstNodeType
     ASSIGN,
     BINARY_OPERATOR,
     ENTITYDECLARATION,
+    GENERIC,
     PORT,
     PROCESS,
     SENSITIVITYLIST,

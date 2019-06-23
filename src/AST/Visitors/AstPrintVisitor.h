@@ -10,19 +10,21 @@ public:
 
     void visit(ArchitectureNode &node, const AstVisitType &type) override;
 
+    void visit(BinaryOperatorNode &node, const AstVisitType &type) override;
+
     void visit(EntityDeclarationNode &node, const AstVisitType &type) override;
 
-    void visit(SignalNode &node, const AstVisitType &type) override;
-
-    void visit(BinaryOperatorNode &node, const AstVisitType &type) override;
+    void visit(GenericNode &node, const AstVisitType &type) override;
 
     void visit(PortNode &node, const AstVisitType &type) override;
 
     void visit(ProcessNode &node, const AstVisitType &type) override;
 
-    void visit(TopNode &node, const AstVisitType &type) override;
-
     void visit(SensitivityListNode & node, const AstVisitType &type) override;
+
+    void visit(SignalNode &node, const AstVisitType &type) override;
+
+    void visit(TopNode &node, const AstVisitType &type) override;
 
     void increaseLevel() override;
 

@@ -2,15 +2,27 @@
 
 #include <iostream>
 
-#include "AssignNode.h"
 #include "ArchitectureNode.h"
-#include "EntityDeclarationNode.h"
-#include "SignalNode.h"
+#include "AssignNode.h"
 #include "BinaryOperatorNode.h"
+#include "EntityDeclarationNode.h"
+#include "GenericNode.h"
 #include "PortNode.h"
 #include "ProcessNode.h"
-#include "TopNode.h"
 #include "SensitivityListNode.h"
+#include "SignalNode.h"
+#include "TopNode.h"
+
+void AstPrintVisitor::visit(ArchitectureNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
+    std::cout << " " << node.getProperty("identifier");
+    std::cout << " of";
+    std::cout << " " << node.getProperty("entity_name");
+    if (!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
+}
 
 void AstPrintVisitor::visit(AssignNode &node, const AstVisitType &type) {
     checkPasses(type);
@@ -20,13 +32,11 @@ void AstPrintVisitor::visit(AssignNode &node, const AstVisitType &type) {
     std::cout << std::endl;
 }
 
-void AstPrintVisitor::visit(ArchitectureNode &node, const AstVisitType &type) {
+void AstPrintVisitor::visit(BinaryOperatorNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
-    std::cout << " " << node.getProperty("identifier");
-    std::cout << " of";
-    std::cout << " " << node.getProperty("entity_name");
-    if (!hideLocation)
+    std::cout << " (" << node.getProperty("operator") << ")";
+    if(!hideLocation)
         std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
     std::cout << std::endl;
 }
@@ -40,19 +50,10 @@ void AstPrintVisitor::visit(EntityDeclarationNode &node, const AstVisitType &typ
     std::cout << std::endl;
 }
 
-void AstPrintVisitor::visit(SignalNode &node, const AstVisitType &type) {
+void AstPrintVisitor::visit(GenericNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
     std::cout << " " << node.getProperty("identifier");
-    if(!hideLocation)
-        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-    std::cout << std::endl;
-}
-
-void AstPrintVisitor::visit(BinaryOperatorNode &node, const AstVisitType &type) {
-    checkPasses(type);
-    std::cout << indent << node.getString();
-    std::cout << " (" << node.getProperty("operator") << ")";
     if(!hideLocation)
         std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
     std::cout << std::endl;
@@ -75,15 +76,24 @@ void AstPrintVisitor::visit(ProcessNode &node, const AstVisitType &type) {
     std::cout << std::endl;
 }
 
-void AstPrintVisitor::visit(TopNode &node, const AstVisitType &type) {
-        checkPasses(type);
-        std::cout << indent << node.getString();
-        if(!hideLocation)
-            std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-        std::cout << std::endl;
+void AstPrintVisitor::visit(SensitivityListNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
+    if(!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
 }
 
-void AstPrintVisitor::visit(SensitivityListNode &node, const AstVisitType &type) {
+void AstPrintVisitor::visit(SignalNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
+    std::cout << " " << node.getProperty("identifier");
+    if(!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
+}
+
+void AstPrintVisitor::visit(TopNode &node, const AstVisitType &type) {
         checkPasses(type);
         std::cout << indent << node.getString();
         if(!hideLocation)

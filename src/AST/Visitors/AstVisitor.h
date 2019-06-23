@@ -11,11 +11,12 @@ class ArchitectureNode;
 class AssignNode;
 class BinaryOperatorNode;
 class EntityDeclarationNode;
-class SignalNode;
+class GenericNode;
 class PortNode;
 class ProcessNode;
-class TopNode;
 class SensitivityListNode;
+class SignalNode;
+class TopNode;
 
 enum class AstTraversalFilter
 {
@@ -32,11 +33,12 @@ public:
     virtual void visit(AssignNode& node, const AstVisitType& type) = 0;
     virtual void visit(BinaryOperatorNode& node, const AstVisitType& type) = 0;
     virtual void visit(EntityDeclarationNode& node, const AstVisitType& type) = 0;
-    virtual void visit(SignalNode& node, const AstVisitType& type) = 0;
+    virtual void visit(GenericNode& node, const AstVisitType& type) = 0;
     virtual void visit(PortNode& node, const AstVisitType& type) = 0;
     virtual void visit(ProcessNode& node, const AstVisitType& type) = 0;
-    virtual void visit(TopNode& node, const AstVisitType& type) = 0;
     virtual void visit(SensitivityListNode& node, const AstVisitType& type) = 0;
+    virtual void visit(SignalNode& node, const AstVisitType& type) = 0;
+    virtual void visit(TopNode& node, const AstVisitType& type) = 0;
 
     virtual void increaseLevel() = 0;
     virtual void decreaseLevel() = 0;

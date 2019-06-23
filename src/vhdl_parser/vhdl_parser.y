@@ -267,16 +267,15 @@ entity_declaration:
   | ";" port_list
 
   generic_list:
-    "identifier" ":"
-      {
-        //auto node = NodeFactory::make_node(AstNodeType::PORT, current_node);
-        //node->setProperty("identifier", $1);
-        //current_node->addChild(node);
-        //current_node = node;
-      }
-    "identifier" ":=" "number"
+    "identifier" ":" "identifier" ":=" "number"
       {
         //current_node = current_node->getParent();
+        std::cout << "Generic " << $1 << " " << $3 << " " << std::to_string($5) << "\n";
+        auto node = NodeFactory::make_node(AstNodeType::GENERIC, current_node);
+        node->setProperty("identifier", $1);
+        node->setProperty("type_identifier", $3);
+        node->setProperty("default_value", std::to_string($5));
+        current_node->addChild(node);
       }
     endgenericassigns
 

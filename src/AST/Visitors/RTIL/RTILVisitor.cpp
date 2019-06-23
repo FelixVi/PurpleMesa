@@ -4,36 +4,20 @@
 
 #include "AssignNode.h"
 #include "ArchitectureNode.h"
-#include "EntityDeclarationNode.h"
-#include "SignalNode.h"
 #include "BinaryOperatorNode.h"
+#include "EntityDeclarationNode.h"
+#include "GenericNode.h"
 #include "PortNode.h"
 #include "ProcessNode.h"
-#include "TopNode.h"
 #include "SensitivityListNode.h"
-
-void RTILVisitor::visit(AssignNode &node, const AstVisitType &type) {
-
-}
+#include "SignalNode.h"
+#include "TopNode.h"
 
 void RTILVisitor::visit(ArchitectureNode &node, const AstVisitType &type) {
 
 }
 
-void RTILVisitor::visit(EntityDeclarationNode &node, const AstVisitType &type) {
-    if(type==AstVisitType::TRANSLATE_PRE) {
-        std::cout << indent;
-        std::cout << "module \\" << node.getProperty("identifier") << "\n";
-        increaseLevel();
-    }
-    if(type==AstVisitType::TRANSLATE_POST) {
-        decreaseLevel();
-        std::cout << indent;
-        std::cout << "end\n";
-    }
-}
-
-void RTILVisitor::visit(SignalNode &node, const AstVisitType &type) {
+void RTILVisitor::visit(AssignNode &node, const AstVisitType &type) {
 
 }
 
@@ -53,6 +37,23 @@ void RTILVisitor::visit(BinaryOperatorNode &node, const AstVisitType &type) {
         std::cout << indent;
         std::cout << "end\n";
     }
+}
+
+void RTILVisitor::visit(EntityDeclarationNode &node, const AstVisitType &type) {
+    if(type==AstVisitType::TRANSLATE_PRE) {
+        std::cout << indent;
+        std::cout << "module \\" << node.getProperty("identifier") << "\n";
+        increaseLevel();
+    }
+    if(type==AstVisitType::TRANSLATE_POST) {
+        decreaseLevel();
+        std::cout << indent;
+        std::cout << "end\n";
+    }
+}
+
+void RTILVisitor::visit(GenericNode &node, const AstVisitType &type) {
+
 }
 
 void RTILVisitor::visit(PortNode &node, const AstVisitType &type) {
@@ -81,10 +82,14 @@ void RTILVisitor::visit(ProcessNode &node, const AstVisitType &type) {
 
 }
 
-void RTILVisitor::visit(TopNode &node, const AstVisitType &type) {
+void RTILVisitor::visit(SensitivityListNode &node, const AstVisitType &type) {
 
 }
 
-void RTILVisitor::visit(SensitivityListNode &node, const AstVisitType &type) {
+void RTILVisitor::visit(SignalNode &node, const AstVisitType &type) {
+
+}
+
+void RTILVisitor::visit(TopNode &node, const AstVisitType &type) {
 
 }
