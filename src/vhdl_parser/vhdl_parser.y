@@ -190,8 +190,8 @@
 %token <int> INTEGER "integer"
 %printer { yyoutput << $$; } <*>;
 
-%type <std::string> logicoperator numoperator
-%type <std::shared_ptr<AstNode>> logicexpr
+%type <std::string> op range_indicator
+%type <std::shared_ptr<AstNode>> logic_expr range_expr
 
 //TODO operator precedence
 //%left "or"
@@ -308,25 +308,25 @@ entity_declaration:
         current_node->setProperty("subtype", $1);
         current_node->setProperty("subtype_width", "1");
       }
-  | "identifier" "(" range_expression ")"
+  | "identifier" "(" range_expr ")"
       {
         current_node->setProperty("subtype", $1);
-        // current_node->setProperty("subtype_width", std::to_string($3 - $5 + 1));
+        current_node->addChild($3);
       }
 
-  range_expression:
-    logicexpr "downto" logicexpr
+  range_expr:
+    logic_expr range_indicator logic_expr
       {
         auto node = NodeFactory::make_node(AstNodeType::RANGE, current_node);
-        node->setProperty("type", "downto");
-        current_node->addChild(node);
+        node->setProperty("type", $2);
+        node->addChild($1);
+        node->addChild($3);
+        $$ = node;
       }
-  | logicexpr "to" logicexpr
-      {
-        auto node = NodeFactory::make_node(AstNodeType::RANGE, current_node);
-        node->setProperty("type", "to");
-        current_node->addChild(node);
-      }
+
+  range_indicator:
+    "downto" { $$ = "downto"; }
+  | "to" { $$ = "to"; }
 
 process_statement:
   optional_process_label "process" "("
@@ -364,7 +364,7 @@ process_statement:
         current_node->addChild(node);
         current_node = node;
       }
-    logicexpr ";"
+    logic_expr ";"
       {
         current_node = current_node->getParent();
       }
@@ -373,23 +373,23 @@ process_statement:
   | "if" logiccondition "then" concurrent_statement_block "elsif" logiccondition "then" concurrent_statement_block "end" "if" ";" process_statement_part
 
   logiccondition:
-    "identifier" "=" logicexpr
+    "identifier" "=" logic_expr
   | "identifier" "(" "identifier" ")" //to cover rising_edge
   | "(" logiccondition ")"
-  | logiccondition logicoperator logiccondition
+  | logiccondition op logiccondition
 
-  logicexpr:
+  logic_expr:
     "identifier"
       {
-        auto rhs = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
-        rhs->setProperty("identifier", $1);
-        current_node->addChild(rhs);
+        auto node = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
+        node->setProperty("identifier", $1);
+        $$ = node;
       }
   | "integer"
       {
         auto node = NodeFactory::make_node(AstNodeType::INTEGER, current_node);
         node->setProperty("value", std::to_string($1));
-        current_node->addChild(node);
+        $$ = node;
       }
   | "'" "integer" "'"
     {
@@ -397,35 +397,61 @@ process_statement:
       node->setProperty("value", std::to_string($2));
       $$ = node;
     }
-  | "(" logicexpr ")" { $$ = $2; }
-  | logicoperator logicexpr
+  | "(" logic_expr ")" { $$ = $2; }
+  | op logic_expr
     {
       auto node = NodeFactory::make_node(AstNodeType::OPERATOR_UNARY, current_node);
       node->setProperty("operator", $1);
+      node->addChild($2);
       $$ = node;
     }
-  | logicexpr logicoperator logicexpr
-  | logicexpr "&" logicexpr //concatenation
-  | "identifier" "(" logicexpr ")"
-  | "identifier" "'" "(" logicexpr ")"
-  | "identifier" "(" logicexpr "downto" logicexpr ")"
-  | "identifier" "(" logicexpr "," logicexpr ")"
-  | logicexpr numoperator logicexpr
-      {
-        auto node = NodeFactory::make_node(AstNodeType::OPERATOR_BINARY, current_node);
-        node->setProperty("operator", $2);
-        current_node->addChild(node);
-      }
+  | logic_expr op logic_expr
+    {
+      auto node = NodeFactory::make_node(AstNodeType::OPERATOR_BINARY, current_node);
+      node->setProperty("operator", $2);
+      node->addChild($1);
+      node->addChild($3);
+      $$ = node;
+    }
+  | "identifier" logic_expr
+    {
+      auto node = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
+      node->setProperty("identifier", $1);
+      node->addChild($2);
+      $$ = node;
+    }
+  | "identifier" "'" "(" logic_expr ")"
+    {
+      auto node = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
+      node->setProperty("identifier", $1 + "'");
+      node->addChild($4);
+      $$ = node;
+    }
+  | "identifier" "(" range_expr ")"
+    {
+      auto node = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
+      node->setProperty("identifier", $1);
+      node->addChild($3);
+      $$ = node;
+    }
+  | logic_expr op logic_expr
+    {
+      auto node = NodeFactory::make_node(AstNodeType::OPERATOR_BINARY, current_node);
+      node->setProperty("operator", $2);
+      node->addChild($1);
+      node->addChild($3);
+      $$ = node;
+    }
 
-  logicoperator:
+  op:
     "and" { $$ = "and"; }
   | "not" { $$ = "not"; }
   | "xor" { $$ = "xor"; }
-
-  numoperator:
-    "+" { $$ = "+"; }
+  | "+" { $$ = "+"; }
   | "-" { $$ = "-"; }
   | "**" { $$ = "**"; }
+  | "&" { $$ = "&"; }
+  | "," { $$ = ","; }
 
   optional_is:
     %empty
@@ -438,7 +464,7 @@ process_statement:
   process_declarative_part:
     %empty
     | "variable" "identifier" ":" "identifier" ";" process_declarative_part
-    | "variable" "identifier" ":" "identifier" "(" range_expression ")" ";" process_declarative_part
+    | "variable" "identifier" ":" "identifier" "(" range_expr ")" ";" process_declarative_part
 
   optional_sensitivitylist:
   %empty
@@ -481,14 +507,14 @@ architecture_body:
 
   architecture_declarative_part:
     %empty
-  | "signal" "identifier" ":" "identifier" "(" range_expression ")" ";" architecture_declarative_part
+  | "signal" "identifier" ":" "identifier" "(" range_expr ")" ";" architecture_declarative_part
   | "signal" "identifier" ":" "identifier" ";" architecture_declarative_part
   | "signal" "identifier" ":" "identifier" ":=" "'" "integer" "'" ";" architecture_declarative_part
   
   | "attribute" "identifier" ":" "identifier" ";" architecture_declarative_part
   | "attribute" "identifier" "of" "identifier" ":" "signal" "is" "quote" "identifier" "quote" ";" architecture_declarative_part
   
-  | "type" "identifier" "is" "array" "(" range_expression ")" "of" "identifier" "(" range_expression ")" ";" architecture_declarative_part
+  | "type" "identifier" "is" "array" "(" range_expr ")" "of" "identifier" "(" range_expr ")" ";" architecture_declarative_part
 
   architecture_statement_part:
     %empty
@@ -496,25 +522,18 @@ architecture_body:
   | process_statement architecture_statement_part
 
   concurrent_statement:
-    "identifier" "<=" assign_rhs
+    "identifier" "<=" logic_expr ";"
       {
         auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
         auto lhs = NodeFactory::make_node(AstNodeType::IDENTIFIER,node);
         lhs->setProperty("identifier", $1);
         node->addChild(lhs);
+        node->addChild($3);
         current_node->addChild(node);
-        current_node = node;
       }
-    ";"
-      {
-        current_node = current_node->getParent();
-      }
-  | "identifier" "(" logicexpr ")" "<=" assign_rhs ";"
-  | "identifier" ":=" assign_rhs ";"
+  | "identifier" "(" logic_expr ")" "<=" logic_expr ";"
+  | "identifier" ":=" logic_expr ";"
   | "if" logiccondition "then" concurrent_statement "end" "if" ";"
-  
-  assign_rhs:
-    logicexpr
   
   concurrent_statement_block:
     %empty
