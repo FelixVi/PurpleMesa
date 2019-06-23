@@ -1,18 +1,18 @@
-#ifndef PURPLEMESA_SIGNALNODE_H
-#define PURPLEMESA_SIGNALNODE_H
+#ifndef PURPLEMESA_IDENTIFIERNODE_H
+#define PURPLEMESA_IDENTIFIERNODE_H
 
 #include "AstNode.h"
 #include "Traversals/Filters/AstTraversalFilters.h"
 #include "Visitors/AstVisitor.h"
 
-struct SignalNode : AstNode
+struct IdentifierNode : AstNode
 {
-    SignalNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent) : AstNode(nt, parent) {}
-    SignalNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent, int lineno, const std::string &filename) : AstNode(nt, parent, lineno, filename) {}
+    IdentifierNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent) : AstNode(nt, parent) {}
+    IdentifierNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent, int lineno, const std::string &filename) : AstNode(nt, parent, lineno, filename) {}
 
     std::string getString() const override
     {
-        return "SIGNAL";
+        return "IDENTIFIER";
     }
 
     void accept(AstVisitor &visitor, const AstVisitType &type) override {
@@ -27,4 +27,4 @@ struct SignalNode : AstNode
     }
 };
 
-#endif //PURPLEMESA_SIGNALNODE_H
+#endif //PURPLEMESA_IDENTIFIERNODE_H

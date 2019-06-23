@@ -10,7 +10,7 @@
 #include "PortNode.h"
 #include "ProcessNode.h"
 #include "SensitivityListNode.h"
-#include "SignalNode.h"
+#include "IdentifierNode.h"
 #include "TopNode.h"
 
 void RTILVisitor::visit(ArchitectureNode &node, const AstVisitType &type) {
@@ -94,7 +94,7 @@ void RTILVisitor::visit(SensitivityListNode &node, const AstVisitType &type) {
 
 }
 
-void RTILVisitor::visit(SignalNode &node, const AstVisitType &type) {
+void RTILVisitor::visit(IdentifierNode &node, const AstVisitType &type) {
 
 }
 

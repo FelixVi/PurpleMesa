@@ -29,7 +29,7 @@ struct PortNode : AstNode
         else if (name == "subtype_width")
             properties.insert(std::pair<std::string, std::string>(name, property));
         else
-            throw std::invalid_argument("Property does not exist in " + this->getString() + ".");
+            throw std::invalid_argument("Property " + name + " does not exist in " + this->getString() + ".");
     }
 };
 

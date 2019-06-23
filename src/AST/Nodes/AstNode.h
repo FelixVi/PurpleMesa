@@ -21,11 +21,12 @@ enum class AstNodeType
     BINARY_OPERATOR,
     ENTITYDECLARATION,
     GENERIC,
+    IDENTIFIER,
+    INTEGER,
     PORT,
     PROCESS,
     RANGE,
     SENSITIVITYLIST,
-    SIGNAL,
     TOP
 };
 

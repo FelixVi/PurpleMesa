@@ -9,11 +9,12 @@
 #include "BinaryOperatorNode.h"
 #include "EntityDeclarationNode.h"
 #include "GenericNode.h"
+#include "IntegerNode.h"
 #include "ProcessNode.h"
 #include "PortNode.h"
 #include "RangeNode.h"
 #include "SensitivityListNode.h"
-#include "SignalNode.h"
+#include "IdentifierNode.h"
 #include "TopNode.h"
 
 #include <functional>
@@ -34,6 +35,10 @@ public:
                 return std::make_shared<EntityDeclarationNode>(AstNodeType::ENTITYDECLARATION, parent);
             case AstNodeType::GENERIC:
                 return std::make_shared<GenericNode>(AstNodeType::GENERIC, parent);
+            case AstNodeType::IDENTIFIER:
+                return std::make_shared<IdentifierNode>(AstNodeType::IDENTIFIER, parent);
+            case AstNodeType::INTEGER:
+                return std::make_shared<IntegerNode>(AstNodeType::INTEGER, parent);
             case AstNodeType::PORT:
                 return std::make_shared<PortNode>(AstNodeType::PORT, parent);
             case AstNodeType::PROCESS:
@@ -42,8 +47,6 @@ public:
                 return std::make_shared<RangeNode>(AstNodeType::RANGE, parent);
             case AstNodeType::SENSITIVITYLIST:
                 return std::make_shared<SensitivityListNode>(AstNodeType::SENSITIVITYLIST, parent);
-            case AstNodeType::SIGNAL:
-                return std::make_shared<SignalNode>(AstNodeType::SIGNAL, parent);
             case AstNodeType::TOP:
                 return std::make_shared<TopNode>(AstNodeType::TOP, parent);
         }
@@ -69,6 +72,12 @@ public:
             case AstNodeType::GENERIC:
                 thisNode = std::make_shared<GenericNode>(AstNodeType::GENERIC, src.getParent(), src.getLineno(), src.getSourcepath());
                 break;
+            case AstNodeType::IDENTIFIER:
+                thisNode = std::make_shared<IdentifierNode>(AstNodeType::IDENTIFIER, src.getParent(), src.getLineno(), src.getSourcepath());
+                break;
+            case AstNodeType::INTEGER:
+                thisNode = std::make_shared<IntegerNode>(AstNodeType::INTEGER, src.getParent(), src.getLineno(), src.getSourcepath());
+                break;
             case AstNodeType::PORT:
                 thisNode = std::make_shared<PortNode>(AstNodeType::PORT, src.getParent(), src.getLineno(), src.getSourcepath());
                 break;
@@ -80,9 +89,6 @@ public:
                 break;
             case AstNodeType::SENSITIVITYLIST:
                 thisNode = std::make_shared<SensitivityListNode>(AstNodeType::SENSITIVITYLIST, src.getParent(), src.getLineno(), src.getSourcepath());
-                break;
-            case AstNodeType::SIGNAL:
-                thisNode = std::make_shared<SignalNode>(AstNodeType::SIGNAL, src.getParent(), src.getLineno(), src.getSourcepath());
                 break;
             case AstNodeType::TOP:
                 thisNode = std::make_shared<TopNode>(AstNodeType::TOP, src.getParent(), src.getLineno(), src.getSourcepath());

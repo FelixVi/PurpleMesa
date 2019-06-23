@@ -313,7 +313,17 @@ entity_declaration:
 
   range_expression:
     logicexpr "downto" logicexpr
+      {
+        auto node = NodeFactory::make_node(AstNodeType::RANGE, current_node);
+        node->setProperty("type", "downto");
+        current_node->addChild(node);
+      }
   | logicexpr "to" logicexpr
+      {
+        auto node = NodeFactory::make_node(AstNodeType::RANGE, current_node);
+        node->setProperty("type", "to");
+        current_node->addChild(node);
+      }
 
 process_statement:
   optional_process_label "process" "("
@@ -345,7 +355,7 @@ process_statement:
   | "identifier" "<="
       {
         auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
-        auto lhs = NodeFactory::make_node(AstNodeType::SIGNAL,node);
+        auto lhs = NodeFactory::make_node(AstNodeType::IDENTIFIER,node);
         lhs->setProperty("identifier", $1);
         node->addChild(lhs);
         current_node->addChild(node);
@@ -368,11 +378,16 @@ process_statement:
   logicexpr:
     "identifier"
       {
-        auto rhs = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+        auto rhs = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
         rhs->setProperty("identifier", $1);
         current_node->addChild(rhs);
       }
   | "integer"
+      {
+        auto node = NodeFactory::make_node(AstNodeType::INTEGER, current_node);
+        node->setProperty("value", std::to_string($1));
+        current_node->addChild(node);
+      }
   | "'" "integer" "'"
   | "(" logicexpr ")"
   | logicoperator logicexpr
@@ -384,15 +399,15 @@ process_statement:
   | "identifier" "(" logicexpr "," logicexpr ")"
   | logicexpr numoperator logicexpr
       {
-        //auto rhs = NodeFactory::make_node(AstNodeType::BINARY_OPERATOR, current_node);
-        //rhs->setProperty("operator", "and");
+        auto node = NodeFactory::make_node(AstNodeType::BINARY_OPERATOR, current_node);
+        node->setProperty("operator", "+");
         //auto c1 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
         //c1->setProperty("identifier", $1);
         //auto c2 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
         //c2->setProperty("identifier", $3);
-        //rhs->addChild(c1);
-        //rhs->addChild(c2);
-        //current_node->addChild(rhs);
+        //node->addChild(c1);
+        //node->addChild(c2);
+        current_node->addChild(node);
       }
 
   logicoperator:
@@ -422,13 +437,13 @@ process_statement:
   %empty
   | "identifier" "," optional_sensitivitylist
       {
-        auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+        auto signal = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
         signal->setProperty("identifier", $1);
         current_node->addChild(signal);
       }
   | "identifier"
       {
-        auto signal = NodeFactory::make_node(AstNodeType::SIGNAL, current_node);
+        auto signal = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
         signal->setProperty("identifier", $1);
         current_node->addChild(signal);
       }
@@ -477,7 +492,7 @@ architecture_body:
     "identifier" "<=" assign_rhs
       {
         auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
-        auto lhs = NodeFactory::make_node(AstNodeType::SIGNAL,node);
+        auto lhs = NodeFactory::make_node(AstNodeType::IDENTIFIER,node);
         lhs->setProperty("identifier", $1);
         node->addChild(lhs);
         current_node->addChild(node);

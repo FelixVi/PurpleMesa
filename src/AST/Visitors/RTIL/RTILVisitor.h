@@ -26,7 +26,7 @@ public:
 
     void visit(SensitivityListNode & node, const AstVisitType &type) override;
 
-    void visit(SignalNode &node, const AstVisitType &type) override;
+    void visit(IdentifierNode &node, const AstVisitType &type) override;
 
     void visit(TopNode &node, const AstVisitType &type) override;
 

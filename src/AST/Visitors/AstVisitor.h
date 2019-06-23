@@ -17,7 +17,7 @@ class PortNode;
 class ProcessNode;
 class RangeNode;
 class SensitivityListNode;
-class SignalNode;
+class IdentifierNode;
 class TopNode;
 
 enum class AstTraversalFilter
@@ -41,7 +41,7 @@ public:
     virtual void visit(ProcessNode& node, const AstVisitType& type) = 0;
     virtual void visit(RangeNode& node, const AstVisitType& type) = 0;
     virtual void visit(SensitivityListNode& node, const AstVisitType& type) = 0;
-    virtual void visit(SignalNode& node, const AstVisitType& type) = 0;
+    virtual void visit(IdentifierNode& node, const AstVisitType& type) = 0;
     virtual void visit(TopNode& node, const AstVisitType& type) = 0;
 
     virtual void increaseLevel() = 0;

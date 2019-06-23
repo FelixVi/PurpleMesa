@@ -12,7 +12,7 @@
 #include "ProcessNode.h"
 #include "RangeNode.h"
 #include "SensitivityListNode.h"
-#include "SignalNode.h"
+#include "IdentifierNode.h"
 #include "TopNode.h"
 
 void AstPrintVisitor::visit(ArchitectureNode &node, const AstVisitType &type) {
@@ -103,7 +103,7 @@ void AstPrintVisitor::visit(SensitivityListNode &node, const AstVisitType &type)
     std::cout << std::endl;
 }
 
-void AstPrintVisitor::visit(SignalNode &node, const AstVisitType &type) {
+void AstPrintVisitor::visit(IdentifierNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
     std::cout << " " << node.getProperty("identifier");

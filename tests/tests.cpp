@@ -124,7 +124,7 @@ TEST(ASTTests, simple) {
     auto top = nf.make_node(AstNodeType::TOP, nullptr);
     auto child1 = nf.make_node(AstNodeType::ENTITYDECLARATION, top);
     child1->setProperty("identifier", "testentity");
-    auto child2 = nf.make_node(AstNodeType::SIGNAL, top);
+    auto child2 = nf.make_node(AstNodeType::IDENTIFIER, top);
     child2->setProperty("identifier", "testsignal");
 
     top->addChild(child1);
