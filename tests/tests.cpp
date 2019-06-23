@@ -82,28 +82,28 @@ TEST(FIFOTests, simple) {
     std::cout << "\nCopy AST...\n";
     auto newAst = NodeFactory::copy_node(*AST);
 
-    std::cout << "Starting RTIL translation of AST copy...\n";
+    //std::cout << "Starting RTIL translation of AST copy...\n";
 
-    std::static_pointer_cast<TopNode>(newAst)->run();
+    //std::static_pointer_cast<TopNode>(newAst)->run();
 
-    auto pass = BindArchPass();
-    pass.run();
+    //auto pass = BindArchPass();
+    //pass.run();
 
     //TODO
     //Need to handle configuration here
-    for(auto const& arch : newAst->getChildren()){
-        if(arch->type() == AstNodeType::ARCHITECTURE){
-            for(auto const& entity : newAst->getChildren()) {
-                if (entity->type() == AstNodeType::ENTITYDECLARATION) {
-                    entity->addChild(arch);
-                    newAst->deleteChild(arch);
-                }
-            }
-        }
-    }
+    //for(auto const& arch : newAst->getChildren()){
+    //    if(arch->type() == AstNodeType::ARCHITECTURE){
+    //        for(auto const& entity : newAst->getChildren()) {
+    //            if (entity->type() == AstNodeType::ENTITYDECLARATION) {
+    //                entity->addChild(arch);
+    //                newAst->deleteChild(arch);
+    //            }
+    //        }
+    //    }
+    //}
 
-    RTILVisitor translator;
-    t.traverse(*newAst, translator);
+    //RTILVisitor translator;
+    //t.traverse(*newAst, translator);
 
     ASSERT_FALSE(0);
 }
