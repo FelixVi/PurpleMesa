@@ -4,10 +4,12 @@
 
 #include "ArchitectureNode.h"
 #include "AssignNode.h"
-#include "BinaryOperatorNode.h"
 #include "EntityDeclarationNode.h"
 #include "GenericNode.h"
 #include "IntegerNode.h"
+#include "LiteralCharacterNode.h"
+#include "OperatorBinaryNode.h"
+#include "OperatorUnaryNode.h"
 #include "PortNode.h"
 #include "ProcessNode.h"
 #include "RangeNode.h"
@@ -29,15 +31,6 @@ void AstPrintVisitor::visit(ArchitectureNode &node, const AstVisitType &type) {
 void AstPrintVisitor::visit(AssignNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
-    if(!hideLocation)
-        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-    std::cout << std::endl;
-}
-
-void AstPrintVisitor::visit(BinaryOperatorNode &node, const AstVisitType &type) {
-    checkPasses(type);
-    std::cout << indent << node.getString();
-    std::cout << " (" << node.getProperty("operator") << ")";
     if(!hideLocation)
         std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
     std::cout << std::endl;
@@ -65,6 +58,33 @@ void AstPrintVisitor::visit(IntegerNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
     std::cout << " " << node.getProperty("value");
+    if(!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
+}
+
+void AstPrintVisitor::visit(LiteralCharacterNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
+    std::cout << " " << node.getProperty("value");
+    if(!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
+}
+
+void AstPrintVisitor::visit(OperatorBinaryNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
+    std::cout << " (" << node.getProperty("operator") << ")";
+    if(!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
+}
+
+void AstPrintVisitor::visit(OperatorUnaryNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
+    std::cout << " (" << node.getProperty("operator") << ")";
     if(!hideLocation)
         std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
     std::cout << std::endl;

@@ -9,10 +9,12 @@ class ShowAll;
 
 class ArchitectureNode;
 class AssignNode;
-class BinaryOperatorNode;
 class EntityDeclarationNode;
 class GenericNode;
 class IntegerNode;
+class LiteralCharacterNode;
+class OperatorBinaryNode;
+class OperatorUnaryNode;
 class PortNode;
 class ProcessNode;
 class RangeNode;
@@ -33,10 +35,12 @@ public:
 
     virtual void visit(ArchitectureNode& node, const AstVisitType& type) = 0;
     virtual void visit(AssignNode& node, const AstVisitType& type) = 0;
-    virtual void visit(BinaryOperatorNode& node, const AstVisitType& type) = 0;
     virtual void visit(EntityDeclarationNode& node, const AstVisitType& type) = 0;
     virtual void visit(GenericNode& node, const AstVisitType& type) = 0;
     virtual void visit(IntegerNode& node, const AstVisitType& type) = 0;
+    virtual void visit(LiteralCharacterNode& node, const AstVisitType& type) = 0;
+    virtual void visit(OperatorBinaryNode& node, const AstVisitType& type) = 0;
+    virtual void visit(OperatorUnaryNode& node, const AstVisitType& type) = 0;
     virtual void visit(PortNode& node, const AstVisitType& type) = 0;
     virtual void visit(ProcessNode& node, const AstVisitType& type) = 0;
     virtual void visit(RangeNode& node, const AstVisitType& type) = 0;

@@ -6,10 +6,12 @@
 
 #include "AssignNode.h"
 #include "ArchitectureNode.h"
-#include "BinaryOperatorNode.h"
 #include "EntityDeclarationNode.h"
 #include "GenericNode.h"
 #include "IntegerNode.h"
+#include "LiteralCharacterNode.h"
+#include "OperatorBinaryNode.h"
+#include "OperatorUnaryNode.h"
 #include "ProcessNode.h"
 #include "PortNode.h"
 #include "RangeNode.h"
@@ -29,8 +31,6 @@ public:
                 return std::make_shared<ArchitectureNode>(AstNodeType::ARCHITECTURE, parent);
             case AstNodeType::ASSIGN:
                 return std::make_shared<AssignNode>(AstNodeType::ASSIGN, parent);
-            case AstNodeType::BINARY_OPERATOR:
-                return std::make_shared<BinaryOperatorNode>(AstNodeType::BINARY_OPERATOR, parent);
             case AstNodeType::ENTITYDECLARATION:
                 return std::make_shared<EntityDeclarationNode>(AstNodeType::ENTITYDECLARATION, parent);
             case AstNodeType::GENERIC:
@@ -39,6 +39,12 @@ public:
                 return std::make_shared<IdentifierNode>(AstNodeType::IDENTIFIER, parent);
             case AstNodeType::INTEGER:
                 return std::make_shared<IntegerNode>(AstNodeType::INTEGER, parent);
+            case AstNodeType::LITERAL_CHARACTER:
+                return std::make_shared<LiteralCharacterNode>(AstNodeType::LITERAL_CHARACTER, parent);
+            case AstNodeType::OPERATOR_BINARY:
+                return std::make_shared<OperatorBinaryNode>(AstNodeType::OPERATOR_BINARY, parent);
+            case AstNodeType::OPERATOR_UNARY:
+                return std::make_shared<OperatorUnaryNode>(AstNodeType::OPERATOR_UNARY, parent);
             case AstNodeType::PORT:
                 return std::make_shared<PortNode>(AstNodeType::PORT, parent);
             case AstNodeType::PROCESS:
@@ -63,9 +69,6 @@ public:
             case AstNodeType::ASSIGN:
                 thisNode = std::make_shared<AssignNode>(AstNodeType::ASSIGN, src.getParent(), src.getLineno(), src.getSourcepath());
                 break;
-            case AstNodeType::BINARY_OPERATOR:
-                thisNode = std::make_shared<BinaryOperatorNode>(AstNodeType::BINARY_OPERATOR, src.getParent(), src.getLineno(), src.getSourcepath());
-                break;
             case AstNodeType::ENTITYDECLARATION:
                 thisNode = std::make_shared<EntityDeclarationNode>(AstNodeType::ENTITYDECLARATION, src.getParent(), src.getLineno(), src.getSourcepath());
                 break;
@@ -77,6 +80,15 @@ public:
                 break;
             case AstNodeType::INTEGER:
                 thisNode = std::make_shared<IntegerNode>(AstNodeType::INTEGER, src.getParent(), src.getLineno(), src.getSourcepath());
+                break;
+            case AstNodeType::LITERAL_CHARACTER:
+                thisNode = std::make_shared<LiteralCharacterNode>(AstNodeType::LITERAL_CHARACTER, src.getParent(), src.getLineno(), src.getSourcepath());
+                break;
+            case AstNodeType::OPERATOR_BINARY:
+                thisNode = std::make_shared<OperatorBinaryNode>(AstNodeType::OPERATOR_BINARY, src.getParent(), src.getLineno(), src.getSourcepath());
+                break;
+            case AstNodeType::OPERATOR_UNARY:
+                thisNode = std::make_shared<OperatorUnaryNode>(AstNodeType::OPERATOR_UNARY, src.getParent(), src.getLineno(), src.getSourcepath());
                 break;
             case AstNodeType::PORT:
                 thisNode = std::make_shared<PortNode>(AstNodeType::PORT, src.getParent(), src.getLineno(), src.getSourcepath());

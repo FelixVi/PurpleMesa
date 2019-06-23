@@ -190,6 +190,9 @@
 %token <int> INTEGER "integer"
 %printer { yyoutput << $$; } <*>;
 
+%type <std::string> logicoperator numoperator
+%type <std::shared_ptr<AstNode>> logicexpr
+
 //TODO operator precedence
 //%left "or"
 //%left "and"
@@ -389,8 +392,18 @@ process_statement:
         current_node->addChild(node);
       }
   | "'" "integer" "'"
-  | "(" logicexpr ")"
+    {
+      auto node = NodeFactory::make_node(AstNodeType::LITERAL_CHARACTER, current_node);
+      node->setProperty("value", std::to_string($2));
+      $$ = node;
+    }
+  | "(" logicexpr ")" { $$ = $2; }
   | logicoperator logicexpr
+    {
+      auto node = NodeFactory::make_node(AstNodeType::OPERATOR_UNARY, current_node);
+      node->setProperty("operator", $1);
+      $$ = node;
+    }
   | logicexpr logicoperator logicexpr
   | logicexpr "&" logicexpr //concatenation
   | "identifier" "(" logicexpr ")"
@@ -399,26 +412,20 @@ process_statement:
   | "identifier" "(" logicexpr "," logicexpr ")"
   | logicexpr numoperator logicexpr
       {
-        auto node = NodeFactory::make_node(AstNodeType::BINARY_OPERATOR, current_node);
-        node->setProperty("operator", "+");
-        //auto c1 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
-        //c1->setProperty("identifier", $1);
-        //auto c2 = NodeFactory::make_node(AstNodeType::SIGNAL, rhs);
-        //c2->setProperty("identifier", $3);
-        //node->addChild(c1);
-        //node->addChild(c2);
+        auto node = NodeFactory::make_node(AstNodeType::OPERATOR_BINARY, current_node);
+        node->setProperty("operator", $2);
         current_node->addChild(node);
       }
 
   logicoperator:
-    "and"
-  | "not"
-  | "xor"
+    "and" { $$ = "and"; }
+  | "not" { $$ = "not"; }
+  | "xor" { $$ = "xor"; }
 
   numoperator:
-    "+"
-  | "-"
-  | "**"
+    "+" { $$ = "+"; }
+  | "-" { $$ = "-"; }
+  | "**" { $$ = "**"; }
 
   optional_is:
     %empty

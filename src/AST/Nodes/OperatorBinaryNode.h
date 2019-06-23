@@ -1,18 +1,18 @@
-#ifndef PURPLEMESA_BINARYOPERATORNODE_H
-#define PURPLEMESA_BINARYOPERATORNODE_H
+#ifndef PURPLEMESA_OPERATORBINARYNODE_H
+#define PURPLEMESA_OPERATORBINARYNODE_H
 
 #include "AstNode.h"
 #include "Traversals/Filters/AstTraversalFilters.h"
 #include "Visitors/AstVisitor.h"
 
-struct BinaryOperatorNode : AstNode
+struct OperatorBinaryNode : AstNode
 {
-    BinaryOperatorNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent) : AstNode(nt, parent) {}
-    BinaryOperatorNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent, int lineno, const std::string &filename) : AstNode(nt, parent, lineno, filename) {}
+    OperatorBinaryNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent) : AstNode(nt, parent) {}
+    OperatorBinaryNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent, int lineno, const std::string &filename) : AstNode(nt, parent, lineno, filename) {}
 
     std::string getString() const override
     {
-        return "BINARY_OPERATOR";
+        return "OPERATOR_BINARY";
     }
 
     void accept(AstVisitor &visitor, const AstVisitType &type) override {
@@ -27,4 +27,4 @@ struct BinaryOperatorNode : AstNode
     }
 };
 
-#endif //PURPLEMESA_BINARYOPERATORNODE_H
+#endif //PURPLEMESA_OPERATORBINARYNODE_H

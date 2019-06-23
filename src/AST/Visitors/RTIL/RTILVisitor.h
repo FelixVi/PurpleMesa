@@ -10,13 +10,17 @@ public:
 
     void visit(AssignNode &node, const AstVisitType &type) override;
 
-    void visit(BinaryOperatorNode &node, const AstVisitType &type) override;
-
     void visit(EntityDeclarationNode &node, const AstVisitType &type) override;
 
     void visit(GenericNode &node, const AstVisitType &type) override;
 
     void visit(IntegerNode &node, const AstVisitType &type) override;
+
+    void visit(LiteralCharacterNode &node, const AstVisitType &type) override;
+
+    void visit(OperatorBinaryNode &node, const AstVisitType &type) override;
+
+    void visit(OperatorUnaryNode &node, const AstVisitType &type) override;
 
     void visit(PortNode &node, const AstVisitType &type) override;
 

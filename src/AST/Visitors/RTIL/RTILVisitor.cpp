@@ -4,9 +4,10 @@
 
 #include "AssignNode.h"
 #include "ArchitectureNode.h"
-#include "BinaryOperatorNode.h"
 #include "EntityDeclarationNode.h"
 #include "GenericNode.h"
+#include "OperatorBinaryNode.h"
+#include "OperatorUnaryNode.h"
 #include "PortNode.h"
 #include "ProcessNode.h"
 #include "SensitivityListNode.h"
@@ -19,24 +20,6 @@ void RTILVisitor::visit(ArchitectureNode &node, const AstVisitType &type) {
 
 void RTILVisitor::visit(AssignNode &node, const AstVisitType &type) {
 
-}
-
-void RTILVisitor::visit(BinaryOperatorNode &node, const AstVisitType &type) {
-    if(type==AstVisitType::TRANSLATE_PRE) {
-        std::cout << "\n";
-        std::cout << indent;
-        std::cout << "attribute \\src \"" << node.getFilename() << ":" << node.getLineno() << "\"" << "\n";
-        std::cout << indent;
-        std::cout << "cell ";
-        std::cout << "$";
-        std::cout << node.getProperty("operator") << "\n";
-        increaseLevel();
-    }
-    if(type==AstVisitType::TRANSLATE_POST) {
-        decreaseLevel();
-        std::cout << indent;
-        std::cout << "end\n";
-    }
 }
 
 void RTILVisitor::visit(EntityDeclarationNode &node, const AstVisitType &type) {
@@ -57,6 +40,32 @@ void RTILVisitor::visit(GenericNode &node, const AstVisitType &type) {
 }
 
 void RTILVisitor::visit(IntegerNode &node, const AstVisitType &type) {
+
+}
+
+void RTILVisitor::visit(LiteralCharacterNode &node, const AstVisitType &type) {
+
+}
+
+void RTILVisitor::visit(OperatorBinaryNode &node, const AstVisitType &type) {
+    if(type==AstVisitType::TRANSLATE_PRE) {
+        std::cout << "\n";
+        std::cout << indent;
+        std::cout << "attribute \\src \"" << node.getFilename() << ":" << node.getLineno() << "\"" << "\n";
+        std::cout << indent;
+        std::cout << "cell ";
+        std::cout << "$";
+        std::cout << node.getProperty("operator") << "\n";
+        increaseLevel();
+    }
+    if(type==AstVisitType::TRANSLATE_POST) {
+        decreaseLevel();
+        std::cout << indent;
+        std::cout << "end\n";
+    }
+}
+
+void RTILVisitor::visit(OperatorUnaryNode &node, const AstVisitType &type) {
 
 }
 
