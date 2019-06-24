@@ -39,6 +39,14 @@ void RTILVisitor::visit(GenericNode &node, const AstVisitType &type) {
 
 }
 
+void RTILVisitor::visit(IdentifierNode &node, const AstVisitType &type) {
+
+}
+
+void RTILVisitor::visit(IfNode &node, const AstVisitType &type) {
+
+}
+
 void RTILVisitor::visit(IntegerNode &node, const AstVisitType &type) {
 
 }
@@ -100,10 +108,6 @@ void RTILVisitor::visit(RangeNode &node, const AstVisitType &type) {
 }
 
 void RTILVisitor::visit(SensitivityListNode &node, const AstVisitType &type) {
-
-}
-
-void RTILVisitor::visit(IdentifierNode &node, const AstVisitType &type) {
 
 }
 

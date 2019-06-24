@@ -191,7 +191,7 @@
 %printer { yyoutput << $$; } <*>;
 
 %type <std::string> op range_indicator
-%type <std::shared_ptr<AstNode>> logic_expr range_expr
+%type <std::shared_ptr<AstNode>> logic_expr range_expr logiccondition
 
 //TODO operator precedence
 //%left "or"
@@ -354,9 +354,33 @@ process_statement:
 
   logiccondition:
     "identifier" "=" logic_expr
+      {
+        auto node = NodeFactory::make_node(AstNodeType::OPERATOR_BINARY, current_node);
+        node->setProperty("operator", "=");
+        auto idnode = NodeFactory::make_node(AstNodeType::IDENTIFIER, node);
+        idnode->setProperty("identifier", $1);
+        node->addChild(idnode);
+        node->addChild($3);
+        $$ = node;
+      }
   | "identifier" "(" "identifier" ")" //to cover rising_edge
-  | "(" logiccondition ")"
+      {
+        auto node = NodeFactory::make_node(AstNodeType::IDENTIFIER, current_node);
+        node->setProperty("identifier", $1);
+        auto idnode = NodeFactory::make_node(AstNodeType::IDENTIFIER, node);
+        idnode->setProperty("identifier", $3);
+        node->addChild(idnode);
+        $$ = node;
+      }
+  | "(" logiccondition ")" { $$ = $2; }
   | logiccondition op logiccondition
+    {
+      auto node = NodeFactory::make_node(AstNodeType::OPERATOR_BINARY, current_node);
+      node->setProperty("operator", $2);
+      node->addChild($1);
+      node->addChild($3);
+      $$ = node;
+    }
 
   logic_expr:
     "identifier"
@@ -514,6 +538,11 @@ architecture_body:
   | "identifier" "(" logic_expr ")" "<=" logic_expr ";"
   | "identifier" ":=" logic_expr ";"
   | "if" logiccondition "then" concurrent_statement_block "end" "if" ";"
+    {
+      auto node = NodeFactory::make_node(AstNodeType::IF, current_node);
+      node->addChild($2);
+      current_node->addChild(node);
+    }
   | "if" logiccondition "then" concurrent_statement_block "elsif" logiccondition "then" concurrent_statement_block "end" "if" ";"
   
   concurrent_statement_block:

@@ -21,6 +21,7 @@ enum class AstNodeType
     ENTITYDECLARATION,
     GENERIC,
     IDENTIFIER,
+    IF,
     INTEGER,
     LITERAL_CHARACTER,
     OPERATOR_UNARY,

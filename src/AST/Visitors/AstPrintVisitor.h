@@ -14,6 +14,10 @@ public:
 
     void visit(GenericNode &node, const AstVisitType &type) override;
 
+    void visit(IdentifierNode &node, const AstVisitType &type) override;
+
+    void visit(IfNode &node, const AstVisitType &type) override;
+
     void visit(IntegerNode &node, const AstVisitType &type) override;
 
     void visit(LiteralCharacterNode &node, const AstVisitType &type) override;
@@ -29,8 +33,6 @@ public:
     void visit(RangeNode & node, const AstVisitType &type) override;
 
     void visit(SensitivityListNode & node, const AstVisitType &type) override;
-
-    void visit(IdentifierNode &node, const AstVisitType &type) override;
 
     void visit(TopNode &node, const AstVisitType &type) override;
 

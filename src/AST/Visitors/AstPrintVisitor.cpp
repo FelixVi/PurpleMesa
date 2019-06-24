@@ -6,6 +6,8 @@
 #include "AssignNode.h"
 #include "EntityDeclarationNode.h"
 #include "GenericNode.h"
+#include "IdentifierNode.h"
+#include "IfNode.h"
 #include "IntegerNode.h"
 #include "LiteralCharacterNode.h"
 #include "OperatorBinaryNode.h"
@@ -14,7 +16,6 @@
 #include "ProcessNode.h"
 #include "RangeNode.h"
 #include "SensitivityListNode.h"
-#include "IdentifierNode.h"
 #include "TopNode.h"
 
 void AstPrintVisitor::visit(ArchitectureNode &node, const AstVisitType &type) {
@@ -49,6 +50,23 @@ void AstPrintVisitor::visit(GenericNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
     std::cout << " " << node.getProperty("identifier");
+    if(!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
+}
+
+void AstPrintVisitor::visit(IdentifierNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
+    std::cout << " " << node.getProperty("identifier");
+    if(!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
+}
+
+void AstPrintVisitor::visit(IfNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
     if(!hideLocation)
         std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
     std::cout << std::endl;
@@ -118,15 +136,6 @@ void AstPrintVisitor::visit(RangeNode &node, const AstVisitType &type) {
 void AstPrintVisitor::visit(SensitivityListNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
-    if(!hideLocation)
-        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-    std::cout << std::endl;
-}
-
-void AstPrintVisitor::visit(IdentifierNode &node, const AstVisitType &type) {
-    checkPasses(type);
-    std::cout << indent << node.getString();
-    std::cout << " " << node.getProperty("identifier");
     if(!hideLocation)
         std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
     std::cout << std::endl;

@@ -9,6 +9,7 @@
 #include "EntityDeclarationNode.h"
 #include "GenericNode.h"
 #include "IntegerNode.h"
+#include "IfNode.h"
 #include "LiteralCharacterNode.h"
 #include "OperatorBinaryNode.h"
 #include "OperatorUnaryNode.h"
@@ -37,6 +38,8 @@ public:
                 return std::make_shared<GenericNode>(AstNodeType::GENERIC, parent);
             case AstNodeType::IDENTIFIER:
                 return std::make_shared<IdentifierNode>(AstNodeType::IDENTIFIER, parent);
+            case AstNodeType::IF:
+                return std::make_shared<IfNode>(AstNodeType::IF, parent);
             case AstNodeType::INTEGER:
                 return std::make_shared<IntegerNode>(AstNodeType::INTEGER, parent);
             case AstNodeType::LITERAL_CHARACTER:
@@ -77,6 +80,9 @@ public:
                 break;
             case AstNodeType::IDENTIFIER:
                 thisNode = std::make_shared<IdentifierNode>(AstNodeType::IDENTIFIER, src.getParent(), src.getLineno(), src.getSourcepath());
+                break;
+            case AstNodeType::IF:
+                thisNode = std::make_shared<IfNode>(AstNodeType::IF, src.getParent(), src.getLineno(), src.getSourcepath());
                 break;
             case AstNodeType::INTEGER:
                 thisNode = std::make_shared<IntegerNode>(AstNodeType::INTEGER, src.getParent(), src.getLineno(), src.getSourcepath());
