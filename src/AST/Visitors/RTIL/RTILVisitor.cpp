@@ -22,6 +22,10 @@ void RTILVisitor::visit(AssignNode &node, const AstVisitType &type) {
 
 }
 
+void RTILVisitor::visit(CaseNode &node, const AstVisitType &type) {
+
+}
+
 void RTILVisitor::visit(EntityDeclarationNode &node, const AstVisitType &type) {
     if(type==AstVisitType::TRANSLATE_PRE) {
         std::cout << indent;
@@ -40,10 +44,6 @@ void RTILVisitor::visit(GenericNode &node, const AstVisitType &type) {
 }
 
 void RTILVisitor::visit(IdentifierNode &node, const AstVisitType &type) {
-
-}
-
-void RTILVisitor::visit(IfNode &node, const AstVisitType &type) {
 
 }
 
@@ -104,6 +104,10 @@ void RTILVisitor::visit(ProcessNode &node, const AstVisitType &type) {
 }
 
 void RTILVisitor::visit(RangeNode &node, const AstVisitType &type) {
+
+}
+
+void RTILVisitor::visit(ReduceBoolNode &node, const AstVisitType &type) {
 
 }
 

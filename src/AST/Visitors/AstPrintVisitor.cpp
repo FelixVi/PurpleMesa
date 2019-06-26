@@ -4,10 +4,10 @@
 
 #include "ArchitectureNode.h"
 #include "AssignNode.h"
+#include "CaseNode.h"
 #include "EntityDeclarationNode.h"
 #include "GenericNode.h"
 #include "IdentifierNode.h"
-#include "IfNode.h"
 #include "IntegerNode.h"
 #include "LiteralCharacterNode.h"
 #include "OperatorBinaryNode.h"
@@ -15,6 +15,7 @@
 #include "PortNode.h"
 #include "ProcessNode.h"
 #include "RangeNode.h"
+#include "ReduceBoolNode.h"
 #include "SensitivityListNode.h"
 #include "TopNode.h"
 
@@ -30,6 +31,14 @@ void AstPrintVisitor::visit(ArchitectureNode &node, const AstVisitType &type) {
 }
 
 void AstPrintVisitor::visit(AssignNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
+    if(!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
+}
+
+void AstPrintVisitor::visit(CaseNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
     if(!hideLocation)
@@ -59,14 +68,6 @@ void AstPrintVisitor::visit(IdentifierNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
     std::cout << " " << node.getProperty("identifier");
-    if(!hideLocation)
-        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
-    std::cout << std::endl;
-}
-
-void AstPrintVisitor::visit(IfNode &node, const AstVisitType &type) {
-    checkPasses(type);
-    std::cout << indent << node.getString();
     if(!hideLocation)
         std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
     std::cout << std::endl;
@@ -126,6 +127,14 @@ void AstPrintVisitor::visit(ProcessNode &node, const AstVisitType &type) {
 }
 
 void AstPrintVisitor::visit(RangeNode &node, const AstVisitType &type) {
+    checkPasses(type);
+    std::cout << indent << node.getString();
+    if(!hideLocation)
+        std::cout << " at " << node.getLineno() << " (" << node.getFilename() << ")";
+    std::cout << std::endl;
+}
+
+void AstPrintVisitor::visit(ReduceBoolNode &node, const AstVisitType &type) {
     checkPasses(type);
     std::cout << indent << node.getString();
     if(!hideLocation)

@@ -18,10 +18,10 @@ enum class AstNodeType
 {
     ARCHITECTURE,
     ASSIGN,
+    CASE,
     ENTITYDECLARATION,
     GENERIC,
     IDENTIFIER,
-    IF,
     INTEGER,
     LITERAL_CHARACTER,
     OPERATOR_UNARY,
@@ -29,6 +29,7 @@ enum class AstNodeType
     PORT,
     PROCESS,
     RANGE,
+    REDUCE_BOOL,
     SENSITIVITYLIST,
     TOP
 };

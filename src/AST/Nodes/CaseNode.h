@@ -1,21 +1,21 @@
-#ifndef PURPLEMESA_IFNODE_H
-#define PURPLEMESA_IFNODE_H
+#ifndef PURPLEMESA_CASENODE_H
+#define PURPLEMESA_CASENODE_H
 
 
 #include <AstNode.h>
 #include "Traversals/Filters/AstTraversalFilters.h"
 #include "Visitors/AstVisitor.h"
 
-struct IfNode : AstNode
+struct CaseNode : AstNode
 {
-    IfNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent) : AstNode(nt, parent) {
+    CaseNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent) : AstNode(nt, parent) {
     }
-    IfNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent, int lineno, const std::string &filename) : AstNode(nt, parent, lineno, filename) {
+    CaseNode(AstNodeType nt, const std::shared_ptr<AstNode> &parent, int lineno, const std::string &filename) : AstNode(nt, parent, lineno, filename) {
     }
 
     std::string getString() const override
     {
-        return "IF";
+        return "CASE";
     }
 
     void accept(AstVisitor &visitor, const AstVisitType &type) override {
@@ -28,4 +28,4 @@ struct IfNode : AstNode
     }
 };
 
-#endif //PURPLEMESA_IFNODE_H
+#endif //PURPLEMESA_CASENODE_H

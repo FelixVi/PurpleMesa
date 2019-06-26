@@ -7,6 +7,7 @@ class PreOrderTraversal : public AstTraversal
 {
 public:
     void traverse(AstNode &node, AstVisitor &visitor) override {
+        //std::cout << "Trying to visit: " << node.getLineno() << std::endl;
         if(visitor.isDoublePass())
         {
             node.accept(visitor, AstVisitType::TRANSLATE_PRE);

@@ -67,21 +67,24 @@ TEST(FIFOTests, simple) {
 
     std::cout << "\n\nTraversing AST ports...\n";
 
-    v.setFilter(AstTraversalFilter::ShowPorts);
-    t.traverse(*AST, v);
+    //v.setFilter(AstTraversalFilter::ShowPorts);
+    //t.traverse(*AST, v);
 
     std::cout << "End traversing AST ports...\n";
 
 
     std::cout << "\nTraversing AST...\n";
 
-    PM.printAST(*AST);
+    //PM.printAST(*AST);
 
     std::cout << "End traversing AST...\n";
 
     std::cout << "\nCopy AST...\n";
-    auto newAst = NodeFactory::copy_node(*AST);
+    //auto newAst = NodeFactory::copy_node(*AST);
 
+
+
+    //We're not doing any RTIL translation (yet)
     //std::cout << "Starting RTIL translation of AST copy...\n";
 
     //std::static_pointer_cast<TopNode>(newAst)->run();

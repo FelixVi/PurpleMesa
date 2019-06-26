@@ -5,7 +5,7 @@ extern std::string filename;
 std::string filename = "";
 
 vhdl_driver::vhdl_driver ()
-        : trace_scanning (false), trace_parsing (false)
+        : trace_scanning (false), trace_parsing (true)
 {}
 
 vhdl_driver::~vhdl_driver ()

@@ -191,7 +191,7 @@
 %printer { yyoutput << $$; } <*>;
 
 %type <std::string> op range_indicator
-%type <std::shared_ptr<AstNode>> logic_expr range_expr logiccondition
+%type <std::shared_ptr<AstNode>> logic_expr range_expr logiccondition concurrent_statement
 
 //TODO operator precedence
 //%left "or"
@@ -533,21 +533,58 @@ architecture_body:
         lhs->setProperty("identifier", $1);
         node->addChild(lhs);
         node->addChild($3);
-        current_node->addChild(node);
+        $$ = node;
       }
   | "identifier" "(" logic_expr ")" "<=" logic_expr ";"
+      {
+        auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
+        auto lhs = NodeFactory::make_node(AstNodeType::IDENTIFIER,node);
+        lhs->setProperty("identifier", $1);
+        lhs->addChild($3);
+        node->addChild(lhs);
+        node->addChild($6);
+        $$ = node;
+      }
   | "identifier" ":=" logic_expr ";"
-  | "if" logiccondition "then" concurrent_statement_block "end" "if" ";"
-    {
-      auto node = NodeFactory::make_node(AstNodeType::IF, current_node);
-      node->addChild($2);
-      current_node->addChild(node);
-    }
-  | "if" logiccondition "then" concurrent_statement_block "elsif" logiccondition "then" concurrent_statement_block "end" "if" ";"
+      {
+        auto node = NodeFactory::make_node(AstNodeType::ASSIGN, current_node);
+        auto lhs = NodeFactory::make_node(AstNodeType::IDENTIFIER,node);
+        lhs->setProperty("identifier", $1);
+        node->addChild(lhs);
+        node->addChild($3);
+        $$ = node;
+      }
+  | "if" logiccondition "then"
+      {
+        auto node = NodeFactory::make_node(AstNodeType::CASE, current_node);
+        node->addChild($2);
+        current_node->addChild(node);
+        current_node = node;
+      }
+    concurrent_statement_block conditional_block_termination
   
   concurrent_statement_block:
     %empty
   | concurrent_statement concurrent_statement_block
+    {
+      current_node->addChild($1);
+    }
+
+  conditional_block_termination:
+    "end" "if" ";"
+      {
+        current_node = current_node->getParent();
+      }
+  | "elsif" logiccondition "then"
+      {
+        current_node = current_node->getParent();
+        auto node = NodeFactory::make_node(AstNodeType::CASE, current_node);
+        node->addChild($2);
+        current_node->addChild(node);
+        current_node = node;
+      }
+    concurrent_statement_block conditional_block_termination
+      
 
 %%
 void yy::vhdl_parser::error ( const location_type& l,

@@ -9,10 +9,10 @@ class ShowAll;
 
 class ArchitectureNode;
 class AssignNode;
+class CaseNode;
 class EntityDeclarationNode;
 class GenericNode;
 class IdentifierNode;
-class IfNode;
 class IntegerNode;
 class LiteralCharacterNode;
 class OperatorBinaryNode;
@@ -20,6 +20,7 @@ class OperatorUnaryNode;
 class PortNode;
 class ProcessNode;
 class RangeNode;
+class ReduceBoolNode;
 class SensitivityListNode;
 class TopNode;
 
@@ -36,10 +37,10 @@ public:
 
     virtual void visit(ArchitectureNode& node, const AstVisitType& type) = 0;
     virtual void visit(AssignNode& node, const AstVisitType& type) = 0;
+    virtual void visit(CaseNode& node, const AstVisitType& type) = 0;
     virtual void visit(EntityDeclarationNode& node, const AstVisitType& type) = 0;
     virtual void visit(GenericNode& node, const AstVisitType& type) = 0;
     virtual void visit(IdentifierNode& node, const AstVisitType& type) = 0;
-    virtual void visit(IfNode& node, const AstVisitType& type) = 0;
     virtual void visit(IntegerNode& node, const AstVisitType& type) = 0;
     virtual void visit(LiteralCharacterNode& node, const AstVisitType& type) = 0;
     virtual void visit(OperatorBinaryNode& node, const AstVisitType& type) = 0;
@@ -47,6 +48,7 @@ public:
     virtual void visit(PortNode& node, const AstVisitType& type) = 0;
     virtual void visit(ProcessNode& node, const AstVisitType& type) = 0;
     virtual void visit(RangeNode& node, const AstVisitType& type) = 0;
+    virtual void visit(ReduceBoolNode& node, const AstVisitType& type) = 0;
     virtual void visit(SensitivityListNode& node, const AstVisitType& type) = 0;
     virtual void visit(TopNode& node, const AstVisitType& type) = 0;
 

@@ -10,13 +10,13 @@ public:
 
     void visit(ArchitectureNode &node, const AstVisitType &type) override;
 
+    void visit(CaseNode &node, const AstVisitType &type) override;
+
     void visit(EntityDeclarationNode &node, const AstVisitType &type) override;
 
     void visit(GenericNode &node, const AstVisitType &type) override;
 
     void visit(IdentifierNode &node, const AstVisitType &type) override;
-
-    void visit(IfNode &node, const AstVisitType &type) override;
 
     void visit(IntegerNode &node, const AstVisitType &type) override;
 
@@ -31,6 +31,8 @@ public:
     void visit(ProcessNode &node, const AstVisitType &type) override;
 
     void visit(RangeNode & node, const AstVisitType &type) override;
+
+    void visit(ReduceBoolNode & node, const AstVisitType &type) override;
 
     void visit(SensitivityListNode & node, const AstVisitType &type) override;
 
