@@ -43,6 +43,7 @@ include_directories(
         src/AST/Nodes
         src/kernel
         src
+        src/vhdl_parser
         external/googletest/googletest/include
         )
 

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "vhdl_parser_driver.h"
+#include "PurpleMesa_parser_driver.h"
 #include "NodeFactory.h"
 #include <memory>
 #include <vector>
@@ -8,7 +8,7 @@ int
 main (int argc, char *argv[])
 {
     int res = 0;
-    vhdl_driver driver;
+    PurpleMesa_parser_driver driver;
     for (int i = 1; i < argc; ++i)
         if (argv[i] == std::string ("-p"))
             driver.trace_parsing = true;
