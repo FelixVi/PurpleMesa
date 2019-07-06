@@ -1,21 +1,22 @@
-#ifndef VHDL_DRIVER_HH
-# define VHDL_DRIVER_HH
+#ifndef PURPLEMESA_PURPLEMESA_PARSER_DRIVER_H
+#define PURPLEMESA_PURPLEMESA_PARSER_DRIVER_H
+
 # include <string>
 # include <map>
 # include <ostream>
-# include "vhdl_parser.hpp"
+# include "PurpleMesa_parser.hpp"
 
 // Tell Flex the lexer's prototype ...
 # define YY_DECL \
-  yyvhdl::vhdl_parser::symbol_type yyvhdllex (vhdl_driver& driver)
+  yypm::PurpleMesa_parser::symbol_type yylex (PurpleMesa_parser_driver& driver)
 // ... and declare it for the parser's sake.
 YY_DECL;
 
-class vhdl_driver
-{
+class PurpleMesa_parser_driver {
+
 public:
-    vhdl_driver ();
-    virtual ~vhdl_driver ();
+    PurpleMesa_parser_driver ();
+    virtual ~PurpleMesa_parser_driver ();
 
     int result;
 
@@ -36,11 +37,10 @@ public:
     bool trace_parsing;
 
     // Error handling.
-    void error (const yyvhdl::location& l, const std::string& m, const int lineno);
-    void error (const yyvhdl::location& l, const std::string& m);
+    void error (const yypm::location& l, const std::string& m, const int lineno);
+    void error (const yypm::location& l, const std::string& m);
     void error (const std::string& m);
-
-    //the resulting AST
-    std::shared_ptr<TopNode> AST;
 };
-#endif // ! VHDL_DRIVER_HH
+
+
+#endif //PURPLEMESA_PURPLEMESA_PARSER_DRIVER_H

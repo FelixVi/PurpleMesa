@@ -17,19 +17,19 @@ int vhdl_driver::parse (const std::string &f)
     ::filename = f;
     file = f;
     scan_begin ();
-    yy::vhdl_parser parser (*this);
+    yyvhdl::vhdl_parser parser (*this);
     parser.set_debug_level (trace_parsing);
     int res = parser.parse ();
     scan_end ();
     return res;
 }
 
-void vhdl_driver::error (const yy::location& l, const std::string& m)
+void vhdl_driver::error (const yyvhdl::location& l, const std::string& m)
 {
     std::cerr << "In " << file << " " << l << ": " << m << std::endl;
 }
 
-void vhdl_driver::error (const yy::location& l, const std::string& m, const int lineno)
+void vhdl_driver::error (const yyvhdl::location& l, const std::string& m, const int lineno)
 {
     std::cerr << "In " << file << ":" << lineno << " " << l << ": " << m << std::endl;
 }

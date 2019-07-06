@@ -4,6 +4,7 @@
 %define api.token.constructor
 %define api.value.type variant
 %define parse.assert
+%define api.prefix {yyvhdl};
 %code requires
 {
     #include "NodeFactory.h"
@@ -587,7 +588,7 @@ architecture_body:
       
 
 %%
-void yy::vhdl_parser::error ( const location_type& l,
+void yyvhdl::vhdl_parser::error ( const location_type& l,
                               const std::string& m )
   {
     driver.error (l, m, yylineno);
