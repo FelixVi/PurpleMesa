@@ -11,7 +11,7 @@ FLEX_TARGET(VhdlLexer src/vhdl_parser/vhdl_lexer.l  ${CMAKE_CURRENT_BINARY_DIR}/
 
 add_subdirectory(external/googletest/googletest)
 
-SET (SRCS src/PurpleMesa.cpp
+SET (SRCS src/kernel/PurpleMesa.cpp
 
         src/vhdl_parser/vhdl_parser_driver.cpp
 
@@ -28,6 +28,7 @@ include_directories(
         ${CMAKE_CURRENT_BINARY_DIR}
         src/AST
         src/AST/Nodes
+        src/kernel
         src
         external/googletest/googletest/include
         )
