@@ -2,7 +2,7 @@
 A VHDL parser based on flex and bison
 
 ## Goals
-The reason PurpleMesa got started is to fill the need for a VHDL parser written in C++ that provides access to the underlying AST structure. This in itself may not seem as exciting as a simulation or synthesis tool, but it allows for various transformations, analyses and exports to be carried out that enable various exciting applications such as:
+The reason PurpleMesa got started is to fill the need for a VHDL parser written in C++ that provides access to the underlying AST structure. This in itself may not seem as exciting as a simulation or synthesis tool, but it allows for various transformations, analyses and exports to be carried out that enable various important applications such as:
 * Formal verification
 * Equivalence testing
 * VHDL to Verilog translation
@@ -10,7 +10,7 @@ The reason PurpleMesa got started is to fill the need for a VHDL parser written 
 * Code linting
 * Editor code highlighting
 
-The initial goal is to make a standalone parser that is independent of any particular application. This is meant to make sure that PurpleMesa can serve as an independent parser. The first application will be **formal verification**, more details are provided below.
+The initial goal is to make a standalone parser that is independent of any particular application. This is meant to make sure that PurpleMesa can serve as a general purpose tool. The first application will be **formal verification**, more details are provided below.
 
 ## Contact and current status
 If you have comments or questions, feel free to reach out to me at PurpleMesaProject@gmail.com. As of now, the basic structure of PurpleMesa is being worked on, so the parser is **not** functional. A description of current challenges can be found below.
@@ -34,7 +34,7 @@ VHDL parsers are fairly complex, so this section tries to break the project down
 ### Parser / AST
 * Generate hierarchy table when design is parsed
 * Populate a symbol table to tag specific type of identifiers
-* Finalize AST structure - continue with visitor pattern to make adding new AST transformation easy or switch to a more generic node type as used in Yosys?
+* Finalize AST structure - continue with visitor pattern to make adding new AST transformations easy or switch to a more generic node type as used in Yosys?
 ### Elaboration
 * Memory extraction
 ### RTIL export
