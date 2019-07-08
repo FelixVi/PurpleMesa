@@ -1,13 +1,14 @@
 #ifndef DEPENDENCY_DRIVER_HH
 # define DEPENDENCY_DRIVER_HH
+
 # include <string>
 # include <map>
 # include <ostream>
-# include "vhdl_parser.hpp"
+# include "dependency_parser.hpp"
 
 // Tell Flex the lexer's prototype ...
 # define YY_DECL \
-  yydep::dependency_parser::symbol_type yydeplex (dependency_driver& driver)
+  yydep::dependency_parser::symbol_type yylex (dependency_driver& driver)
 // ... and declare it for the parser's sake.
 YY_DECL;
 
@@ -36,8 +37,8 @@ public:
     bool trace_parsing;
 
     // Error handling.
-    void error (const yyvhdl::location& l, const std::string& m, const int lineno);
-    void error (const yyvhdl::location& l, const std::string& m);
+    void error (const yydep::location& l, const std::string& m, const int lineno);
+    void error (const yydep::location& l, const std::string& m);
     void error (const std::string& m);
 };
 #endif // ! DEPENDENCY_DRIVER_HH

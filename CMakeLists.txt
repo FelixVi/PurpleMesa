@@ -19,6 +19,8 @@ add_subdirectory(external/googletest/googletest)
 
 SET (SRCS src/kernel/PurpleMesa.cpp
 
+        src/vhdl_dependencies/dependency_parser_driver.cpp
+
         src/vhdl_parser/vhdl_parser_driver.cpp
 
         src/kernel/PurpleMesa_parser_driver.cpp

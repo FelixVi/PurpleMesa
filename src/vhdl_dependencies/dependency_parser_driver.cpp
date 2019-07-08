@@ -1,8 +1,8 @@
 #include "dependency_parser_driver.h"
 #include "dependency_parser.hpp"
 
-extern std::string filename;
-std::string filename = "";
+extern std::string dep_filename;
+std::string dep_filename = "";
 
 dependency_driver::dependency_driver ()
         : trace_scanning (false), trace_parsing (true)
@@ -14,7 +14,7 @@ dependency_driver::~dependency_driver ()
 
 int dependency_driver::parse (const std::string &f)
 {
-    ::filename = f;
+    ::dep_filename = f;
     file = f;
     scan_begin ();
     yydep::dependency_parser parser (*this);
