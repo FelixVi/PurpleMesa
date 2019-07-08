@@ -58,7 +58,8 @@ unit:
 
 commands:
     command commands
-|   command "exit" {std::cout << "BYE" << "\n"; return 0;}
+|   command "exit" {std::cout << "\nBYE" << "\n"; return 0;}
+|   command END    {std::cout << "\nBYE" << "\n"; return 0;}
 
 command:
   %empty

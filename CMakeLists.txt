@@ -7,10 +7,13 @@ find_package(BISON)
 find_package(FLEX)
 
 BISON_TARGET(VhdlParser src/vhdl_parser/vhdl_parser.y ${CMAKE_CURRENT_BINARY_DIR}/vhdl/vhdl_parser.cpp)
-FLEX_TARGET(VhdlLexer src/vhdl_parser/vhdl_lexer.l  ${CMAKE_CURRENT_BINARY_DIR}/vhdl/vhdl_lexer.cpp COMPILE_FLAGS)
+FLEX_TARGET(VhdlLexer src/vhdl_parser/vhdl_lexer.l  ${CMAKE_CURRENT_BINARY_DIR}/vhdl/vhdl_lexer.cpp)
 
 BISON_TARGET(PurpleMesaParser src/kernel/PurpleMesa_parser.y ${CMAKE_CURRENT_BINARY_DIR}/pm/PurpleMesa_parser.cpp)
 FLEX_TARGET(PurpleMesaLexer src/kernel/PurpleMesa_lexer.l  ${CMAKE_CURRENT_BINARY_DIR}/pm/PurpleMesa_lexer.cpp COMPILE_FLAGS "-P yypm")
+
+BISON_TARGET(DependencyParser src/vhdl_dependencies/dependency_parser.y ${CMAKE_CURRENT_BINARY_DIR}/dependencies/dependency_parser.cpp)
+FLEX_TARGET(DependencyLexer src/vhdl_dependencies/dependency_lexer.l  ${CMAKE_CURRENT_BINARY_DIR}/dependencies/dependency_lexer.cpp COMPILE_FLAGS "-P yydep")
 
 add_subdirectory(external/googletest/googletest)
 
@@ -33,12 +36,16 @@ SET (SRCS src/kernel/PurpleMesa.cpp
 
         ${FLEX_PurpleMesaLexer_OUTPUTS}
         ${BISON_PurpleMesaParser_OUTPUTS}
+
+        ${FLEX_DependencyLexer_OUTPUTS}
+        ${BISON_DependencyParser_OUTPUTS}
         )
 
 include_directories(
         ${CMAKE_CURRENT_BINARY_DIR}
         ${CMAKE_CURRENT_BINARY_DIR}/pm
         ${CMAKE_CURRENT_BINARY_DIR}/vhdl
+        ${CMAKE_CURRENT_BINARY_DIR}/dependencies
         src/AST
         src/AST/Nodes
         src/kernel
@@ -64,3 +71,4 @@ target_link_libraries(tests
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/pm)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/vhdl)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dependencies)
